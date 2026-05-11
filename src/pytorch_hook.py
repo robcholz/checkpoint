@@ -18,6 +18,7 @@ class OptimizerParamSnapshot:
         exp_avg_sq = second moment
         step       = optimizer step
     """
+
     exp_avg: torch.Tensor
     exp_avg_sq: torch.Tensor
     step: int | torch.Tensor
@@ -31,6 +32,7 @@ class ParameterSnapshot:
 
     This is the basic unit GoCkpt transfers/reconstructs.
     """
+
     name: str
     param: torch.Tensor
     grad: torch.Tensor | None
@@ -43,6 +45,7 @@ class CheckpointRequest:
     """
     One GoCkpt checkpoint request.
     """
+
     start_step: int
     target_step: int
     tag: str
@@ -53,6 +56,7 @@ class CheckpointRuntimeState:
     """
     Runtime state for one active GoCkpt process.
     """
+
     request: CheckpointRequest
     transferred_blocks: dict[str, ParameterSnapshot] = field(default_factory=dict)
     gradients_by_step: dict[int, dict[str, torch.Tensor]] = field(default_factory=dict)
@@ -92,10 +96,10 @@ class PyTorchCheckpointHook(ABC):
 
     @abstractmethod
     def load_checkpoint(
-            self,
-            checkpoint_path: str | Path,
-            *,
-            map_location: str | torch.device | None = None,
+        self,
+        checkpoint_path: str | Path,
+        *,
+        map_location: str | torch.device | None = None,
     ) -> CheckpointLoadResult:
         """
         Restore model / optimizer / metadata from checkpoint.

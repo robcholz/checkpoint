@@ -1,33 +1,30 @@
 #!/usr/bin/env python3
 """Plot training loss from a line-oriented log file.
 
-Each non-empty line is expected to be either JSON or a Python dict literal, for
+Each non-empty line is expected to contain whitespace-separated key=value pairs, for
 example:
 
-    {'loss': '1.069', 'grad_norm': '25.38', 'learning_rate': '0', 'epoch': '1.932e-05'}
+    step=198/200 loss=0.8669 lr=0.00000001 steps_per_sec=5.52
 """
 
 from __future__ import annotations
 
 import argparse
-import ast
-import json
 from pathlib import Path
 from typing import Any
 
 
 def parse_record(line: str, line_number: int) -> dict[str, Any]:
-    """Parse one log line as JSON first, then as a Python literal fallback."""
-    try:
-        record = json.loads(line)
-    except json.JSONDecodeError:
-        try:
-            record = ast.literal_eval(line)
-        except (SyntaxError, ValueError) as exc:
-            raise ValueError(f"line {line_number}: cannot parse record") from exc
+    """Parse one whitespace-delimited key=value log line."""
+    record: dict[str, Any] = {}
+    for field in line.split():
+        if "=" not in field:
+            raise ValueError(f"line {line_number}: malformed field: {field!r}")
+        key, value = field.split("=", 1)
+        if not key:
+            raise ValueError(f"line {line_number}: empty key in field: {field!r}")
+        record[key] = value
 
-    if not isinstance(record, dict):
-        raise ValueError(f"line {line_number}: record is not a dict")
     return record
 
 

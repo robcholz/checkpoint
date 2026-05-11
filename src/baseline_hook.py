@@ -142,7 +142,9 @@ class BaselineCheckpointHook(PyTorchCheckpointHook):
             torch.cuda.set_rng_state_all(rng_state["torch_cuda_all"])
 
     @staticmethod
-    def save_raw_checkpoint(checkpoint: dict[str, Any], checkpoint_path: str | Path) -> float:
+    def save_raw_checkpoint(
+        checkpoint: dict[str, Any], checkpoint_path: str | Path
+    ) -> float:
         start = time.perf_counter()
         torch.save(checkpoint, checkpoint_path)
         return time.perf_counter() - start
