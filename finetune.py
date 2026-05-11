@@ -3,9 +3,9 @@ import importlib
 import json
 import math
 import time
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List
 
 import torch
 from datasets import load_dataset
@@ -20,6 +20,8 @@ from transformers import (
 )
 
 from src.baseline_hook import BaselineCheckpointConfig
+from src.gockpt_hook import GoCkptCheckpointConfig
+from src.phase_profiler import PhaseProfiler, PhaseProfilingHook
 from src.pytorch_hook import PyTorchCheckpointHook
 
 MODEL_NAME = "Qwen/Qwen3-0.6B"
@@ -101,12 +103,30 @@ def parse_args() -> argparse.Namespace:
         choices=tuple(HOOK_SPECS.keys()),
         help="Checkpoint hook implementation to use.",
     )
+    parser.add_argument(
+        "--overlap-steps",
+        type=int,
+        default=7,
+        help="Number of training steps used by gockpt/gockpt_o to transfer one checkpoint.",
+    )
+    parser.add_argument(
+        "--profile-phases",
+        action="store_true",
+        help="Wrap the checkpoint hook with phase-level timing instrumentation.",
+    )
+    parser.add_argument(
+        "--skip-final-model-save",
+        action="store_true",
+        help="Skip final Hugging Face model/tokenizer save. Useful for timing-only benchmark runs.",
+    )
     args = parser.parse_args()
 
     if args.batch_size != 1:
         raise ValueError(
             "This script is configured for batch size 1 per the requested spec."
         )
+    if args.overlap_steps <= 0:
+        raise ValueError("--overlap-steps must be positive.")
 
     return args
 
@@ -207,6 +227,7 @@ def save_training_metadata(
     output_dir: Path,
     hook: PyTorchCheckpointHook,
     losses: List[dict],
+    train_runtime_sec: float,
 ) -> None:
     checkpoint_durations = []
     for result in hook.history:
@@ -223,12 +244,36 @@ def save_training_metadata(
         "batch_size": args.batch_size,
         "max_steps": args.max_steps,
         "save_steps": args.save_steps,
+        "overlap_steps": args.overlap_steps,
+        "profile_phases": args.profile_phases,
+        "train_runtime_sec": train_runtime_sec,
+        "train_steps_per_sec": args.max_steps / train_runtime_sec,
         "checkpoint_files": [str(result.path) for result in hook.history],
         "checkpoint_durations_sec": checkpoint_durations,
+        "checkpoint_results": [
+            checkpoint_result_to_dict(result) for result in hook.history
+        ],
         "loss_history": losses,
     }
+    profiler = getattr(hook, "profiler", None)
+    if profiler is not None:
+        metadata["phase_summary"] = profiler.summary()
+        metadata["phase_records"] = profiler.as_dicts()
+
     with (output_dir / "run_summary.json").open("w", encoding="utf-8") as handle:
         json.dump(metadata, handle, indent=2)
+
+
+def checkpoint_result_to_dict(result: Any) -> dict[str, Any]:
+    if hasattr(result, "__dataclass_fields__"):
+        data = asdict(result)
+    else:
+        data = vars(result).copy()
+
+    for key, value in list(data.items()):
+        if isinstance(value, Path):
+            data[key] = str(value)
+    return data
 
 
 def create_checkpoint_hook(
@@ -237,6 +282,8 @@ def create_checkpoint_hook(
     model: torch.nn.Module,
     optimizer: torch.optim.Optimizer | None,
     checkpoint_dir: Path,
+    overlap_steps: int = 7,
+    profile_phases: bool = False,
 ) -> PyTorchCheckpointHook:
     module_name, class_name = HOOK_SPECS[hook_type]
     module = importlib.import_module(module_name)
@@ -248,17 +295,32 @@ def create_checkpoint_hook(
             "but that implementation is not available yet."
         )
 
-    return hook_class(
-        model=model,
-        optimizer=optimizer,
-        config=BaselineCheckpointConfig(
+    if hook_type in {"gockpt", "gockpt_o"}:
+        config = GoCkptCheckpointConfig(
             checkpoint_dir=checkpoint_dir,
             tag_prefix=f"{hook_type}_step",
             save_model=True,
             save_optimizer=True,
             save_rng_state=True,
-        ),
+            overlap_steps=overlap_steps,
+        )
+    else:
+        config = BaselineCheckpointConfig(
+            checkpoint_dir=checkpoint_dir,
+            tag_prefix=f"{hook_type}_step",
+            save_model=True,
+            save_optimizer=True,
+            save_rng_state=True,
+        )
+
+    hook = hook_class(
+        model=model,
+        optimizer=optimizer,
+        config=config,
     )
+    if profile_phases:
+        return PhaseProfilingHook(hook, profiler=PhaseProfiler())
+    return hook
 
 
 def main() -> None:
@@ -306,6 +368,8 @@ def main() -> None:
         model=model,
         optimizer=optimizer,
         checkpoint_dir=hook_checkpoint_dir,
+        overlap_steps=args.overlap_steps,
+        profile_phases=args.profile_phases,
     )
 
     dataset = load_dataset(DATASET_NAME, split="train")
@@ -382,9 +446,14 @@ def main() -> None:
     print(f"train_runtime_sec={total_runtime:.2f}", flush=True)
     print(f"train_steps_per_sec={args.max_steps / total_runtime:.2f}", flush=True)
 
-    model.save_pretrained(output_dir)
-    tokenizer.save_pretrained(output_dir)
-    save_training_metadata(args, output_dir, hook, loss_history)
+    wait_for_pending_persistence = getattr(hook, "wait_for_pending_persistence", None)
+    if wait_for_pending_persistence is not None:
+        wait_for_pending_persistence()
+
+    if not args.skip_final_model_save:
+        model.save_pretrained(output_dir)
+        tokenizer.save_pretrained(output_dir)
+    save_training_metadata(args, output_dir, hook, loss_history, total_runtime)
 
 
 if __name__ == "__main__":
