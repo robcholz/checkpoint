@@ -1,4 +1,4 @@
-from __future__ import annotations
+sfrom __future__ import annotations
 
 import threading
 import time
@@ -68,7 +68,7 @@ class AsyncOCheckpointHook(BaselineCheckpointHook):
         )
 
     def save_checkpoint(self, step: int) -> None:
-        self.wait_for_pending_persistence()
+        self._join_previous_persist_if_needed()
 
         tag = f"{self.config.tag_prefix}_{step}"
         path = self._checkpoint_path(step)
@@ -156,7 +156,22 @@ class AsyncOCheckpointHook(BaselineCheckpointHook):
             return
 
         thread.join()
+        self._finalize_pending_thread(thread)
 
+    def _join_previous_persist_if_needed(self) -> None:
+        thread: threading.Thread | None
+        with self._pending_lock:
+            thread = self._pending_thread
+
+        if thread is None:
+            return
+
+        if thread.is_alive():
+            thread.join()
+
+        self._finalize_pending_thread(thread)
+
+    def _finalize_pending_thread(self, thread: threading.Thread) -> None:
         with self._pending_lock:
             if self._pending_thread is not thread:
                 return
