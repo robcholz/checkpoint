@@ -92,7 +92,9 @@ def parse_args() -> argparse.Namespace:
     args = parser.parse_args()
 
     if args.batch_size != 1:
-        raise ValueError("This script is configured for batch size 1 per the requested spec.")
+        raise ValueError(
+            "This script is configured for batch size 1 per the requested spec."
+        )
 
     return args
 
