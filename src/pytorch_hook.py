@@ -78,8 +78,12 @@ class PyTorchCheckpointHook(ABC):
     Required insertion points:
 
         save_checkpoint(step)
+        forward_begin(step)
+        forward_end(step)
         backward_begin(step)
+        backward_end(step)
         update_begin(step)
+        update_end(step)
     """
 
     @abstractmethod
@@ -113,6 +117,24 @@ class PyTorchCheckpointHook(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def forward_begin(self, step: int) -> None:
+        """
+        Called before the model forward pass begins.
+
+        This is the right place for barriers that must complete before the next
+        step starts consuming model state.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def forward_end(self, step: int) -> None:
+        """
+        Called after the forward pass completes and loss is available, but
+        before loss.backward().
+        """
+        raise NotImplementedError
+
+    @abstractmethod
     def backward_begin(self, step: int) -> None:
         """
         Called before loss.backward().
@@ -134,19 +156,24 @@ class PyTorchCheckpointHook(ABC):
     @abstractmethod
     def update_begin(self, step: int) -> None:
         """
-        Called before optimizer.step().
+        Called at the start of the update phase.
 
         Paper equivalent:
             update_begin
 
-        This is where GoCkpt can capture model/optimizer blocks
-        before the GPU optimizer updates them.
+        Update means the optimizer mutation phase, for example:
+            scaler.step(optimizer) or optimizer.step()
+            scaler.update()
+            optimizer.zero_grad()
+
+        This is where GoCkpt can capture model / optimizer blocks before the
+        optimizer mutates them.
         """
         raise NotImplementedError
 
     @abstractmethod
     def update_end(self, step: int) -> None:
         """
-        Called after optimizer.step().
+        Called after the update phase is fully complete, including zero_grad.
         """
         raise NotImplementedError

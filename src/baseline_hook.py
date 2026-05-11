@@ -40,12 +40,17 @@ class BaselineCheckpointHook(PyTorchCheckpointHook):
         if step % checkpoint_interval == 0:
             hook.save_checkpoint(step)
 
+        hook.forward_begin(step)
+        outputs = model(**batch)
+        hook.forward_end(step)
+
         hook.backward_begin(step)
         loss.backward()
         hook.backward_end(step)
 
         hook.update_begin(step)
         optimizer.step()
+        optimizer.zero_grad()
         hook.update_end(step)
     """
 
@@ -86,6 +91,14 @@ class BaselineCheckpointHook(PyTorchCheckpointHook):
         self.last_result = result
         self.history.append(result)
 
+    def forward_begin(self, step: int) -> None:
+        # Baseline checkpoint does not need pre-forward synchronization.
+        return
+
+    def forward_end(self, step: int) -> None:
+        # Baseline checkpoint does not capture forward-pass artifacts.
+        return
+
     def backward_begin(self, step: int) -> None:
         # Baseline checkpoint does not need gradients.
         return
@@ -95,11 +108,11 @@ class BaselineCheckpointHook(PyTorchCheckpointHook):
         return
 
     def update_begin(self, step: int) -> None:
-        # Baseline checkpoint does not capture model/optimizer blocks.
+        # Baseline checkpoint does not intercept the optimizer update phase.
         return
 
     def update_end(self, step: int) -> None:
-        # Baseline checkpoint does not reconstruct checkpoint state.
+        # Baseline checkpoint does not need post-update bookkeeping.
         return
 
     def _capture_rng_state(self) -> dict[str, Any]:

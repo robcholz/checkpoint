@@ -1,4 +1,5 @@
 import argparse
+import importlib
 import json
 import math
 import time
@@ -18,11 +19,19 @@ from transformers import (
     set_seed,
 )
 
-from src.baseline_hook import BaselineCheckpointConfig, BaselineCheckpointHook
+from src.baseline_hook import BaselineCheckpointConfig
+from src.pytorch_hook import PyTorchCheckpointHook
 
 MODEL_NAME = "Qwen/Qwen3-0.6B"
 DATASET_NAME = "yahma/alpaca-cleaned"
 DEFAULT_OUTPUT_DIR = "checkpoints/qwen3-0.6b-full"
+HOOK_SPECS = {
+    "baseline": ("src.baseline_hook", "BaselineCheckpointHook"),
+    "async": ("src.async_hook", "AsyncCheckpointHook"),
+    "async_o": ("src.async_o_hook", "AsyncOCheckpointHook"),
+    "gockpt": ("src.gockpt_hook", "GoCkptCheckpointHook"),
+    "gockpt_o": ("src.gockpt_o_hook", "GoCkptOCheckpointHook"),
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -84,6 +93,13 @@ def parse_args() -> argparse.Namespace:
         "--gradient-checkpointing",
         action="store_true",
         help="Enable gradient checkpointing to reduce VRAM pressure.",
+    )
+    parser.add_argument(
+        "--hook-type",
+        type=str,
+        default="baseline",
+        choices=tuple(HOOK_SPECS.keys()),
+        help="Checkpoint hook implementation to use.",
     )
     args = parser.parse_args()
 
@@ -189,22 +205,60 @@ def get_train_dtype() -> torch.dtype:
 def save_training_metadata(
     args: argparse.Namespace,
     output_dir: Path,
-    hook: BaselineCheckpointHook,
+    hook: PyTorchCheckpointHook,
     losses: List[dict],
 ) -> None:
+    checkpoint_durations = []
+    for result in hook.history:
+        duration = getattr(result, "duration_sec", None)
+        if duration is None:
+            duration = getattr(result, "total_duration_sec", None)
+        checkpoint_durations.append(duration)
+
     metadata = {
         "model_name": MODEL_NAME,
         "dataset_name": DATASET_NAME,
+        "hook_type": args.hook_type,
         "seq_len": args.seq_len,
         "batch_size": args.batch_size,
         "max_steps": args.max_steps,
         "save_steps": args.save_steps,
         "checkpoint_files": [str(result.path) for result in hook.history],
-        "checkpoint_durations_sec": [result.duration_sec for result in hook.history],
+        "checkpoint_durations_sec": checkpoint_durations,
         "loss_history": losses,
     }
     with (output_dir / "run_summary.json").open("w", encoding="utf-8") as handle:
         json.dump(metadata, handle, indent=2)
+
+
+def create_checkpoint_hook(
+    hook_type: str,
+    *,
+    model: torch.nn.Module,
+    optimizer: torch.optim.Optimizer | None,
+    checkpoint_dir: Path,
+) -> PyTorchCheckpointHook:
+    module_name, class_name = HOOK_SPECS[hook_type]
+    module = importlib.import_module(module_name)
+    hook_class = getattr(module, class_name, None)
+
+    if hook_class is None:
+        raise NotImplementedError(
+            f"Hook type '{hook_type}' expects {class_name} in {module_name}, "
+            "but that implementation is not available yet."
+        )
+
+    return hook_class(
+        model=model,
+        optimizer=optimizer,
+        config=BaselineCheckpointConfig(
+            checkpoint_dir=checkpoint_dir,
+            tag_prefix=f"{hook_type}_step",
+            save_model=True,
+            save_optimizer=True,
+            save_rng_state=True,
+        ),
+    )
 
 
 def main() -> None:
@@ -216,7 +270,7 @@ def main() -> None:
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    hook_checkpoint_dir = output_dir / "baseline_hook"
+    hook_checkpoint_dir = output_dir / args.hook_type
     hook_checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, trust_remote_code=True)
@@ -247,16 +301,11 @@ def main() -> None:
         num_training_steps=args.max_steps,
     )
 
-    hook = BaselineCheckpointHook(
+    hook = create_checkpoint_hook(
+        args.hook_type,
         model=model,
         optimizer=optimizer,
-        config=BaselineCheckpointConfig(
-            checkpoint_dir=hook_checkpoint_dir,
-            tag_prefix="baseline_step",
-            save_model=True,
-            save_optimizer=True,
-            save_rng_state=True,
-        ),
+        checkpoint_dir=hook_checkpoint_dir,
     )
 
     dataset = load_dataset(DATASET_NAME, split="train")
@@ -278,6 +327,7 @@ def main() -> None:
     batch_iterator = cycle_dataloader(train_dataloader)
     loss_history: List[dict] = []
     train_start = time.perf_counter()
+    optimizer.zero_grad(set_to_none=True)
 
     for step in range(1, args.max_steps + 1):
         if step % args.save_steps == 0:
@@ -287,13 +337,14 @@ def main() -> None:
         batch = {
             key: value.to(device, non_blocking=True) for key, value in batch.items()
         }
-        optimizer.zero_grad(set_to_none=True)
 
-        hook.backward_begin(step)
+        hook.forward_begin(step)
         with autocast("cuda", dtype=train_dtype):
             outputs = model(**batch)
             loss = outputs.loss
+        hook.forward_end(step)
 
+        hook.backward_begin(step)
         if scaler.is_enabled():
             scaler.scale(loss).backward()
         else:
@@ -306,6 +357,7 @@ def main() -> None:
             scaler.update()
         else:
             optimizer.step()
+        optimizer.zero_grad(set_to_none=True)
         hook.update_end(step)
         scheduler.step()
 
