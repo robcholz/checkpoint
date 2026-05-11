@@ -328,7 +328,7 @@ def main() -> None:
     set_seed(args.seed)
 
     if not torch.cuda.is_available():
-        raise RuntimeError("CUDA is required. This script targets a single RTX 4090.")
+        raise RuntimeError("CUDA is required.")
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)

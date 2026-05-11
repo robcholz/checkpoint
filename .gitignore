@@ -2,3 +2,4 @@ checkpoints/
 .idea/
 __pycache__/
 benchmark/checkpoint_runs/
+*.pt

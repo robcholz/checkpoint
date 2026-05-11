@@ -39,18 +39,7 @@ conda run -n checkpoint python benchmark/finetune_benchmark.py \
   --output-dir benchmark/finetune_runs
 ```
 
-This benchmark runs the real `finetune.py` Qwen training loop once per hook,
-enables phase profiling, skips the final Hugging Face model save by default,
-and writes `benchmark/finetune_runs/report.json`. The report compares
-throughput, wall time, checkpoint count, and hook-phase stall time. Use this
-benchmark for real checkpointing performance; use `checkpoint_benchmark.py`
-for fast correctness and resume validation.
-
-The runner checks GPU 0 free memory before launching runs. If another process
-is using the RTX 4090, free the GPU first or lower `--min-free-gb` only for a
-constrained smoke run.
-
-## Finetuning
+## Sanity Check
 
 ```bash
 python finetune.py \
