@@ -1,0 +1,1019 @@
+{
+  "config": {
+    "hook_types": [
+      "baseline",
+      "async",
+      "async_o",
+      "gockpt",
+      "gockpt_o"
+    ],
+    "seq_len": 512,
+    "max_steps": 200,
+    "save_steps": 20,
+    "overlap_steps": 7,
+    "learning_rate": 2e-05,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.03,
+    "seed": 42,
+    "gradient_checkpointing": true,
+    "save_final_model": false,
+    "min_free_gb": 12.0
+  },
+  "runs": [
+    {
+      "hook_type": "baseline",
+      "output_dir": "benchmark/finetune_runs/baseline",
+      "command": [
+        "/home/zsheng2/miniconda3/envs/checkpoint/bin/python",
+        "/home/zsheng2/checkpoint/finetune.py",
+        "--hook-type",
+        "baseline",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "200",
+        "--save-steps",
+        "20",
+        "--overlap-steps",
+        "7",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "benchmark/finetune_runs/baseline",
+        "--profile-phases",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 125.3394759632647,
+      "train_runtime_sec": 97.72032402828336,
+      "train_steps_per_sec": 2.046657151301644,
+      "checkpoint_count": 10,
+      "checkpoint_files": [
+        "benchmark/finetune_runs/baseline/baseline/baseline_step_20.pt",
+        "benchmark/finetune_runs/baseline/baseline/baseline_step_40.pt",
+        "benchmark/finetune_runs/baseline/baseline/baseline_step_60.pt",
+        "benchmark/finetune_runs/baseline/baseline/baseline_step_80.pt",
+        "benchmark/finetune_runs/baseline/baseline/baseline_step_100.pt",
+        "benchmark/finetune_runs/baseline/baseline/baseline_step_120.pt",
+        "benchmark/finetune_runs/baseline/baseline/baseline_step_140.pt",
+        "benchmark/finetune_runs/baseline/baseline/baseline_step_160.pt",
+        "benchmark/finetune_runs/baseline/baseline/baseline_step_180.pt",
+        "benchmark/finetune_runs/baseline/baseline/baseline_step_200.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 200,
+          "total_sec": 0.0001970157027244568,
+          "avg_sec": 9.85078513622284e-07,
+          "max_sec": 2.261251211166382e-06
+        },
+        "hook.forward_end": {
+          "count": 200,
+          "total_sec": 0.0001765415072441101,
+          "avg_sec": 8.827075362205505e-07,
+          "max_sec": 2.942979335784912e-06
+        },
+        "hook.backward_begin": {
+          "count": 200,
+          "total_sec": 7.819384336471558e-05,
+          "avg_sec": 3.909692168235779e-07,
+          "max_sec": 9.201467037200928e-07
+        },
+        "hook.backward_end": {
+          "count": 200,
+          "total_sec": 0.00030574947595596313,
+          "avg_sec": 1.5287473797798157e-06,
+          "max_sec": 3.6656856536865234e-06
+        },
+        "hook.update_begin": {
+          "count": 200,
+          "total_sec": 0.0001252107322216034,
+          "avg_sec": 6.26053661108017e-07,
+          "max_sec": 2.123415470123291e-06
+        },
+        "hook.update_end": {
+          "count": 200,
+          "total_sec": 0.00012170523405075073,
+          "avg_sec": 6.085261702537536e-07,
+          "max_sec": 2.6226043701171875e-06
+        },
+        "hook.save_checkpoint": {
+          "count": 10,
+          "total_sec": 43.65891693159938,
+          "avg_sec": 4.365891693159938,
+          "max_sec": 4.788395080715418
+        }
+      },
+      "checkpoint_results": [
+        {
+          "step": 20,
+          "tag": "baseline_step_20",
+          "path": "benchmark/finetune_runs/baseline/baseline/baseline_step_20.pt",
+          "duration_sec": 3.9268132224678993
+        },
+        {
+          "step": 40,
+          "tag": "baseline_step_40",
+          "path": "benchmark/finetune_runs/baseline/baseline/baseline_step_40.pt",
+          "duration_sec": 4.01046059653163
+        },
+        {
+          "step": 60,
+          "tag": "baseline_step_60",
+          "path": "benchmark/finetune_runs/baseline/baseline/baseline_step_60.pt",
+          "duration_sec": 4.0719161331653595
+        },
+        {
+          "step": 80,
+          "tag": "baseline_step_80",
+          "path": "benchmark/finetune_runs/baseline/baseline/baseline_step_80.pt",
+          "duration_sec": 4.074358619749546
+        },
+        {
+          "step": 100,
+          "tag": "baseline_step_100",
+          "path": "benchmark/finetune_runs/baseline/baseline/baseline_step_100.pt",
+          "duration_sec": 4.594948887825012
+        },
+        {
+          "step": 120,
+          "tag": "baseline_step_120",
+          "path": "benchmark/finetune_runs/baseline/baseline/baseline_step_120.pt",
+          "duration_sec": 4.65515847876668
+        },
+        {
+          "step": 140,
+          "tag": "baseline_step_140",
+          "path": "benchmark/finetune_runs/baseline/baseline/baseline_step_140.pt",
+          "duration_sec": 4.712339453399181
+        },
+        {
+          "step": 160,
+          "tag": "baseline_step_160",
+          "path": "benchmark/finetune_runs/baseline/baseline/baseline_step_160.pt",
+          "duration_sec": 4.7867789305746555
+        },
+        {
+          "step": 180,
+          "tag": "baseline_step_180",
+          "path": "benchmark/finetune_runs/baseline/baseline/baseline_step_180.pt",
+          "duration_sec": 4.674086034297943
+        },
+        {
+          "step": 200,
+          "tag": "baseline_step_200",
+          "path": "benchmark/finetune_runs/baseline/baseline/baseline_step_200.pt",
+          "duration_sec": 4.134873688220978
+        }
+      ],
+      "error": null
+    },
+    {
+      "hook_type": "async",
+      "output_dir": "benchmark/finetune_runs/async",
+      "command": [
+        "/home/zsheng2/miniconda3/envs/checkpoint/bin/python",
+        "/home/zsheng2/checkpoint/finetune.py",
+        "--hook-type",
+        "async",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "200",
+        "--save-steps",
+        "20",
+        "--overlap-steps",
+        "7",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "benchmark/finetune_runs/async",
+        "--profile-phases",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 120.4508840367198,
+      "train_runtime_sec": 107.842120077461,
+      "train_steps_per_sec": 1.8545629467998561,
+      "checkpoint_count": 10,
+      "checkpoint_files": [
+        "benchmark/finetune_runs/async/async/async_step_20.pt",
+        "benchmark/finetune_runs/async/async/async_step_40.pt",
+        "benchmark/finetune_runs/async/async/async_step_60.pt",
+        "benchmark/finetune_runs/async/async/async_step_80.pt",
+        "benchmark/finetune_runs/async/async/async_step_100.pt",
+        "benchmark/finetune_runs/async/async/async_step_120.pt",
+        "benchmark/finetune_runs/async/async/async_step_140.pt",
+        "benchmark/finetune_runs/async/async/async_step_160.pt",
+        "benchmark/finetune_runs/async/async/async_step_180.pt",
+        "benchmark/finetune_runs/async/async/async_step_200.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 200,
+          "total_sec": 31.188603341579437,
+          "avg_sec": 0.15594301670789718,
+          "max_sec": 3.585223440080881
+        },
+        "hook.forward_end": {
+          "count": 200,
+          "total_sec": 0.00018838420510292053,
+          "avg_sec": 9.419210255146027e-07,
+          "max_sec": 3.4533441066741943e-06
+        },
+        "hook.backward_begin": {
+          "count": 200,
+          "total_sec": 8.271634578704834e-05,
+          "avg_sec": 4.135817289352417e-07,
+          "max_sec": 8.977949619293213e-07
+        },
+        "hook.backward_end": {
+          "count": 200,
+          "total_sec": 0.0003429427742958069,
+          "avg_sec": 1.7147138714790345e-06,
+          "max_sec": 4.0978193283081055e-06
+        },
+        "hook.update_begin": {
+          "count": 200,
+          "total_sec": 0.00015067681670188904,
+          "avg_sec": 7.533840835094452e-07,
+          "max_sec": 2.1941959857940674e-06
+        },
+        "hook.update_end": {
+          "count": 200,
+          "total_sec": 0.00013053789734840393,
+          "avg_sec": 6.526894867420197e-07,
+          "max_sec": 3.4794211387634277e-06
+        },
+        "hook.save_checkpoint": {
+          "count": 10,
+          "total_sec": 22.016656707972288,
+          "avg_sec": 2.2016656707972286,
+          "max_sec": 12.640465643256903
+        },
+        "hook.wait_for_pending_persistence": {
+          "count": 1,
+          "total_sec": 3.4321530386805534,
+          "avg_sec": 3.4321530386805534,
+          "max_sec": 3.4321530386805534
+        }
+      },
+      "checkpoint_results": [
+        {
+          "step": 20,
+          "tag": "async_step_20",
+          "path": "benchmark/finetune_runs/async/async/async_step_20.pt",
+          "transfer_duration_sec": 1.5984155535697937,
+          "persistence_duration_sec": 3.829583939164877,
+          "total_duration_sec": 5.427999492734671
+        },
+        {
+          "step": 40,
+          "tag": "async_step_40",
+          "path": "benchmark/finetune_runs/async/async/async_step_40.pt",
+          "transfer_duration_sec": 0.9041133522987366,
+          "persistence_duration_sec": 3.774533022195101,
+          "total_duration_sec": 4.678646374493837
+        },
+        {
+          "step": 60,
+          "tag": "async_step_60",
+          "path": "benchmark/finetune_runs/async/async/async_step_60.pt",
+          "transfer_duration_sec": 12.635144803673029,
+          "persistence_duration_sec": 3.6929406709969044,
+          "total_duration_sec": 16.328085474669933
+        },
+        {
+          "step": 80,
+          "tag": "async_step_80",
+          "path": "benchmark/finetune_runs/async/async/async_step_80.pt",
+          "transfer_duration_sec": 0.9283795394003391,
+          "persistence_duration_sec": 3.5958652161061764,
+          "total_duration_sec": 4.5242447555065155
+        },
+        {
+          "step": 100,
+          "tag": "async_step_100",
+          "path": "benchmark/finetune_runs/async/async/async_step_100.pt",
+          "transfer_duration_sec": 0.8989326693117619,
+          "persistence_duration_sec": 3.6536612398922443,
+          "total_duration_sec": 4.552593909204006
+        },
+        {
+          "step": 120,
+          "tag": "async_step_120",
+          "path": "benchmark/finetune_runs/async/async/async_step_120.pt",
+          "transfer_duration_sec": 0.8902618028223515,
+          "persistence_duration_sec": 3.76331764832139,
+          "total_duration_sec": 4.653579451143742
+        },
+        {
+          "step": 140,
+          "tag": "async_step_140",
+          "path": "benchmark/finetune_runs/async/async/async_step_140.pt",
+          "transfer_duration_sec": 1.7191899865865707,
+          "persistence_duration_sec": 3.8259552158415318,
+          "total_duration_sec": 5.5451452024281025
+        },
+        {
+          "step": 160,
+          "tag": "async_step_160",
+          "path": "benchmark/finetune_runs/async/async/async_step_160.pt",
+          "transfer_duration_sec": 0.8898831307888031,
+          "persistence_duration_sec": 3.7787677086889744,
+          "total_duration_sec": 4.6686508394777775
+        },
+        {
+          "step": 180,
+          "tag": "async_step_180",
+          "path": "benchmark/finetune_runs/async/async/async_step_180.pt",
+          "transfer_duration_sec": 1.1324370466172695,
+          "persistence_duration_sec": 3.730716209858656,
+          "total_duration_sec": 4.8631532564759254
+        },
+        {
+          "step": 200,
+          "tag": "async_step_200",
+          "path": "benchmark/finetune_runs/async/async/async_step_200.pt",
+          "transfer_duration_sec": 0.36924732849001884,
+          "persistence_duration_sec": 3.6938687786459923,
+          "total_duration_sec": 4.063116107136011
+        }
+      ],
+      "error": null
+    },
+    {
+      "hook_type": "async_o",
+      "output_dir": "benchmark/finetune_runs/async_o",
+      "command": [
+        "/home/zsheng2/miniconda3/envs/checkpoint/bin/python",
+        "/home/zsheng2/checkpoint/finetune.py",
+        "--hook-type",
+        "async_o",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "200",
+        "--save-steps",
+        "20",
+        "--overlap-steps",
+        "7",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "benchmark/finetune_runs/async_o",
+        "--profile-phases",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 62.17300086095929,
+      "train_runtime_sec": 47.18056047335267,
+      "train_steps_per_sec": 4.239034000305251,
+      "checkpoint_count": 10,
+      "checkpoint_files": [
+        "benchmark/finetune_runs/async_o/async_o/async_o_step_20.pt",
+        "benchmark/finetune_runs/async_o/async_o/async_o_step_40.pt",
+        "benchmark/finetune_runs/async_o/async_o/async_o_step_60.pt",
+        "benchmark/finetune_runs/async_o/async_o/async_o_step_80.pt",
+        "benchmark/finetune_runs/async_o/async_o/async_o_step_100.pt",
+        "benchmark/finetune_runs/async_o/async_o/async_o_step_120.pt",
+        "benchmark/finetune_runs/async_o/async_o/async_o_step_140.pt",
+        "benchmark/finetune_runs/async_o/async_o/async_o_step_160.pt",
+        "benchmark/finetune_runs/async_o/async_o/async_o_step_180.pt",
+        "benchmark/finetune_runs/async_o/async_o/async_o_step_200.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 200,
+          "total_sec": 0.0001853369176387787,
+          "avg_sec": 9.266845881938934e-07,
+          "max_sec": 2.678483724594116e-06
+        },
+        "hook.forward_end": {
+          "count": 200,
+          "total_sec": 0.0001893751323223114,
+          "avg_sec": 9.46875661611557e-07,
+          "max_sec": 6.943941116333008e-06
+        },
+        "hook.backward_begin": {
+          "count": 200,
+          "total_sec": 8.971244096755981e-05,
+          "avg_sec": 4.4856220483779906e-07,
+          "max_sec": 1.6540288925170898e-06
+        },
+        "hook.backward_end": {
+          "count": 200,
+          "total_sec": 0.00030808523297309875,
+          "avg_sec": 1.5404261648654938e-06,
+          "max_sec": 3.848224878311157e-06
+        },
+        "hook.update_begin": {
+          "count": 200,
+          "total_sec": 0.0003769025206565857,
+          "avg_sec": 1.8845126032829285e-06,
+          "max_sec": 3.4399330615997314e-05
+        },
+        "hook.update_end": {
+          "count": 200,
+          "total_sec": 0.00012451782822608948,
+          "avg_sec": 6.225891411304474e-07,
+          "max_sec": 3.2372772693634033e-06
+        },
+        "hook.save_checkpoint": {
+          "count": 10,
+          "total_sec": 12.656733982264996,
+          "avg_sec": 1.2656733982264996,
+          "max_sec": 3.790850855410099
+        },
+        "hook.wait_for_pending_persistence": {
+          "count": 1,
+          "total_sec": 3.5745824240148067,
+          "avg_sec": 3.5745824240148067,
+          "max_sec": 3.5745824240148067
+        }
+      },
+      "checkpoint_results": [
+        {
+          "step": 20,
+          "tag": "async_o_step_20",
+          "path": "benchmark/finetune_runs/async_o/async_o/async_o_step_20.pt",
+          "transfer_duration_sec": 2.2774141170084476,
+          "persistence_duration_sec": 3.877409677952528,
+          "total_duration_sec": 6.154823794960976
+        },
+        {
+          "step": 40,
+          "tag": "async_o_step_40",
+          "path": "benchmark/finetune_runs/async_o/async_o/async_o_step_40.pt",
+          "transfer_duration_sec": 2.4914529249072075,
+          "persistence_duration_sec": 3.9480932280421257,
+          "total_duration_sec": 6.439546152949333
+        },
+        {
+          "step": 60,
+          "tag": "async_o_step_60",
+          "path": "benchmark/finetune_runs/async_o/async_o/async_o_step_60.pt",
+          "transfer_duration_sec": 0.006535656750202179,
+          "persistence_duration_sec": 3.6728749945759773,
+          "total_duration_sec": 3.6794106513261795
+        },
+        {
+          "step": 80,
+          "tag": "async_o_step_80",
+          "path": "benchmark/finetune_runs/async_o/async_o/async_o_step_80.pt",
+          "transfer_duration_sec": 0.0066260844469070435,
+          "persistence_duration_sec": 3.8366680964827538,
+          "total_duration_sec": 3.843294180929661
+        },
+        {
+          "step": 100,
+          "tag": "async_o_step_100",
+          "path": "benchmark/finetune_runs/async_o/async_o/async_o_step_100.pt",
+          "transfer_duration_sec": 0.006394516676664352,
+          "persistence_duration_sec": 3.7848986238241196,
+          "total_duration_sec": 3.791293140500784
+        },
+        {
+          "step": 120,
+          "tag": "async_o_step_120",
+          "path": "benchmark/finetune_runs/async_o/async_o/async_o_step_120.pt",
+          "transfer_duration_sec": 2.6072126887738705,
+          "persistence_duration_sec": 3.9723393432796,
+          "total_duration_sec": 6.579552032053471
+        },
+        {
+          "step": 140,
+          "tag": "async_o_step_140",
+          "path": "benchmark/finetune_runs/async_o/async_o/async_o_step_140.pt",
+          "transfer_duration_sec": 0.006273653358221054,
+          "persistence_duration_sec": 3.7570428662002087,
+          "total_duration_sec": 3.7633165195584297
+        },
+        {
+          "step": 160,
+          "tag": "async_o_step_160",
+          "path": "benchmark/finetune_runs/async_o/async_o/async_o_step_160.pt",
+          "transfer_duration_sec": 0.006698574870824814,
+          "persistence_duration_sec": 3.8102249689400196,
+          "total_duration_sec": 3.8169235438108444
+        },
+        {
+          "step": 180,
+          "tag": "async_o_step_180",
+          "path": "benchmark/finetune_runs/async_o/async_o/async_o_step_180.pt",
+          "transfer_duration_sec": 0.007017742842435837,
+          "persistence_duration_sec": 3.9221265763044357,
+          "total_duration_sec": 3.9291443191468716
+        },
+        {
+          "step": 200,
+          "tag": "async_o_step_200",
+          "path": "benchmark/finetune_runs/async_o/async_o/async_o_step_200.pt",
+          "transfer_duration_sec": 0.006793104112148285,
+          "persistence_duration_sec": 3.758097656071186,
+          "total_duration_sec": 3.7648907601833344
+        }
+      ],
+      "error": null
+    },
+    {
+      "hook_type": "gockpt",
+      "output_dir": "benchmark/finetune_runs/gockpt",
+      "command": [
+        "/home/zsheng2/miniconda3/envs/checkpoint/bin/python",
+        "/home/zsheng2/checkpoint/finetune.py",
+        "--hook-type",
+        "gockpt",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "200",
+        "--save-steps",
+        "20",
+        "--overlap-steps",
+        "7",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "benchmark/finetune_runs/gockpt",
+        "--profile-phases",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 95.43857641890645,
+      "train_runtime_sec": 83.84186490625143,
+      "train_steps_per_sec": 2.385443122283025,
+      "checkpoint_count": 9,
+      "checkpoint_files": [
+        "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_27.pt",
+        "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_47.pt",
+        "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_67.pt",
+        "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_87.pt",
+        "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_107.pt",
+        "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_127.pt",
+        "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_147.pt",
+        "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_167.pt",
+        "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_187.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 200,
+          "total_sec": 6.262806750833988,
+          "avg_sec": 0.03131403375416994,
+          "max_sec": 0.8012267537415028
+        },
+        "hook.forward_end": {
+          "count": 200,
+          "total_sec": 0.00021985173225402832,
+          "avg_sec": 1.0992586612701415e-06,
+          "max_sec": 3.043562173843384e-06
+        },
+        "hook.backward_begin": {
+          "count": 200,
+          "total_sec": 7.946789264678955e-05,
+          "avg_sec": 3.9733946323394774e-07,
+          "max_sec": 7.450580596923828e-07
+        },
+        "hook.backward_end": {
+          "count": 200,
+          "total_sec": 13.32951034232974,
+          "avg_sec": 0.0666475517116487,
+          "max_sec": 0.3949211612343788
+        },
+        "hook.update_begin": {
+          "count": 200,
+          "total_sec": 9.079588707536459,
+          "avg_sec": 0.0453979435376823,
+          "max_sec": 0.2152894027531147
+        },
+        "hook.update_end": {
+          "count": 200,
+          "total_sec": 1.6275907531380653,
+          "avg_sec": 0.008137953765690327,
+          "max_sec": 0.286556888371706
+        },
+        "hook.save_checkpoint": {
+          "count": 10,
+          "total_sec": 5.944015499204397,
+          "avg_sec": 0.5944015499204397,
+          "max_sec": 0.8624302074313164
+        },
+        "hook.wait_for_pending_persistence": {
+          "count": 1,
+          "total_sec": 2.3208558559417725e-06,
+          "avg_sec": 2.3208558559417725e-06,
+          "max_sec": 2.3208558559417725e-06
+        }
+      },
+      "checkpoint_results": [
+        {
+          "start_step": 20,
+          "target_step": 27,
+          "tag": "gockpt_step_27",
+          "path": "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_27.pt",
+          "transfer_duration_sec": 1.9461010098457336,
+          "gradient_duration_sec": 1.8825087659060955,
+          "reconstruction_duration_sec": 0.7750257588922977,
+          "persistence_duration_sec": 3.7290988713502884,
+          "total_duration_sec": 8.332734405994415
+        },
+        {
+          "start_step": 40,
+          "target_step": 47,
+          "tag": "gockpt_step_47",
+          "path": "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_47.pt",
+          "transfer_duration_sec": 2.0474302396178246,
+          "gradient_duration_sec": 1.5411562584340572,
+          "reconstruction_duration_sec": 0.7974204160273075,
+          "persistence_duration_sec": 3.793227933347225,
+          "total_duration_sec": 8.179234847426414
+        },
+        {
+          "start_step": 60,
+          "target_step": 67,
+          "tag": "gockpt_step_67",
+          "path": "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_67.pt",
+          "transfer_duration_sec": 0.030875522643327713,
+          "gradient_duration_sec": 1.8868863210082054,
+          "reconstruction_duration_sec": 0.7831101752817631,
+          "persistence_duration_sec": 3.772687666118145,
+          "total_duration_sec": 6.473559685051441
+        },
+        {
+          "start_step": 80,
+          "target_step": 87,
+          "tag": "gockpt_step_87",
+          "path": "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_87.pt",
+          "transfer_duration_sec": 1.4803364276885986,
+          "gradient_duration_sec": 1.1011541970074177,
+          "reconstruction_duration_sec": 0.8585405983030796,
+          "persistence_duration_sec": 3.828140541911125,
+          "total_duration_sec": 7.268171764910221
+        },
+        {
+          "start_step": 100,
+          "target_step": 107,
+          "tag": "gockpt_step_107",
+          "path": "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_107.pt",
+          "transfer_duration_sec": 0.00783596932888031,
+          "gradient_duration_sec": 1.7917990051209927,
+          "reconstruction_duration_sec": 0.8562122620642185,
+          "persistence_duration_sec": 3.7823038063943386,
+          "total_duration_sec": 6.43815104290843
+        },
+        {
+          "start_step": 120,
+          "target_step": 127,
+          "tag": "gockpt_step_127",
+          "path": "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_127.pt",
+          "transfer_duration_sec": 0.007776863873004913,
+          "gradient_duration_sec": 0.7710357904434204,
+          "reconstruction_duration_sec": 0.8060097135603428,
+          "persistence_duration_sec": 3.7612933926284313,
+          "total_duration_sec": 5.346115760505199
+        },
+        {
+          "start_step": 140,
+          "target_step": 147,
+          "tag": "gockpt_step_147",
+          "path": "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_147.pt",
+          "transfer_duration_sec": 0.7264165580272675,
+          "gradient_duration_sec": 1.4479542598128319,
+          "reconstruction_duration_sec": 0.8674898184835911,
+          "persistence_duration_sec": 3.7558743208646774,
+          "total_duration_sec": 6.797734957188368
+        },
+        {
+          "start_step": 160,
+          "target_step": 167,
+          "tag": "gockpt_step_167",
+          "path": "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_167.pt",
+          "transfer_duration_sec": 0.00785396620631218,
+          "gradient_duration_sec": 1.8963274247944355,
+          "reconstruction_duration_sec": 0.8028223067522049,
+          "persistence_duration_sec": 3.9692241735756397,
+          "total_duration_sec": 6.676227871328592
+        },
+        {
+          "start_step": 180,
+          "target_step": 187,
+          "tag": "gockpt_step_187",
+          "path": "benchmark/finetune_runs/gockpt/gockpt/gockpt_step_187.pt",
+          "transfer_duration_sec": 0.007594369351863861,
+          "gradient_duration_sec": 0.8306804709136486,
+          "reconstruction_duration_sec": 0.8334393985569477,
+          "persistence_duration_sec": 3.8439092449843884,
+          "total_duration_sec": 5.5156234838068485
+        }
+      ],
+      "error": null
+    },
+    {
+      "hook_type": "gockpt_o",
+      "output_dir": "benchmark/finetune_runs/gockpt_o",
+      "command": [
+        "/home/zsheng2/miniconda3/envs/checkpoint/bin/python",
+        "/home/zsheng2/checkpoint/finetune.py",
+        "--hook-type",
+        "gockpt_o",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "200",
+        "--save-steps",
+        "20",
+        "--overlap-steps",
+        "7",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "benchmark/finetune_runs/gockpt_o",
+        "--profile-phases",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 84.95369018986821,
+      "train_runtime_sec": 72.97108424454927,
+      "train_steps_per_sec": 2.7408116800037736,
+      "checkpoint_count": 9,
+      "checkpoint_files": [
+        "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_27.pt",
+        "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_47.pt",
+        "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_67.pt",
+        "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_87.pt",
+        "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_107.pt",
+        "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_127.pt",
+        "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_147.pt",
+        "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_167.pt",
+        "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_187.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 200,
+          "total_sec": 6.2345153875648975,
+          "avg_sec": 0.03117257693782449,
+          "max_sec": 1.2687253318727016
+        },
+        "hook.forward_end": {
+          "count": 200,
+          "total_sec": 0.00020801275968551636,
+          "avg_sec": 1.0400637984275818e-06,
+          "max_sec": 6.008893251419067e-06
+        },
+        "hook.backward_begin": {
+          "count": 200,
+          "total_sec": 6.551947180181742,
+          "avg_sec": 0.03275973590090871,
+          "max_sec": 0.21942345425486565
+        },
+        "hook.backward_end": {
+          "count": 200,
+          "total_sec": 2.115056063979864,
+          "avg_sec": 0.01057528031989932,
+          "max_sec": 0.2976304329931736
+        },
+        "hook.update_begin": {
+          "count": 200,
+          "total_sec": 0.00015542656183242798,
+          "avg_sec": 7.771328091621399e-07,
+          "max_sec": 1.944601535797119e-06
+        },
+        "hook.update_end": {
+          "count": 200,
+          "total_sec": 3.625825375318527,
+          "avg_sec": 0.018129126876592638,
+          "max_sec": 0.4261600077152252
+        },
+        "hook.save_checkpoint": {
+          "count": 10,
+          "total_sec": 6.363004181534052,
+          "avg_sec": 0.6363004181534052,
+          "max_sec": 0.9876064360141754
+        },
+        "hook.wait_for_pending_persistence": {
+          "count": 1,
+          "total_sec": 3.676861524581909e-06,
+          "avg_sec": 3.676861524581909e-06,
+          "max_sec": 3.676861524581909e-06
+        }
+      },
+      "checkpoint_results": [
+        {
+          "start_step": 20,
+          "target_step": 27,
+          "tag": "gockpt_o_step_27",
+          "path": "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_27.pt",
+          "transfer_duration_sec": 1.9817967116832733,
+          "gradient_duration_sec": 3.669985182583332,
+          "reconstruction_duration_sec": 0.8360154591500759,
+          "persistence_duration_sec": 3.686174001544714,
+          "total_duration_sec": 10.173971354961395
+        },
+        {
+          "start_step": 40,
+          "target_step": 47,
+          "tag": "gockpt_o_step_47",
+          "path": "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_47.pt",
+          "transfer_duration_sec": 1.5482720099389553,
+          "gradient_duration_sec": 3.5845512710511684,
+          "reconstruction_duration_sec": 0.8793557360768318,
+          "persistence_duration_sec": 3.9312394447624683,
+          "total_duration_sec": 9.943418461829424
+        },
+        {
+          "start_step": 60,
+          "target_step": 67,
+          "tag": "gockpt_o_step_67",
+          "path": "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_67.pt",
+          "transfer_duration_sec": 0.0068863071501255035,
+          "gradient_duration_sec": 1.9799120239913464,
+          "reconstruction_duration_sec": 0.8728042803704739,
+          "persistence_duration_sec": 3.825606022030115,
+          "total_duration_sec": 6.685208633542061
+        },
+        {
+          "start_step": 80,
+          "target_step": 87,
+          "tag": "gockpt_o_step_87",
+          "path": "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_87.pt",
+          "transfer_duration_sec": 0.0068624988198280334,
+          "gradient_duration_sec": 1.9930514581501484,
+          "reconstruction_duration_sec": 0.8692336045205593,
+          "persistence_duration_sec": 3.9318753965198994,
+          "total_duration_sec": 6.801022958010435
+        },
+        {
+          "start_step": 100,
+          "target_step": 107,
+          "tag": "gockpt_o_step_107",
+          "path": "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_107.pt",
+          "transfer_duration_sec": 0.006748635321855545,
+          "gradient_duration_sec": 1.9423126056790352,
+          "reconstruction_duration_sec": 0.8391191363334656,
+          "persistence_duration_sec": 3.785107981413603,
+          "total_duration_sec": 6.573288358747959
+        },
+        {
+          "start_step": 120,
+          "target_step": 127,
+          "tag": "gockpt_o_step_127",
+          "path": "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_127.pt",
+          "transfer_duration_sec": 2.658598054200411,
+          "gradient_duration_sec": 4.987457547336817,
+          "reconstruction_duration_sec": 0.8972882479429245,
+          "persistence_duration_sec": 3.8198965191841125,
+          "total_duration_sec": 12.363240368664265
+        },
+        {
+          "start_step": 140,
+          "target_step": 147,
+          "tag": "gockpt_o_step_147",
+          "path": "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_147.pt",
+          "transfer_duration_sec": 0.00713685154914856,
+          "gradient_duration_sec": 1.9350717961788177,
+          "reconstruction_duration_sec": 0.8442855216562748,
+          "persistence_duration_sec": 3.9668774865567684,
+          "total_duration_sec": 6.7533716559410095
+        },
+        {
+          "start_step": 160,
+          "target_step": 167,
+          "tag": "gockpt_o_step_167",
+          "path": "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_167.pt",
+          "transfer_duration_sec": 0.010363340377807617,
+          "gradient_duration_sec": 2.225960873067379,
+          "reconstruction_duration_sec": 1.074862603098154,
+          "persistence_duration_sec": 4.114898022264242,
+          "total_duration_sec": 7.426084838807583
+        },
+        {
+          "start_step": 180,
+          "target_step": 187,
+          "tag": "gockpt_o_step_187",
+          "path": "benchmark/finetune_runs/gockpt_o/gockpt_o/gockpt_o_step_187.pt",
+          "transfer_duration_sec": 0.007231350988149643,
+          "gradient_duration_sec": 1.9898100420832634,
+          "reconstruction_duration_sec": 0.8482716009020805,
+          "persistence_duration_sec": 3.9396626204252243,
+          "total_duration_sec": 6.784975614398718
+        }
+      ],
+      "error": null
+    }
+  ],
+  "comparison": {
+    "baseline": {
+      "train_steps_per_sec": 2.046657151301644,
+      "wall_time_sec": 125.3394759632647,
+      "checkpoint_count": 10,
+      "save_checkpoint_total_sec": 43.65891693159938,
+      "forward_begin_total_sec": 0.0001970157027244568,
+      "backward_end_total_sec": 0.00030574947595596313,
+      "update_begin_total_sec": 0.0001252107322216034,
+      "update_end_total_sec": 0.00012170523405075073
+    },
+    "async": {
+      "train_steps_per_sec": 1.8545629467998561,
+      "wall_time_sec": 120.4508840367198,
+      "checkpoint_count": 10,
+      "save_checkpoint_total_sec": 22.016656707972288,
+      "forward_begin_total_sec": 31.188603341579437,
+      "backward_end_total_sec": 0.0003429427742958069,
+      "update_begin_total_sec": 0.00015067681670188904,
+      "update_end_total_sec": 0.00013053789734840393,
+      "speedup_vs_baseline": 0.9061424604606498,
+      "save_checkpoint_time_ratio_vs_baseline": 0.5042877436118235
+    },
+    "async_o": {
+      "train_steps_per_sec": 4.239034000305251,
+      "wall_time_sec": 62.17300086095929,
+      "checkpoint_count": 10,
+      "save_checkpoint_total_sec": 12.656733982264996,
+      "forward_begin_total_sec": 0.0001853369176387787,
+      "backward_end_total_sec": 0.00030808523297309875,
+      "update_begin_total_sec": 0.0003769025206565857,
+      "update_end_total_sec": 0.00012451782822608948,
+      "speedup_vs_baseline": 2.071198880383697,
+      "save_checkpoint_time_ratio_vs_baseline": 0.28990031983831294
+    },
+    "gockpt": {
+      "train_steps_per_sec": 2.385443122283025,
+      "wall_time_sec": 95.43857641890645,
+      "checkpoint_count": 9,
+      "save_checkpoint_total_sec": 5.944015499204397,
+      "forward_begin_total_sec": 6.262806750833988,
+      "backward_end_total_sec": 13.32951034232974,
+      "update_begin_total_sec": 9.079588707536459,
+      "update_end_total_sec": 1.6275907531380653,
+      "speedup_vs_baseline": 1.1655313743026858,
+      "save_checkpoint_time_ratio_vs_baseline": 0.13614665495520453
+    },
+    "gockpt_o": {
+      "train_steps_per_sec": 2.7408116800037736,
+      "wall_time_sec": 84.95369018986821,
+      "checkpoint_count": 9,
+      "save_checkpoint_total_sec": 6.363004181534052,
+      "forward_begin_total_sec": 6.2345153875648975,
+      "backward_end_total_sec": 2.115056063979864,
+      "update_begin_total_sec": 0.00015542656183242798,
+      "update_end_total_sec": 3.625825375318527,
+      "speedup_vs_baseline": 1.3391650273523623,
+      "save_checkpoint_time_ratio_vs_baseline": 0.14574351882120665
+    }
+  }
+}
