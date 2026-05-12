@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import threading
 import time
+from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -18,7 +19,7 @@ from src.gockpt_hook import (
 
 @dataclass
 class GoCkptOCheckpointConfig(GoCkptCheckpointConfig):
-    pass
+    reconstruction_workers: int = 4
 
 
 @dataclass
@@ -67,9 +68,20 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
             torch.cuda.Stream() if torch.cuda.is_available() else None
         )
         self._pending_gradient_transfers: dict[int, PendingGradientTransfer] = {}
+        self._reconstruction_workers = max(
+            1,
+            int(getattr(self.config, "reconstruction_workers", 4)),
+        )
+        self._reconstruction_pool = ThreadPoolExecutor(
+            max_workers=self._reconstruction_workers,
+            thread_name_prefix="gockpt-o-reconstruct",
+        )
+        self._reconstruction_futures_by_partition: dict[int, Future[None]] = {}
+        self._reconstruction_lock = threading.Lock()
 
     def save_checkpoint(self, step: int) -> None:
         self._pending_gradient_transfers.clear()
+        self._reconstruction_futures_by_partition.clear()
         super().save_checkpoint(step)
         runtime = self._active_runtime
         if runtime is None or runtime.result is None:
@@ -113,6 +125,7 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
             return
 
         self._finish_pending_gradient_transfer(runtime, step)
+        self._wait_for_reconstruction()
 
         for partition_index in range(len(runtime.partitions)):
             self._wait_partition_transfer(runtime, partition_index)
@@ -143,6 +156,7 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
 
         self._active_runtime = None
         self._pending_gradient_transfers.clear()
+        self._reconstruction_futures_by_partition.clear()
         worker.start()
 
     def _collect_gradients_for_step(
@@ -151,8 +165,10 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
         step: int,
     ) -> dict[str, torch.Tensor | None]:
         gradients: dict[str, torch.Tensor | None] = {}
-        for name, snapshot in runtime.transferred_blocks.items():
-            if snapshot.version_step != step:
+        for name in runtime.transferred_blocks:
+            partition_index = runtime.partition_name_to_index[name]
+            transfer_step = runtime.request.start_step + partition_index
+            if step < transfer_step:
                 continue
 
             param = self._params_by_name[name]
@@ -226,25 +242,72 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
         if pending.event is not None:
             pending.event.synchronize()
 
-        reconstruction_start = time.perf_counter()
-        waited_partitions: set[int] = set()
-        for name in pending.gradients:
-            partition_index = runtime.partition_name_to_index[name]
-            if partition_index in waited_partitions:
-                continue
-            self._wait_partition_transfer(runtime, partition_index)
-            waited_partitions.add(partition_index)
-
-        for name, grad in pending.gradients.items():
-            snapshot = runtime.transferred_blocks[name]
-            if grad is not None:
-                self._apply_cpu_adamw_update(snapshot, grad)
-            snapshot.version_step = step + 1
+        self._submit_reconstruction(runtime, pending)
 
         if runtime.result is not None:
             runtime.result.gradient_duration_sec += (
                 time.perf_counter() - pending.submitted_at
             )
-            runtime.result.reconstruction_duration_sec += (
-                time.perf_counter() - reconstruction_start
-            )
+
+    def _submit_reconstruction(
+        self,
+        runtime: GoCkptRuntime,
+        pending: PendingGradientTransfer,
+    ) -> None:
+        gradients_by_partition: dict[int, dict[str, torch.Tensor | None]] = {}
+        for name, grad in pending.gradients.items():
+            partition_index = runtime.partition_name_to_index[name]
+            gradients_by_partition.setdefault(partition_index, {})[name] = grad
+
+        for partition_index, gradients in gradients_by_partition.items():
+            with self._reconstruction_lock:
+                previous_future = self._reconstruction_futures_by_partition.get(
+                    partition_index
+                )
+                future = self._reconstruction_pool.submit(
+                    self._reconstruct_partition_worker,
+                    runtime,
+                    pending.step,
+                    partition_index,
+                    gradients,
+                    previous_future,
+                )
+                self._reconstruction_futures_by_partition[partition_index] = future
+
+    def _reconstruct_partition_worker(
+        self,
+        runtime: GoCkptRuntime,
+        step: int,
+        partition_index: int,
+        gradients: dict[str, torch.Tensor | None],
+        previous_future: Future[None] | None,
+    ) -> None:
+        if previous_future is not None:
+            previous_future.result()
+
+        reconstruction_start = time.perf_counter()
+        self._wait_partition_transfer(runtime, partition_index)
+
+        for name, grad in gradients.items():
+            snapshot = runtime.transferred_blocks[name]
+            if snapshot.version_step != step:
+                raise RuntimeError(
+                    "GoCkpt-O reconstruction order violation for "
+                    f"{name}: expected version {step}, got {snapshot.version_step}."
+                )
+            if grad is not None:
+                self._apply_cpu_adamw_update(snapshot, grad)
+            snapshot.version_step = step + 1
+
+        if runtime.result is not None:
+            with self._reconstruction_lock:
+                runtime.result.reconstruction_duration_sec += (
+                    time.perf_counter() - reconstruction_start
+                )
+
+    def _wait_for_reconstruction(self) -> None:
+        with self._reconstruction_lock:
+            futures = list(self._reconstruction_futures_by_partition.values())
+
+        for future in futures:
+            future.result()
