@@ -1,24 +1,0 @@
-[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 21391.44it/s]
-step=10/200 loss=1.2890 lr=0.00001998 steps_per_sec=3.70
-step=20/200 loss=1.4737 lr=0.00001974 steps_per_sec=3.35
-step=30/200 loss=0.9434 lr=0.00001925 steps_per_sec=2.71
-step=40/200 loss=1.3005 lr=0.00001852 steps_per_sec=2.75
-step=50/200 loss=1.4212 lr=0.00001757 steps_per_sec=2.60
-step=60/200 loss=0.5621 lr=0.00001641 steps_per_sec=2.66
-step=70/200 loss=0.7776 lr=0.00001509 steps_per_sec=2.68
-step=80/200 loss=1.2990 lr=0.00001364 steps_per_sec=2.75
-step=90/200 loss=0.9403 lr=0.00001209 steps_per_sec=2.77
-step=100/200 loss=1.7060 lr=0.00001049 steps_per_sec=2.79
-step=110/200 loss=1.7911 lr=0.00000887 steps_per_sec=2.80
-step=120/200 loss=0.5676 lr=0.00000728 steps_per_sec=2.80
-step=130/200 loss=2.1418 lr=0.00000577 steps_per_sec=2.64
-step=140/200 loss=1.7214 lr=0.00000436 steps_per_sec=2.68
-step=150/200 loss=0.5705 lr=0.00000310 steps_per_sec=2.68
-step=160/200 loss=1.7869 lr=0.00000203 steps_per_sec=2.71
-step=170/200 loss=1.4658 lr=0.00000116 steps_per_sec=2.71
-step=180/200 loss=3.4189 lr=0.00000052 steps_per_sec=2.72
-step=190/200 loss=2.2518 lr=0.00000013 steps_per_sec=2.72
-step=200/200 loss=1.4202 lr=0.00000000 steps_per_sec=2.74
-train_runtime_sec=72.97
-train_steps_per_sec=2.74
