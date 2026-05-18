@@ -2,5 +2,6 @@ checkpoints/
 .idea/
 __pycache__/
 benchmark/checkpoint_runs/
-*.pt
+benchmark/overlap_steps_runs/
 benchmark/finetune_runs/
+*.pt

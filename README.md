@@ -52,16 +52,14 @@ conda run -n checkpoint python benchmark/visualize_checkpoint_save_time.py \
 
 ```bash
 conda run -n checkpoint python benchmark/run_overlap_steps_benchmark.py \
-  --overlap-steps 7,8,9,10 \
-  --images-folder overlap_steps_7_10
+  --overlap-steps 7,8,9,10,11,12,13,14 \
+  --images-folder overlap_steps_7-14
 ```
 
-This runs each overlap step in series (no parallel execution), and generates:
+This runs overlap steps in series and writes one combined line chart where
+x-axis is algorithms and each overlap-step value is a separate line.
 
-- `benchmark/images/overlap_steps_7_10/checkpoint_time_overlap_steps=7.png`
-- `benchmark/images/overlap_steps_7_10/checkpoint_time_overlap_steps=8.png`
-- `benchmark/images/overlap_steps_7_10/checkpoint_time_overlap_steps=9.png`
-- `benchmark/images/overlap_steps_7_10/checkpoint_time_overlap_steps=10.png`
+- `benchmark/images/overlap_steps_7-14/checkpoint_time_overlap_steps.png`
 
 ## Sanity Check
 
