@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import threading
 import time
+from queue import Queue
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable
@@ -44,6 +45,9 @@ class GoCkptRuntime:
     transferred_blocks: dict[str, ParameterSnapshot] = field(default_factory=dict)
     gradients_by_step: dict[int, dict[str, torch.Tensor | None]] = field(default_factory=dict)
     result: GoCkptCheckpointResult | None = None
+    reconstruction_queue: Queue | None = None
+    reconstruction_thread: threading.Thread | None = None
+    reconstruction_error: BaseException | None = None
 
 
 class GoCkptCheckpointHook(BaselineCheckpointHook):
@@ -135,6 +139,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             partition_name_to_index=partition_name_to_index,
             result=result,
         )
+        self._start_reconstruction_worker(self._active_runtime)
 
     def load_checkpoint(
         self,
@@ -184,8 +189,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
 
         grad_start = time.perf_counter()
         gradients_for_step: dict[str, torch.Tensor | None] = {}
+        gradient_refs: dict[str, torch.Tensor] = {}
         for name, snapshot in runtime.transferred_blocks.items():
-            if snapshot.version_step != step:
+            if snapshot.version_step > step:
                 continue
 
             param = self._params_by_name[name]
@@ -194,7 +200,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
                 gradients_for_step[name] = None
                 continue
 
-            gradients_for_step[name] = grad.detach().cpu().clone()
+            gradient_refs[name] = grad.detach()
+
+        gradients_for_step.update(self._copy_gradients_to_cpu_blocking(gradient_refs))
 
         runtime.gradients_by_step[step] = gradients_for_step
         if runtime.result is not None:
@@ -209,25 +217,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         if not gradients_for_step:
             return
 
-        reconstruction_start = time.perf_counter()
-        waited_partitions: set[int] = set()
-        for name in gradients_for_step:
-            partition_index = runtime.partition_name_to_index[name]
-            if partition_index in waited_partitions:
-                continue
-            self._wait_partition_transfer(runtime, partition_index)
-            waited_partitions.add(partition_index)
-
-        for name, grad in gradients_for_step.items():
-            snapshot = runtime.transferred_blocks[name]
-            if grad is not None:
-                self._apply_cpu_adamw_update(snapshot, grad)
-            snapshot.version_step = step + 1
-
-        if runtime.result is not None:
-            runtime.result.reconstruction_duration_sec += (
-                time.perf_counter() - reconstruction_start
-            )
+        self._enqueue_reconstruction(runtime, step, gradients_for_step)
 
     def update_end(self, step: int) -> None:
         runtime = self._active_runtime
@@ -236,8 +226,8 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         if step != runtime.request.target_step - 1:
             return
 
-        for partition_index in range(len(runtime.partitions)):
-            self._wait_partition_transfer(runtime, partition_index)
+        self._wait_for_reconstruction(runtime)
+        self._stop_reconstruction_worker(runtime)
 
         expected_version = runtime.request.target_step
         for snapshot in runtime.transferred_blocks.values():
@@ -267,6 +257,10 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         worker.start()
 
     def wait_for_pending_persistence(self) -> None:
+        if self._active_runtime is not None:
+            self._stop_reconstruction_worker(self._active_runtime)
+            self._active_runtime = None
+
         thread: threading.Thread | None
         with self._pending_lock:
             thread = self._pending_thread
@@ -308,6 +302,96 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
 
         if error is not None:
             raise RuntimeError("Background checkpoint persistence failed.") from error
+
+    def _start_reconstruction_worker(self, runtime: GoCkptRuntime) -> None:
+        queue: Queue = Queue()
+        worker = threading.Thread(
+            target=self._reconstruction_worker,
+            args=(runtime,),
+            daemon=True,
+            name=f"gockpt-reconstruct-{runtime.request.target_step}",
+        )
+        runtime.reconstruction_queue = queue
+        runtime.reconstruction_thread = worker
+        worker.start()
+
+    def _enqueue_reconstruction(
+        self,
+        runtime: GoCkptRuntime,
+        step: int,
+        gradients_for_step: dict[str, torch.Tensor | None],
+    ) -> None:
+        if runtime.reconstruction_error is not None:
+            raise RuntimeError("Background checkpoint reconstruction failed.") from runtime.reconstruction_error
+
+        if runtime.reconstruction_queue is None:
+            self._apply_reconstruction_task(runtime, step, gradients_for_step)
+            return
+
+        runtime.reconstruction_queue.put((step, gradients_for_step))
+
+    def _wait_for_reconstruction(self, runtime: GoCkptRuntime) -> None:
+        if runtime.reconstruction_queue is not None:
+            runtime.reconstruction_queue.join()
+
+        if runtime.reconstruction_error is not None:
+            raise RuntimeError("Background checkpoint reconstruction failed.") from runtime.reconstruction_error
+
+    def _stop_reconstruction_worker(self, runtime: GoCkptRuntime) -> None:
+        queue = runtime.reconstruction_queue
+        worker = runtime.reconstruction_thread
+        if queue is None or worker is None:
+            return
+
+        queue.put(None)
+        queue.join()
+        worker.join()
+        runtime.reconstruction_queue = None
+        runtime.reconstruction_thread = None
+
+    def _reconstruction_worker(self, runtime: GoCkptRuntime) -> None:
+        queue = runtime.reconstruction_queue
+        if queue is None:
+            return
+
+        while True:
+            task = queue.get()
+            try:
+                if task is None:
+                    return
+
+                step, gradients_for_step = task
+                self._apply_reconstruction_task(runtime, step, gradients_for_step)
+            except BaseException as exc:
+                runtime.reconstruction_error = exc
+            finally:
+                queue.task_done()
+
+    def _apply_reconstruction_task(
+        self,
+        runtime: GoCkptRuntime,
+        step: int,
+        gradients_for_step: dict[str, torch.Tensor | None],
+    ) -> None:
+        reconstruction_start = time.perf_counter()
+        waited_partitions: set[int] = set()
+        for name in gradients_for_step:
+            partition_index = runtime.partition_name_to_index[name]
+            if partition_index in waited_partitions:
+                continue
+            self._wait_partition_transfer(runtime, partition_index)
+            waited_partitions.add(partition_index)
+
+        for name, grad in gradients_for_step.items():
+            snapshot = runtime.transferred_blocks[name]
+            if grad is not None:
+                self._apply_cpu_adamw_update(snapshot, grad)
+            snapshot.version_step = step + 1
+
+        if runtime.result is not None:
+            runtime.result.reconstruction_duration_sec += (
+                time.perf_counter() - reconstruction_start
+            )
 
     def _build_optimizer_metadata(self) -> None:
         if self.optimizer is None:
@@ -446,6 +530,32 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         cpu_tensor = torch.empty_like(tensor, device="cpu", pin_memory=True)
         cpu_tensor.copy_(tensor, non_blocking=True)
         return cpu_tensor
+
+    def _copy_gradients_to_cpu_blocking(
+        self,
+        gradients: dict[str, torch.Tensor],
+    ) -> dict[str, torch.Tensor]:
+        if not gradients:
+            return {}
+
+        if self._transfer_stream is None:
+            return {name: grad.cpu().clone() for name, grad in gradients.items()}
+
+        copied: dict[str, torch.Tensor] = {}
+        stream = torch.cuda.current_stream()
+        for name, grad in gradients.items():
+            if grad.device.type != "cuda":
+                copied[name] = grad.cpu().clone()
+                continue
+
+            cpu_tensor = torch.empty_like(grad, device="cpu", pin_memory=True)
+            cpu_tensor.copy_(grad, non_blocking=True)
+            copied[name] = cpu_tensor
+
+        event = torch.cuda.Event()
+        event.record(stream)
+        event.synchronize()
+        return copied
 
     def _wait_partition_transfer(self, runtime: GoCkptRuntime, partition_index: int) -> None:
         event = runtime.partition_events.get(partition_index)

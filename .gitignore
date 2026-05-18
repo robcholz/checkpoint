@@ -3,3 +3,4 @@ checkpoints/
 __pycache__/
 benchmark/checkpoint_runs/
 *.pt
+benchmark/finetune_runs/
