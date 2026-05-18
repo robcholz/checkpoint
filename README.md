@@ -34,7 +34,7 @@ conda run -n checkpoint python benchmark/finetune_benchmark.py \
   --seq-len 512 \
   --max-steps 200 \
   --save-steps 20 \
-  --overlap-steps 9 \
+  --overlap-steps 10 \
   --gradient-checkpointing \
   --output-dir benchmark/finetune_runs
 ```
@@ -47,6 +47,21 @@ conda run -n checkpoint python benchmark/visualize_checkpoint_save_time.py \
     --output benchmark/images/foreground_checkpoint_time.png \
     --title "Foreground Checkpoint Stall Time vs Algorithms"
 ```
+
+## Sweep Overlap Steps (Serial)
+
+```bash
+conda run -n checkpoint python benchmark/run_overlap_steps_benchmark.py \
+  --overlap-steps 7,8,9,10 \
+  --images-folder overlap_steps_7_10
+```
+
+This runs each overlap step in series (no parallel execution), and generates:
+
+- `benchmark/images/overlap_steps_7_10/checkpoint_time_overlap_steps=7.png`
+- `benchmark/images/overlap_steps_7_10/checkpoint_time_overlap_steps=8.png`
+- `benchmark/images/overlap_steps_7_10/checkpoint_time_overlap_steps=9.png`
+- `benchmark/images/overlap_steps_7_10/checkpoint_time_overlap_steps=10.png`
 
 ## Sanity Check
 

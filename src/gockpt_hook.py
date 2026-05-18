@@ -3,6 +3,7 @@ from __future__ import annotations
 import threading
 import time
 import os
+import warnings
 from concurrent.futures import Future, ThreadPoolExecutor, wait
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -37,6 +38,18 @@ class GoCkptCheckpointResult:
 
 
 @dataclass
+class GoCkptAbandonedWindow:
+    start_step: int
+    target_step: int
+    tag: str
+    reason: str
+    transferred_partitions: int
+    total_partitions: int
+    reconstructed_blocks: int
+    total_blocks: int
+
+
+@dataclass
 class GoCkptRuntime:
     request: CheckpointRequest
     partitions: list[list[str]]
@@ -45,6 +58,7 @@ class GoCkptRuntime:
     partition_events: dict[int, torch.cuda.Event | None] = field(default_factory=dict)
     transferred_blocks: dict[str, ParameterSnapshot] = field(default_factory=dict)
     gradients_by_step: dict[int, dict[str, torch.Tensor | None]] = field(default_factory=dict)
+    optimizer_param_groups_by_step: dict[int, dict[str, dict[str, Any]]] = field(default_factory=dict)
     result: GoCkptCheckpointResult | None = None
     reconstruction_executor: ThreadPoolExecutor | None = None
     reconstruction_futures: list[Future] = field(default_factory=list)
@@ -90,6 +104,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
 
         self.last_result: GoCkptCheckpointResult | None = None
         self.history: list[GoCkptCheckpointResult] = []
+        self.abandoned_windows: list[GoCkptAbandonedWindow] = []
 
         self._active_runtime: GoCkptRuntime | None = None
         self._pending_thread: threading.Thread | None = None
@@ -107,7 +122,6 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
 
         self._param_to_group: dict[int, dict[str, Any]] = {}
         self._param_to_state_id: dict[int, int] = {}
-        self._optimizer_param_groups_template: list[dict[str, Any]] = []
         self._build_optimizer_metadata()
         self._reconstruction_workers = max(
             1,
@@ -227,7 +241,14 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         if not gradients_for_step:
             return
 
-        self._enqueue_reconstruction(runtime, step, gradients_for_step)
+        optimizer_param_groups = self._snapshot_optimizer_param_groups_by_name()
+        runtime.optimizer_param_groups_by_step[step] = optimizer_param_groups
+        self._enqueue_reconstruction(
+            runtime,
+            step,
+            gradients_for_step,
+            optimizer_param_groups,
+        )
 
     def update_end(self, step: int) -> None:
         runtime = self._active_runtime
@@ -268,7 +289,12 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
 
     def wait_for_pending_persistence(self) -> None:
         if self._active_runtime is not None:
-            self._stop_reconstruction_worker(self._active_runtime)
+            runtime = self._active_runtime
+            self._record_abandoned_window(
+                runtime,
+                "training ended before checkpoint target step was reached",
+            )
+            self._stop_reconstruction_worker(runtime)
             self._active_runtime = None
 
         thread: threading.Thread | None
@@ -329,6 +355,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         runtime: GoCkptRuntime,
         step: int,
         gradients_for_step: dict[str, torch.Tensor | None],
+        optimizer_param_groups: dict[str, dict[str, Any]],
     ) -> None:
         if runtime.reconstruction_error is not None:
             raise RuntimeError("Background checkpoint reconstruction failed.") from runtime.reconstruction_error
@@ -336,7 +363,12 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         executor = runtime.reconstruction_executor
         slots = runtime.reconstruction_slots
         if executor is None or slots is None:
-            self._apply_reconstruction_task(runtime, step, gradients_for_step)
+            self._apply_reconstruction_task(
+                runtime,
+                step,
+                gradients_for_step,
+                optimizer_param_groups,
+            )
             return
 
         gradients_by_partition: dict[int, dict[str, torch.Tensor | None]] = {}
@@ -356,6 +388,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
                 step,
                 partition_index,
                 partition_gradients,
+                optimizer_param_groups,
                 previous_future,
             )
             runtime.partition_futures[partition_index] = future
@@ -395,6 +428,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         runtime: GoCkptRuntime,
         step: int,
         gradients_for_step: dict[str, torch.Tensor | None],
+        optimizer_param_groups: dict[str, dict[str, Any]],
     ) -> None:
         reconstruction_start = time.perf_counter()
         waited_partitions: set[int] = set()
@@ -408,7 +442,11 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         for name, grad in gradients_for_step.items():
             snapshot = runtime.transferred_blocks[name]
             if grad is not None:
-                self._apply_cpu_adamw_update(snapshot, grad)
+                self._apply_cpu_adamw_update(
+                    snapshot,
+                    grad,
+                    optimizer_param_groups[name],
+                )
             snapshot.version_step = step + 1
 
         if runtime.result is not None:
@@ -422,6 +460,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         step: int,
         partition_index: int,
         gradients_for_step: dict[str, torch.Tensor | None],
+        optimizer_param_groups: dict[str, dict[str, Any]],
         previous_future: Future | None,
     ) -> None:
         slots = runtime.reconstruction_slots
@@ -438,7 +477,11 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             for name, grad in gradients_for_step.items():
                 snapshot = runtime.transferred_blocks[name]
                 if grad is not None:
-                    self._apply_cpu_adamw_update(snapshot, grad)
+                    self._apply_cpu_adamw_update(
+                        snapshot,
+                        grad,
+                        optimizer_param_groups[name],
+                    )
                 snapshot.version_step = step + 1
 
             # Parallel reconstruction duration is reported as wall time from the
@@ -466,7 +509,6 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
                 state_id += 1
 
             group_template["params"] = group_param_ids
-            self._optimizer_param_groups_template.append(group_template)
 
     def _build_partitions(self) -> list[list[str]]:
         param_names = [name for name, _ in self._named_parameters]
@@ -577,8 +619,74 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             exp_avg=self._copy_tensor_to_cpu(exp_avg.detach()),
             exp_avg_sq=self._copy_tensor_to_cpu(exp_avg_sq.detach()),
             step=step_snapshot,
-            param_group=self._param_to_group[id(param)].copy(),
+            param_group=self._snapshot_optimizer_group_for_param(param),
         )
+
+    def _snapshot_optimizer_param_groups_by_name(self) -> dict[str, dict[str, Any]]:
+        if self.optimizer is None:
+            raise RuntimeError("GoCkpt requires an optimizer to snapshot param groups.")
+
+        param_groups: dict[str, dict[str, Any]] = {}
+        for group in self.optimizer.param_groups:
+            group_snapshot = {
+                key: self._clone_optimizer_value(value)
+                for key, value in group.items()
+                if key != "params"
+            }
+            for param in group["params"]:
+                name = self._param_name_by_obj.get(id(param))
+                if name is not None:
+                    param_groups[name] = group_snapshot.copy()
+        return param_groups
+
+    def _snapshot_optimizer_group_for_param(
+        self,
+        param: torch.nn.Parameter,
+    ) -> dict[str, Any]:
+        if self.optimizer is None:
+            raise RuntimeError("GoCkpt requires an optimizer to snapshot param groups.")
+
+        for group in self.optimizer.param_groups:
+            if any(candidate is param for candidate in group["params"]):
+                return {
+                    key: self._clone_optimizer_value(value)
+                    for key, value in group.items()
+                    if key != "params"
+                }
+        return self._param_to_group[id(param)].copy()
+
+    def _snapshot_optimizer_param_groups_for_checkpoint(self) -> list[dict[str, Any]]:
+        if self.optimizer is None:
+            return []
+
+        param_groups: list[dict[str, Any]] = []
+        for group in self.optimizer.param_groups:
+            group_snapshot = {
+                key: self._clone_optimizer_value(value)
+                for key, value in group.items()
+                if key != "params"
+            }
+            group_snapshot["params"] = [
+                self._param_to_state_id[id(param)]
+                for param in group["params"]
+                if id(param) in self._param_to_state_id
+            ]
+            param_groups.append(group_snapshot)
+        return param_groups
+
+    def _clone_optimizer_value(self, value: Any) -> Any:
+        if isinstance(value, torch.Tensor):
+            return value.detach().cpu().clone()
+        if isinstance(value, list):
+            return [self._clone_optimizer_value(item) for item in value]
+        if isinstance(value, tuple):
+            return tuple(self._clone_optimizer_value(item) for item in value)
+        if isinstance(value, dict):
+            return {
+                key: self._clone_optimizer_value(item)
+                for key, item in value.items()
+            }
+        return value
 
     def _copy_tensor_to_cpu(self, tensor: torch.Tensor) -> torch.Tensor:
         if tensor.device.type != "cuda" or self._transfer_stream is None:
@@ -626,12 +734,13 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         self,
         snapshot: ParameterSnapshot,
         grad: torch.Tensor,
+        param_group: dict[str, Any],
     ) -> None:
         param = snapshot.param
         exp_avg = snapshot.optimizer_state.exp_avg
         exp_avg_sq = snapshot.optimizer_state.exp_avg_sq
         step_state = snapshot.optimizer_state.step
-        group = snapshot.optimizer_state.param_group
+        group = param_group
 
         lr = float(group.get("lr", 1e-3))
         beta1, beta2 = group.get("betas", (0.9, 0.999))
@@ -695,7 +804,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             "model": model_state,
             "optimizer": {
                 "state": optimizer_state,
-                "param_groups": [group.copy() for group in self._optimizer_param_groups_template],
+                "param_groups": self._snapshot_optimizer_param_groups_for_checkpoint(),
             },
         }
         if self.config.save_rng_state:
@@ -707,6 +816,31 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             "num_partitions": len(runtime.partitions),
         }
         return checkpoint
+
+    def _record_abandoned_window(self, runtime: GoCkptRuntime, reason: str) -> None:
+        result = runtime.result
+        tag = result.tag if result is not None else runtime.request.tag
+        window = GoCkptAbandonedWindow(
+            start_step=runtime.request.start_step,
+            target_step=runtime.request.target_step,
+            tag=tag,
+            reason=reason,
+            transferred_partitions=len(runtime.transferred_partitions),
+            total_partitions=len(runtime.partitions),
+            reconstructed_blocks=sum(
+                1
+                for snapshot in runtime.transferred_blocks.values()
+                if snapshot.version_step == runtime.request.target_step
+            ),
+            total_blocks=len(self._named_parameters),
+        )
+        self.abandoned_windows.append(window)
+        warnings.warn(
+            "Discarding incomplete GoCkpt window "
+            f"{tag}: {reason}; no checkpoint will be written.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
 
     def _persist_checkpoint_worker(
         self,

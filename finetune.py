@@ -260,6 +260,13 @@ def save_training_metadata(
         metadata["phase_summary"] = profiler.summary()
         metadata["phase_records"] = profiler.as_dicts()
 
+    abandoned_windows = getattr(hook, "abandoned_windows", None)
+    if abandoned_windows:
+        metadata["abandoned_checkpoint_windows"] = [
+            asdict(window) if hasattr(window, "__dataclass_fields__") else vars(window)
+            for window in abandoned_windows
+        ]
+
     with (output_dir / "run_summary.json").open("w", encoding="utf-8") as handle:
         json.dump(metadata, handle, indent=2)
 
@@ -411,6 +418,7 @@ def main() -> None:
         hook.backward_begin(step)
         if scaler.is_enabled():
             scaler.scale(loss).backward()
+            scaler.unscale_(optimizer)
         else:
             loss.backward()
         hook.backward_end(step)
@@ -422,8 +430,8 @@ def main() -> None:
         else:
             optimizer.step()
         optimizer.zero_grad(set_to_none=True)
-        hook.update_end(step)
         scheduler.step()
+        hook.update_end(step)
 
         step_loss = float(loss.detach().item())
         current_lr = float(scheduler.get_last_lr()[0])

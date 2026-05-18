@@ -102,12 +102,20 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
         self._pending_gradient_transfers[step] = transfer
 
     def update_begin(self, step: int) -> None:
-        return
+        runtime = self._active_runtime
+        if runtime is None or not self._is_step_in_request(runtime, step):
+            return
+
+        runtime.optimizer_param_groups_by_step[
+            step
+        ] = self._snapshot_optimizer_param_groups_by_name()
 
     def update_end(self, step: int) -> None:
         runtime = self._active_runtime
         if runtime is None:
             return
+
+        self._finish_pending_gradient_transfer_if_ready(runtime, step)
 
         if step != runtime.request.target_step - 1:
             return
@@ -228,9 +236,32 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
         if pending.event is not None:
             pending.event.synchronize()
 
-        self._enqueue_reconstruction(runtime, step, pending.gradients)
+        optimizer_param_groups = runtime.optimizer_param_groups_by_step.get(step)
+        if optimizer_param_groups is None:
+            optimizer_param_groups = self._snapshot_optimizer_param_groups_by_name()
+            runtime.optimizer_param_groups_by_step[step] = optimizer_param_groups
+
+        self._enqueue_reconstruction(
+            runtime,
+            step,
+            pending.gradients,
+            optimizer_param_groups,
+        )
 
         if runtime.result is not None:
             runtime.result.gradient_duration_sec += (
                 time.perf_counter() - pending.submitted_at
             )
+
+    def _finish_pending_gradient_transfer_if_ready(
+        self,
+        runtime: GoCkptRuntime,
+        step: int,
+    ) -> None:
+        pending = self._pending_gradient_transfers.get(step)
+        if pending is None:
+            return
+        if pending.event is not None and not pending.event.query():
+            return
+
+        self._finish_pending_gradient_transfer(runtime, step)
