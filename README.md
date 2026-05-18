@@ -34,7 +34,7 @@ conda run -n checkpoint python benchmark/finetune_benchmark.py \
   --seq-len 512 \
   --max-steps 200 \
   --save-steps 20 \
-  --overlap-steps 7 \
+  --overlap-steps 9 \
   --gradient-checkpointing \
   --output-dir benchmark/finetune_runs
 ```
@@ -45,7 +45,7 @@ conda run -n checkpoint python benchmark/finetune_benchmark.py \
 conda run -n checkpoint python benchmark/visualize_checkpoint_save_time.py \
     --report benchmark/finetune_runs/report.json \
     --output benchmark/images/foreground_checkpoint_time.png \
-    --title "Foreground Checkpoint Stall Time vs Algorithms" \
+    --title "Foreground Checkpoint Stall Time vs Algorithms"
 ```
 
 ## Sanity Check
