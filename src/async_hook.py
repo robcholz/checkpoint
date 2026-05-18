@@ -29,8 +29,9 @@ class AsyncCheckpointHook(BaselineCheckpointHook):
        transferred from GPU-backed tensors into CPU-owned tensors.
     2. Once the CPU checkpoint payload is complete, training resumes.
     3. torch.save runs on a background thread against that CPU payload.
-    4. Before the next step's forward phase, the hook waits for the previous
-       background persistence to finish so checkpoint I/O cannot lag forever.
+    4. Before starting another checkpoint, the hook waits for previous
+       background persistence to finish. This prevents concurrent checkpoint
+       writes without blocking unrelated forward/backward work.
     """
 
     def __init__(
@@ -105,9 +106,7 @@ class AsyncCheckpointHook(BaselineCheckpointHook):
         )
 
     def forward_begin(self, step: int) -> None:
-        pending_started_step = self._pending_started_step
-        if pending_started_step is not None and step > pending_started_step:
-            self.wait_for_pending_persistence()
+        return
 
     def forward_end(self, step: int) -> None:
         return
