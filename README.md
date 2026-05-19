@@ -80,10 +80,19 @@ conda run -n checkpoint python benchmark/run_pcie_benchmark.py \
   --images-folder transfer_chunk_0-32
 ```
 
-This runs overlap steps in series and writes one combined line chart where
-x-axis is algorithms and each overlap-step value is a separate line.
+## Visualize Ringbuffer Pressure
 
-- `benchmark/images/overlap_steps_7-14/checkpoint_time_overlap_steps.png`
+```bash
+conda run -n checkpoint python benchmark/run_ringbuffer_pressure.py \
+  --hook-types gockpt gockpt_o \
+  --seq-len 512 \
+  --max-steps 200 \
+  --save-steps 20 \
+  --overlap-steps 7 \
+  --gockpt-inflight-packets 64,128,256 \
+  --gradient-checkpointing \
+  --images-folder ringbuffer_pressure_64-256
+```
 
 ## Sanity Check
 

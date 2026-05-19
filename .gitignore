@@ -9,3 +9,5 @@ benchmark/finetune_runs_*_smoke/
 benchmark/pcie_runs/
 rust/**/target/
 benchmark/images/transfer_chunk_smoke/
+benchmark/ringbuffer_pressure_runs/
+benchmark/images/ringbuffer_pressure_smoke/

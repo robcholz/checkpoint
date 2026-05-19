@@ -289,6 +289,10 @@ def save_training_metadata(
         metadata["phase_summary"] = profiler.summary()
         metadata["phase_records"] = profiler.as_dicts()
 
+    ringbuffer_pressure_samples = getattr(hook, "ringbuffer_pressure_samples", None)
+    if ringbuffer_pressure_samples is not None:
+        metadata["ringbuffer_pressure_samples"] = list(ringbuffer_pressure_samples)
+
     abandoned_windows = getattr(hook, "abandoned_windows", None)
     if abandoned_windows:
         metadata["abandoned_checkpoint_windows"] = [
@@ -433,6 +437,9 @@ def main() -> None:
     batch_iterator = cycle_dataloader(train_dataloader)
     loss_history: List[dict] = []
     train_start = time.perf_counter()
+    set_training_start_time = getattr(hook, "set_training_start_time", None)
+    if set_training_start_time is not None:
+        set_training_start_time(train_start)
     optimizer.zero_grad(set_to_none=True)
 
     for step in range(1, args.max_steps + 1):

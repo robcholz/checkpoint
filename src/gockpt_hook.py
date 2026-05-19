@@ -148,6 +148,11 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             torch.cuda.Stream() if torch.cuda.is_available() else None
         )
         self._ds_cpu_adam_local = threading.local()
+        self._ringbuffer_pressure_lock = threading.Lock()
+        self._ringbuffer_pressure_t0 = time.perf_counter()
+        self._ringbuffer_total_capacity = 0
+        self._ringbuffer_inflight = 0
+        self.ringbuffer_pressure_samples: list[dict[str, float | int | str]] = []
 
         self._named_parameters = list(self.model.named_parameters())
         self._params_by_name = {name: param for name, param in self._named_parameters}
@@ -181,6 +186,49 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             raise ValueError("transfer_chunk_mb must be >= 0.")
         self._transfer_chunk_mb = transfer_chunk_mb
         self._transfer_chunk_bytes = int(transfer_chunk_mb * 1024 * 1024)
+
+    def set_training_start_time(self, start_time: float) -> None:
+        with self._ringbuffer_pressure_lock:
+            self._ringbuffer_pressure_t0 = start_time
+            self.ringbuffer_pressure_samples.clear()
+            self._sample_ringbuffer_pressure_locked("training_start")
+
+    def _sample_ringbuffer_pressure_locked(self, event: str) -> None:
+        capacity = self._ringbuffer_total_capacity
+        inflight = self._ringbuffer_inflight
+        pressure = (inflight / capacity) if capacity > 0 else 0.0
+        self.ringbuffer_pressure_samples.append(
+            {
+                "time_sec": time.perf_counter() - self._ringbuffer_pressure_t0,
+                "event": event,
+                "inflight": inflight,
+                "capacity": capacity,
+                "pressure": pressure,
+                "pressure_percent": pressure * 100.0,
+            }
+        )
+
+    def _add_ringbuffer_capacity(self, capacity: int) -> None:
+        with self._ringbuffer_pressure_lock:
+            self._ringbuffer_total_capacity += capacity
+            self._sample_ringbuffer_pressure_locked("queue_start")
+
+    def _remove_ringbuffer_capacity(self, capacity: int) -> None:
+        with self._ringbuffer_pressure_lock:
+            self._ringbuffer_total_capacity = max(0, self._ringbuffer_total_capacity - capacity)
+            if self._ringbuffer_inflight > self._ringbuffer_total_capacity:
+                self._ringbuffer_inflight = self._ringbuffer_total_capacity
+            self._sample_ringbuffer_pressure_locked("queue_stop")
+
+    def _increment_ringbuffer_inflight(self) -> None:
+        with self._ringbuffer_pressure_lock:
+            self._ringbuffer_inflight += 1
+            self._sample_ringbuffer_pressure_locked("enqueue")
+
+    def _decrement_ringbuffer_inflight(self) -> None:
+        with self._ringbuffer_pressure_lock:
+            self._ringbuffer_inflight = max(0, self._ringbuffer_inflight - 1)
+            self._sample_ringbuffer_pressure_locked("complete")
 
     def save_checkpoint(self, step: int) -> None:
         self._join_previous_persist_if_needed()
@@ -387,9 +435,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         )
         # Bounded in-flight tasks form a simple ring buffer. If CPU replay falls
         # too far behind, enqueue blocks instead of growing memory unboundedly.
-        runtime.reconstruction_slots = threading.Semaphore(
-            max(1, self._reconstruction_queue_depth)
-        )
+        capacity = max(1, self._reconstruction_queue_depth)
+        runtime.reconstruction_slots = threading.Semaphore(capacity)
+        self._add_ringbuffer_capacity(capacity)
 
     def _enqueue_reconstruction(
         self,
@@ -425,6 +473,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         for partition_index, partition_gradients in gradients_by_partition.items():
             acquire_start = time.perf_counter()
             slots.acquire()
+            self._increment_ringbuffer_inflight()
             if runtime.result is not None:
                 runtime.result.reconstruction_backpressure_sec += (
                     time.perf_counter() - acquire_start
@@ -470,6 +519,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
 
         self._wait_for_reconstruction(runtime)
         executor.shutdown(wait=True)
+        self._remove_ringbuffer_capacity(max(1, self._reconstruction_queue_depth))
         runtime.reconstruction_executor = None
         runtime.reconstruction_slots = None
 
@@ -537,6 +587,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             raise
         finally:
             if slots is not None:
+                self._decrement_ringbuffer_inflight()
                 slots.release()
 
     def _build_optimizer_metadata(self) -> None:

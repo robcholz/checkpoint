@@ -29,6 +29,7 @@ class FinetuneBenchmarkRun:
     checkpoint_files: list[str]
     phase_summary: dict[str, Any]
     checkpoint_results: list[dict[str, Any]]
+    ringbuffer_pressure_samples: list[dict[str, Any]]
     power_samples_file: str | None
     power_sample_count: int
     power_avg_w: float | None
@@ -424,6 +425,7 @@ def run_one(args: argparse.Namespace, hook_type: str) -> FinetuneBenchmarkRun:
         checkpoint_files=checkpoint_files,
         phase_summary=summary.get("phase_summary", {}),
         checkpoint_results=summary.get("checkpoint_results", []),
+        ringbuffer_pressure_samples=summary.get("ringbuffer_pressure_samples", []),
         power_samples_file=str(power_samples_path),
         power_sample_count=int(power_summary["sample_count"]),
         power_avg_w=(
