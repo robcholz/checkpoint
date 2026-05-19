@@ -167,11 +167,21 @@ def collect_metrics(report: dict[str, Any]) -> dict[str, Any]:
             "backward_end_sec": phase_total(run, "hook.backward_end"),
             "update_begin_sec": phase_total(run, "hook.update_begin"),
             "update_end_sec": phase_total(run, "hook.update_end"),
-            "transfer_duration_sec": checkpoint_result_sum(run, "transfer_duration_sec"),
-            "gradient_duration_sec": checkpoint_result_sum(run, "gradient_duration_sec"),
-            "reconstruction_duration_sec": checkpoint_result_sum(run, "reconstruction_duration_sec"),
-            "reconstruction_backpressure_sec": checkpoint_result_sum(run, "reconstruction_backpressure_sec"),
-            "persistence_duration_sec": checkpoint_result_sum(run, "persistence_duration_sec"),
+            "transfer_duration_sec": checkpoint_result_sum(
+                run, "transfer_duration_sec"
+            ),
+            "gradient_duration_sec": checkpoint_result_sum(
+                run, "gradient_duration_sec"
+            ),
+            "reconstruction_duration_sec": checkpoint_result_sum(
+                run, "reconstruction_duration_sec"
+            ),
+            "reconstruction_backpressure_sec": checkpoint_result_sum(
+                run, "reconstruction_backpressure_sec"
+            ),
+            "persistence_duration_sec": checkpoint_result_sum(
+                run, "persistence_duration_sec"
+            ),
         }
     return metrics
 
@@ -299,7 +309,9 @@ def plot_metric(
     plt.close(fig)
 
 
-def write_summary(summaries: list[ChunkRunSummary], args: argparse.Namespace, images_dir: Path) -> Path:
+def write_summary(
+    summaries: list[ChunkRunSummary], args: argparse.Namespace, images_dir: Path
+) -> Path:
     args_payload = vars(args).copy()
     args_payload["transfer_chunk_mb"] = args.transfer_chunk_mb
     args_payload["images_folder"] = str(args.images_folder)
@@ -315,14 +327,20 @@ def write_summary(summaries: list[ChunkRunSummary], args: argparse.Namespace, im
     args.output_dir.mkdir(parents=True, exist_ok=True)
     with summary_path.open("w", encoding="utf-8") as handle:
         json.dump(payload, handle, indent=2)
-    with (images_dir / "pcie_benchmark_summary.json").open("w", encoding="utf-8") as handle:
+    with (images_dir / "pcie_benchmark_summary.json").open(
+        "w", encoding="utf-8"
+    ) as handle:
         json.dump(payload, handle, indent=2)
     return summary_path
 
 
 def main() -> None:
     args = parse_args()
-    args.output_dir = (REPO_ROOT / args.output_dir).resolve() if not args.output_dir.is_absolute() else args.output_dir
+    args.output_dir = (
+        (REPO_ROOT / args.output_dir).resolve()
+        if not args.output_dir.is_absolute()
+        else args.output_dir
+    )
     images_dir = resolve_images_dir(args.images_folder)
     images_dir.mkdir(parents=True, exist_ok=True)
 
@@ -332,7 +350,9 @@ def main() -> None:
         summary = run_chunk(args, chunk)
         summaries.append(summary)
         if summary.returncode != 0:
-            print(f"chunk {chunk:g} MiB failed; see {summary.output_dir}/pcie_benchmark_stdout.log")
+            print(
+                f"chunk {chunk:g} MiB failed; see {summary.output_dir}/pcie_benchmark_stdout.log"
+            )
             break
 
     summary_path = write_summary(summaries, args, images_dir)

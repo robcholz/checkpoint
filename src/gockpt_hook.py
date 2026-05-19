@@ -215,7 +215,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
 
     def _remove_ringbuffer_capacity(self, capacity: int) -> None:
         with self._ringbuffer_pressure_lock:
-            self._ringbuffer_total_capacity = max(0, self._ringbuffer_total_capacity - capacity)
+            self._ringbuffer_total_capacity = max(
+                0, self._ringbuffer_total_capacity - capacity
+            )
             if self._ringbuffer_inflight > self._ringbuffer_total_capacity:
                 self._ringbuffer_inflight = self._ringbuffer_total_capacity
             self._sample_ringbuffer_pressure_locked("queue_stop")

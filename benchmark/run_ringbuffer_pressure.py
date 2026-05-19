@@ -54,7 +54,9 @@ def parse_packet_list(value: str) -> list[int]:
             raise argparse.ArgumentTypeError("in-flight packet sizes must be positive")
         packets.append(packet_count)
     if not packets:
-        raise argparse.ArgumentTypeError("at least one in-flight packet size is required")
+        raise argparse.ArgumentTypeError(
+            "at least one in-flight packet size is required"
+        )
     return packets
 
 
@@ -116,7 +118,9 @@ def resolve_images_dir(path: Path) -> Path:
     return REPO_ROOT / "benchmark" / "images" / path
 
 
-def build_command(args: argparse.Namespace, packet_count: int, run_dir: Path) -> list[str]:
+def build_command(
+    args: argparse.Namespace, packet_count: int, run_dir: Path
+) -> list[str]:
     command = [
         str(args.python),
         str(REPO_ROOT / "benchmark" / "finetune_benchmark.py"),
@@ -205,7 +209,9 @@ def plot_pressure(summaries: list[PressureRunSummary], images_dir: Path) -> Path
 
     color_by_packets = {
         packet_count: PACKET_COLORS[index % len(PACKET_COLORS)]
-        for index, packet_count in enumerate(summary.inflight_packets for summary in summaries)
+        for index, packet_count in enumerate(
+            summary.inflight_packets for summary in summaries
+        )
     }
 
     for summary in summaries:
@@ -228,7 +234,9 @@ def plot_pressure(summaries: list[PressureRunSummary], images_dir: Path) -> Path
                     continue
                 time_sec = sample.get("time_sec")
                 pressure_percent = sample.get("pressure_percent")
-                if isinstance(time_sec, (int, float)) and isinstance(pressure_percent, (int, float)):
+                if isinstance(time_sec, (int, float)) and isinstance(
+                    pressure_percent, (int, float)
+                ):
                     xs.append(float(time_sec))
                     ys.append(float(pressure_percent))
             if not xs:
@@ -275,7 +283,9 @@ def plot_pressure(summaries: list[PressureRunSummary], images_dir: Path) -> Path
     return output_path
 
 
-def write_summary(summaries: list[PressureRunSummary], args: argparse.Namespace) -> Path:
+def write_summary(
+    summaries: list[PressureRunSummary], args: argparse.Namespace
+) -> Path:
     args_payload = vars(args).copy()
     args_payload["gockpt_inflight_packets"] = args.gockpt_inflight_packets
     args_payload["images_folder"] = str(args.images_folder)
