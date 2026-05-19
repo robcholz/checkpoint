@@ -5,8 +5,9 @@ The input must be a JSON report produced by benchmark/finetune_benchmark.py.
 
 The plotted value is foreground time spent inside checkpoint hook phases. This
 is the paper-style metric for visible checkpoint overhead; it intentionally
-does not include background persistence/reconstruction work unless the training
-thread waits for it in a hook phase.
+does not include final post-training drain time. For GoCkpt and GoCkpt-O, the
+plot also shows a shaded same-color bar that includes final wrapping-up so the
+catch-up cost remains visible without mixing it into the foreground metric.
 """
 
 from __future__ import annotations
@@ -25,6 +26,15 @@ HOOK_LABELS = {
     "gockpt": "GoCkpt",
     "gockpt_o": "GoCkpt-O",
 }
+HOOK_COLORS = {
+    "baseline": "#263238",
+    "async": "#607d8b",
+    "async_o": "#00897b",
+    "gockpt": "#ef6c00",
+    "gockpt_o": "#c62828",
+}
+WRAPUP_HOOKS = {"gockpt", "gockpt_o"}
+FINAL_WRAPUP_PHASE = "hook.wait_for_pending_persistence"
 
 
 def parse_args() -> argparse.Namespace:
@@ -86,13 +96,11 @@ def foreground_phase_names(run: dict[str, Any]) -> list[str]:
         return [
             "hook.save_checkpoint",
             "hook.forward_begin",
-            "hook.wait_for_pending_persistence",
         ]
     if hook_type == "async_o":
         return [
             "hook.save_checkpoint",
             "hook.update_begin",
-            "hook.wait_for_pending_persistence",
         ]
     if hook_type in {"gockpt", "gockpt_o"}:
         return [
@@ -102,13 +110,12 @@ def foreground_phase_names(run: dict[str, Any]) -> list[str]:
             "hook.backward_end",
             "hook.update_begin",
             "hook.update_end",
-            "hook.wait_for_pending_persistence",
         ]
     return ["hook.save_checkpoint"]
 
 
-def collect_foreground_times(report: dict[str, Any]) -> list[tuple[str, float]]:
-    by_hook: dict[str, float] = {}
+def collect_foreground_times(report: dict[str, Any]) -> list[tuple[str, float, float | None]]:
+    by_hook: dict[str, tuple[float, float | None]] = {}
     for run in get_runs(report):
         hook_type = run.get("hook_type")
         if not isinstance(hook_type, str):
@@ -117,16 +124,21 @@ def collect_foreground_times(report: dict[str, Any]) -> list[tuple[str, float]]:
         total = 0.0
         for phase in foreground_phase_names(run):
             total += phase_total(run, phase) or 0.0
-        by_hook[hook_type] = total
+
+        total_with_final: float | None = None
+        if hook_type in WRAPUP_HOOKS:
+            total_with_final = total + (phase_total(run, FINAL_WRAPUP_PHASE) or 0.0)
+
+        by_hook[hook_type] = (total, total_with_final)
 
     ordered = [(hook, by_hook[hook]) for hook in HOOK_ORDER if hook in by_hook]
     if not ordered:
         raise ValueError("no foreground checkpoint timing data found in report")
-    return ordered
+    return [(hook, values[0], values[1]) for hook, values in ordered]
 
 
 def plot_foreground_times(
-    foreground_times: list[tuple[str, float]],
+    foreground_times: list[tuple[str, float, float | None]],
     output_path: Path,
     title: str,
     report_path: Path,
@@ -136,13 +148,40 @@ def plot_foreground_times(
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    labels = [HOOK_LABELS.get(hook, hook) for hook, _ in foreground_times]
-    values = [value for _, value in foreground_times]
-    colors = ["#263238", "#607d8b", "#00897b", "#ef6c00", "#c62828"][: len(values)]
+    labels = [HOOK_LABELS.get(hook, hook) for hook, _, _ in foreground_times]
+    values = [value for _, value, _ in foreground_times]
+    wrapup_values = [value for _, _, value in foreground_times]
+    colors = [HOOK_COLORS.get(hook, "#455a64") for hook, _, _ in foreground_times]
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig, ax = plt.subplots(figsize=(10, 5.8))
-    bars = ax.bar(labels, values, color=colors, width=0.64)
+    x_positions = list(range(len(labels)))
+
+    wrapup_bars = []
+    for index, (hook, _, total_with_final) in enumerate(foreground_times):
+        if total_with_final is None:
+            continue
+        wrapup_bars.append(
+            ax.bar(
+                index,
+                total_with_final,
+                color=HOOK_COLORS.get(hook, "#455a64"),
+                alpha=0.28,
+                width=0.74,
+                label="Including final wrapping-up" if not wrapup_bars else None,
+                zorder=1,
+            )[0]
+        )
+
+    bars = ax.bar(
+        x_positions,
+        values,
+        color=colors,
+        width=0.54,
+        label="Foreground stall only",
+        zorder=2,
+    )
+    ax.set_xticks(x_positions, labels)
 
     ax.set_title(title)
     ax.set_ylabel("Foreground checkpoint stall time (sec)")
@@ -151,7 +190,9 @@ def plot_foreground_times(
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
-    max_value = max(values)
+    max_value = max(
+        values + [value for value in wrapup_values if value is not None]
+    )
     ax.set_ylim(0, max_value * 1.18 if max_value > 0 else 1.0)
     for bar, value in zip(bars, values):
         ax.text(
@@ -162,6 +203,21 @@ def plot_foreground_times(
             va="bottom",
             fontsize=10,
         )
+
+    for bar in wrapup_bars:
+        value = bar.get_height()
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            value,
+            f"{value:.3f}s incl.",
+            ha="center",
+            va="bottom",
+            fontsize=9,
+            color="#444444",
+        )
+
+    if wrapup_bars:
+        ax.legend(frameon=False, loc="upper left")
 
     fig.text(
         0.01,
