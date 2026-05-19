@@ -49,6 +49,14 @@ conda run -n checkpoint python benchmark/visualize_checkpoint_save_time.py \
     --title "Foreground Checkpoint Stall Time vs Algorithms"
 ```
 
+## Visualize Power Metrics
+
+```bash
+conda run -n checkpoint python benchmark/visualize_checkpoint_power.py \
+    --report benchmark/finetune_runs/power.json \
+    --output benchmark/images/checkpoint_power.png
+```
+
 ## Sweep Overlap Steps (Serial)
 
 ```bash
