@@ -121,6 +121,15 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--gockpt-transfer-chunk-mb",
+        type=float,
+        default=0.0,
+        help=(
+            "GPU-to-CPU transfer chunk size for GoCkpt/GoCkpt-O in MiB. "
+            "Use 0 for whole-tensor copies."
+        ),
+    )
+    parser.add_argument(
         "--profile-phases",
         action="store_true",
         help="Wrap the checkpoint hook with phase-level timing instrumentation.",
@@ -143,6 +152,8 @@ def parse_args() -> argparse.Namespace:
         and args.gockpt_reconstruction_queue_depth <= 0
     ):
         raise ValueError("--gockpt-inflight-packets must be positive when set.")
+    if args.gockpt_transfer_chunk_mb < 0:
+        raise ValueError("--gockpt-transfer-chunk-mb must be >= 0.")
 
     return args
 
@@ -262,6 +273,7 @@ def save_training_metadata(
         "save_steps": args.save_steps,
         "overlap_steps": args.overlap_steps,
         "gockpt_reconstruction_queue_depth": args.gockpt_reconstruction_queue_depth,
+        "gockpt_transfer_chunk_mb": args.gockpt_transfer_chunk_mb,
         "profile_phases": args.profile_phases,
         "train_runtime_sec": train_runtime_sec,
         "train_steps_per_sec": args.max_steps / train_runtime_sec,
@@ -308,6 +320,7 @@ def create_checkpoint_hook(
     checkpoint_dir: Path,
     overlap_steps: int = 7,
     gockpt_reconstruction_queue_depth: int | None = None,
+    gockpt_transfer_chunk_mb: float = 0.0,
     profile_phases: bool = False,
 ) -> PyTorchCheckpointHook:
     module_name, class_name = HOOK_SPECS[hook_type]
@@ -329,6 +342,7 @@ def create_checkpoint_hook(
             save_rng_state=True,
             overlap_steps=overlap_steps,
             reconstruction_queue_depth=gockpt_reconstruction_queue_depth,
+            transfer_chunk_mb=gockpt_transfer_chunk_mb,
         )
     else:
         config = BaselineCheckpointConfig(
@@ -396,6 +410,7 @@ def main() -> None:
         checkpoint_dir=hook_checkpoint_dir,
         overlap_steps=args.overlap_steps,
         gockpt_reconstruction_queue_depth=args.gockpt_reconstruction_queue_depth,
+        gockpt_transfer_chunk_mb=args.gockpt_transfer_chunk_mb,
         profile_phases=args.profile_phases,
     )
 

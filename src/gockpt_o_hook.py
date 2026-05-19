@@ -229,9 +229,7 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
                     continue
 
                 source_refs[name] = grad
-                cpu_tensor = torch.empty_like(grad, device="cpu", pin_memory=True)
-                cpu_tensor.copy_(grad, non_blocking=True)
-                cpu_gradients[name] = cpu_tensor
+                cpu_gradients[name] = self._copy_cuda_tensor_to_pinned_cpu(grad)
 
         event = torch.cuda.Event()
         event.record(self._gradient_stream)

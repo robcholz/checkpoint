@@ -61,6 +61,12 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Max in-flight GoCkpt reconstruction packets forwarded to finetune.py.",
     )
+    parser.add_argument(
+        "--gockpt-transfer-chunk-mb",
+        type=float,
+        default=0.0,
+        help="GoCkpt GPU-to-CPU transfer chunk size in MiB. Use 0 for whole-tensor copies.",
+    )
     parser.add_argument("--learning-rate", type=float, default=2e-5)
     parser.add_argument("--weight-decay", type=float, default=0.01)
     parser.add_argument("--warmup-ratio", type=float, default=0.03)
@@ -96,6 +102,8 @@ def parse_args() -> argparse.Namespace:
         help="GPU index for nvidia-smi power sampling.",
     )
     args = parser.parse_args()
+    if args.gockpt_transfer_chunk_mb < 0:
+        raise ValueError("--gockpt-transfer-chunk-mb must be >= 0.")
     if args.power_sample_interval_sec < 0:
         raise ValueError("--power-sample-interval-sec must be >= 0.")
     if args.power_gpu_index < 0:
@@ -265,6 +273,7 @@ def build_power_report(
             "save_steps": args.save_steps,
             "overlap_steps": args.overlap_steps,
             "gockpt_reconstruction_queue_depth": args.gockpt_reconstruction_queue_depth,
+            "gockpt_transfer_chunk_mb": args.gockpt_transfer_chunk_mb,
             "gradient_checkpointing": args.gradient_checkpointing,
             "power_sample_interval_sec": args.power_sample_interval_sec,
             "power_gpu_index": args.power_gpu_index,
@@ -325,6 +334,7 @@ def build_command(args: argparse.Namespace, hook_type: str, run_dir: Path) -> li
                 str(args.gockpt_reconstruction_queue_depth),
             ]
         )
+    command.extend(["--gockpt-transfer-chunk-mb", str(args.gockpt_transfer_chunk_mb)])
     if args.gradient_checkpointing:
         command.append("--gradient-checkpointing")
     if not args.save_final_model:
@@ -490,6 +500,7 @@ def main() -> None:
             "save_steps": args.save_steps,
             "overlap_steps": args.overlap_steps,
             "gockpt_reconstruction_queue_depth": args.gockpt_reconstruction_queue_depth,
+            "gockpt_transfer_chunk_mb": args.gockpt_transfer_chunk_mb,
             "learning_rate": args.learning_rate,
             "weight_decay": args.weight_decay,
             "warmup_ratio": args.warmup_ratio,

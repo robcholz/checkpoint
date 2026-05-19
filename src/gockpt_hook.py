@@ -30,6 +30,7 @@ from src.rust_replay import adamw_update as rust_adamw_update
 class GoCkptCheckpointConfig(BaselineCheckpointConfig):
     overlap_steps: int = 7
     reconstruction_queue_depth: int | None = None
+    transfer_chunk_mb: float = 0.0
 
 
 @dataclass
@@ -171,6 +172,15 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         self._reconstruction_queue_depth = int(queue_depth)
         if self._reconstruction_queue_depth <= 0:
             raise ValueError("reconstruction_queue_depth must be positive.")
+
+        transfer_chunk_mb = float(getattr(self.config, "transfer_chunk_mb", 0.0))
+        env_transfer_chunk_mb = os.environ.get("GOCKPT_TRANSFER_CHUNK_MB")
+        if env_transfer_chunk_mb is not None:
+            transfer_chunk_mb = float(env_transfer_chunk_mb)
+        if transfer_chunk_mb < 0:
+            raise ValueError("transfer_chunk_mb must be >= 0.")
+        self._transfer_chunk_mb = transfer_chunk_mb
+        self._transfer_chunk_bytes = int(transfer_chunk_mb * 1024 * 1024)
 
     def save_checkpoint(self, step: int) -> None:
         self._join_previous_persist_if_needed()
@@ -830,8 +840,26 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         if tensor.device.type != "cuda" or self._transfer_stream is None:
             return tensor.cpu().clone()
 
+        return self._copy_cuda_tensor_to_pinned_cpu(tensor)
+
+    def _copy_cuda_tensor_to_pinned_cpu(self, tensor: torch.Tensor) -> torch.Tensor:
         cpu_tensor = torch.empty_like(tensor, device="cpu", pin_memory=True)
-        cpu_tensor.copy_(tensor, non_blocking=True)
+        if self._transfer_chunk_bytes <= 0:
+            cpu_tensor.copy_(tensor, non_blocking=True)
+            return cpu_tensor
+
+        total_bytes = tensor.numel() * tensor.element_size()
+        if total_bytes <= self._transfer_chunk_bytes:
+            cpu_tensor.copy_(tensor, non_blocking=True)
+            return cpu_tensor
+
+        source = tensor if tensor.is_contiguous() else tensor.contiguous()
+        source_flat = source.reshape(-1)
+        target_flat = cpu_tensor.reshape(-1)
+        chunk_elems = max(1, self._transfer_chunk_bytes // tensor.element_size())
+        for start in range(0, source_flat.numel(), chunk_elems):
+            end = min(start + chunk_elems, source_flat.numel())
+            target_flat[start:end].copy_(source_flat[start:end], non_blocking=True)
         return cpu_tensor
 
     def _copy_gradients_to_cpu_blocking(
@@ -851,9 +879,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
                 copied[name] = grad.cpu().clone()
                 continue
 
-            cpu_tensor = torch.empty_like(grad, device="cpu", pin_memory=True)
-            cpu_tensor.copy_(grad, non_blocking=True)
-            copied[name] = cpu_tensor
+            copied[name] = self._copy_cuda_tensor_to_pinned_cpu(grad)
 
         event = torch.cuda.Event()
         event.record(stream)
@@ -1322,6 +1348,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             "target_step": runtime.request.target_step,
             "overlap_steps": self.overlap_steps,
             "reconstruction_queue_depth": self._reconstruction_queue_depth,
+            "transfer_chunk_mb": self._transfer_chunk_mb,
             "num_partitions": len(runtime.partitions),
         }
         return checkpoint

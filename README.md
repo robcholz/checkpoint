@@ -65,6 +65,21 @@ conda run -n checkpoint python benchmark/run_overlap_steps_benchmark.py \
   --images-folder overlap_steps_7-14
 ```
 
+## Sweep PCIe Steps (Serial)
+
+```bash
+conda run -n checkpoint python benchmark/run_pcie_benchmark.py \
+  --hook-types gockpt gockpt_o \
+  --seq-len 512 \
+  --max-steps 200 \
+  --save-steps 20 \
+  --overlap-steps 7 \
+  --gockpt-inflight-packets 64 \
+  --gradient-checkpointing \
+  --transfer-chunk-mb 0,4,8,16,32 \
+  --images-folder transfer_chunk_0-32
+```
+
 This runs overlap steps in series and writes one combined line chart where
 x-axis is algorithms and each overlap-step value is a separate line.
 
