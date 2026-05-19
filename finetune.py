@@ -110,6 +110,17 @@ def parse_args() -> argparse.Namespace:
         help="Number of training steps used by gockpt/gockpt_o to transfer one checkpoint.",
     )
     parser.add_argument(
+        "--gockpt-inflight-packets",
+        "--gockpt-reconstruction-queue-depth",
+        dest="gockpt_reconstruction_queue_depth",
+        type=int,
+        default=None,
+        help=(
+            "Max in-flight GoCkpt reconstruction packets. Higher values reduce foreground "
+            "backpressure but increase CPU memory and checkpoint commit lag."
+        ),
+    )
+    parser.add_argument(
         "--profile-phases",
         action="store_true",
         help="Wrap the checkpoint hook with phase-level timing instrumentation.",
@@ -127,6 +138,11 @@ def parse_args() -> argparse.Namespace:
         )
     if args.overlap_steps <= 0:
         raise ValueError("--overlap-steps must be positive.")
+    if (
+        args.gockpt_reconstruction_queue_depth is not None
+        and args.gockpt_reconstruction_queue_depth <= 0
+    ):
+        raise ValueError("--gockpt-inflight-packets must be positive when set.")
 
     return args
 
@@ -245,6 +261,7 @@ def save_training_metadata(
         "max_steps": args.max_steps,
         "save_steps": args.save_steps,
         "overlap_steps": args.overlap_steps,
+        "gockpt_reconstruction_queue_depth": args.gockpt_reconstruction_queue_depth,
         "profile_phases": args.profile_phases,
         "train_runtime_sec": train_runtime_sec,
         "train_steps_per_sec": args.max_steps / train_runtime_sec,
@@ -290,6 +307,7 @@ def create_checkpoint_hook(
     optimizer: torch.optim.Optimizer | None,
     checkpoint_dir: Path,
     overlap_steps: int = 7,
+    gockpt_reconstruction_queue_depth: int | None = None,
     profile_phases: bool = False,
 ) -> PyTorchCheckpointHook:
     module_name, class_name = HOOK_SPECS[hook_type]
@@ -310,6 +328,7 @@ def create_checkpoint_hook(
             save_optimizer=True,
             save_rng_state=True,
             overlap_steps=overlap_steps,
+            reconstruction_queue_depth=gockpt_reconstruction_queue_depth,
         )
     else:
         config = BaselineCheckpointConfig(
@@ -376,6 +395,7 @@ def main() -> None:
         optimizer=optimizer,
         checkpoint_dir=hook_checkpoint_dir,
         overlap_steps=args.overlap_steps,
+        gockpt_reconstruction_queue_depth=args.gockpt_reconstruction_queue_depth,
         profile_phases=args.profile_phases,
     )
 

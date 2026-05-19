@@ -13,6 +13,7 @@ from src.gockpt_hook import (
     GoCkptCheckpointHook,
     GoCkptCheckpointResult,
     GoCkptRuntime,
+    PendingCheckpointWorker,
 )
 
 
@@ -69,7 +70,6 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
         self._pending_gradient_transfers: dict[int, PendingGradientTransfer] = {}
 
     def save_checkpoint(self, step: int) -> None:
-        self._pending_gradient_transfers.clear()
         super().save_checkpoint(step)
         runtime = self._active_runtime
         if runtime is None or runtime.result is None:
@@ -120,40 +120,55 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
         if step != runtime.request.target_step - 1:
             return
 
-        self._finish_pending_gradient_transfer(runtime, step)
-        self._wait_for_reconstruction(runtime)
-        self._stop_reconstruction_worker(runtime)
-
-        for partition_index in range(len(runtime.partitions)):
-            self._wait_partition_transfer(runtime, partition_index)
-
-        expected_version = runtime.request.target_step
-        for snapshot in runtime.transferred_blocks.values():
-            if snapshot.version_step != expected_version:
-                raise RuntimeError(
-                    "GoCkpt-O reconstruction is incomplete; not all partitions "
-                    f"reached target step {expected_version}."
-                )
-
-        checkpoint = self._assemble_checkpoint(runtime)
         result = runtime.result
         if result is None:
             raise RuntimeError("GoCkpt-O runtime is missing checkpoint metadata.")
 
+        pending = PendingCheckpointWorker(result=result)
         worker = threading.Thread(
-            target=self._persist_checkpoint_worker,
-            args=(checkpoint, result.path, result),
+            target=self._finalize_o_checkpoint_worker,
+            args=(runtime, step, pending),
             daemon=True,
-            name=f"gockpt-o-persist-{result.target_step}",
+            name=f"gockpt-o-finalize-{result.target_step}",
         )
+        pending.thread = worker
         with self._pending_lock:
-            self._pending_thread = worker
-            self._pending_result = result
-            self._pending_error = None
+            self._pending_workers.append(pending)
 
         self._active_runtime = None
-        self._pending_gradient_transfers.clear()
         worker.start()
+
+    def _finalize_o_checkpoint_worker(
+        self,
+        runtime: GoCkptRuntime,
+        final_step: int,
+        pending: PendingCheckpointWorker,
+    ) -> None:
+        result = runtime.result
+        if result is None:
+            pending.error = RuntimeError("GoCkpt-O runtime is missing checkpoint metadata.")
+            return
+
+        try:
+            self._finish_pending_gradient_transfer(runtime, final_step)
+            self._stop_reconstruction_worker(runtime)
+
+            for partition_index in range(len(runtime.partitions)):
+                self._wait_partition_transfer(runtime, partition_index)
+                self._ensure_partition_flattened(runtime, partition_index)
+
+            expected_version = runtime.request.target_step
+            for snapshot in runtime.transferred_blocks.values():
+                if snapshot.version_step != expected_version:
+                    raise RuntimeError(
+                        "GoCkpt-O reconstruction is incomplete; not all partitions "
+                        f"reached target step {expected_version}."
+                    )
+
+            checkpoint = self._assemble_checkpoint(runtime)
+            pending.error = self._persist_checkpoint_worker(checkpoint, result.path, result)
+        except BaseException as exc:
+            pending.error = exc
 
     def _collect_gradients_for_step(
         self,

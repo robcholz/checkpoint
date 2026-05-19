@@ -46,6 +46,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-steps", type=int, default=200)
     parser.add_argument("--save-steps", type=int, default=20, choices=(10, 20))
     parser.add_argument("--overlap-steps", type=int, default=7)
+    parser.add_argument(
+        "--gockpt-inflight-packets",
+        "--gockpt-reconstruction-queue-depth",
+        dest="gockpt_reconstruction_queue_depth",
+        type=int,
+        default=None,
+        help="Max in-flight GoCkpt reconstruction packets forwarded to finetune.py.",
+    )
     parser.add_argument("--learning-rate", type=float, default=2e-5)
     parser.add_argument("--weight-decay", type=float, default=0.01)
     parser.add_argument("--warmup-ratio", type=float, default=0.03)
@@ -144,6 +152,11 @@ def build_command(args: argparse.Namespace, hook_type: str, run_dir: Path) -> li
         str(run_dir),
         "--profile-phases",
     ]
+    if args.gockpt_reconstruction_queue_depth is not None:
+        command.extend([
+            "--gockpt-inflight-packets",
+            str(args.gockpt_reconstruction_queue_depth),
+        ])
     if args.gradient_checkpointing:
         command.append("--gradient-checkpointing")
     if not args.save_final_model:
@@ -250,6 +263,7 @@ def main() -> None:
             "max_steps": args.max_steps,
             "save_steps": args.save_steps,
             "overlap_steps": args.overlap_steps,
+            "gockpt_reconstruction_queue_depth": args.gockpt_reconstruction_queue_depth,
             "learning_rate": args.learning_rate,
             "weight_decay": args.weight_decay,
             "warmup_ratio": args.warmup_ratio,

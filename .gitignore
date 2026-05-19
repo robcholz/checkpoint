@@ -5,3 +5,5 @@ benchmark/checkpoint_runs/
 benchmark/overlap_steps_runs/
 benchmark/finetune_runs/
 *.pt
+benchmark/finetune_runs_*_smoke/
+rust/**/target/

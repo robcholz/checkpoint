@@ -10,6 +10,12 @@ from pathlib import Path
 from typing import Any, Callable
 
 import torch
+from torch.optim import _functional as optim_functional
+
+try:
+    from deepspeed.ops.adam import DeepSpeedCPUAdam
+except Exception:  # pragma: no cover - optional acceleration backend
+    DeepSpeedCPUAdam = None
 
 from src.baseline_hook import BaselineCheckpointConfig, BaselineCheckpointHook
 from src.pytorch_hook import (
@@ -17,11 +23,13 @@ from src.pytorch_hook import (
     OptimizerParamSnapshot,
     ParameterSnapshot,
 )
+from src.rust_replay import adamw_update as rust_adamw_update
 
 
 @dataclass
 class GoCkptCheckpointConfig(BaselineCheckpointConfig):
     overlap_steps: int = 7
+    reconstruction_queue_depth: int | None = None
 
 
 @dataclass
@@ -33,6 +41,7 @@ class GoCkptCheckpointResult:
     transfer_duration_sec: float = 0.0
     gradient_duration_sec: float = 0.0
     reconstruction_duration_sec: float = 0.0
+    reconstruction_backpressure_sec: float = 0.0
     persistence_duration_sec: float | None = None
     total_duration_sec: float | None = None
 
@@ -50,6 +59,23 @@ class GoCkptAbandonedWindow:
 
 
 @dataclass
+class PendingCheckpointWorker:
+    result: GoCkptCheckpointResult
+    thread: threading.Thread | None = None
+    error: BaseException | None = None
+
+
+@dataclass
+class FlatReplayBlock:
+    partition_index: int
+    names: list[str]
+    offsets: dict[str, tuple[int, int]]
+    param_buffer: torch.Tensor
+    exp_avg_buffer: torch.Tensor
+    exp_avg_sq_buffer: torch.Tensor
+
+
+@dataclass
 class GoCkptRuntime:
     request: CheckpointRequest
     partitions: list[list[str]]
@@ -59,6 +85,9 @@ class GoCkptRuntime:
     transferred_blocks: dict[str, ParameterSnapshot] = field(default_factory=dict)
     gradients_by_step: dict[int, dict[str, torch.Tensor | None]] = field(default_factory=dict)
     optimizer_param_groups_by_step: dict[int, dict[str, dict[str, Any]]] = field(default_factory=dict)
+    flat_replay_blocks_by_name: dict[str, FlatReplayBlock] = field(default_factory=dict)
+    flattened_partitions: set[int] = field(default_factory=set)
+    flatten_lock: threading.Lock = field(default_factory=threading.Lock)
     result: GoCkptCheckpointResult | None = None
     reconstruction_executor: ThreadPoolExecutor | None = None
     reconstruction_futures: list[Future] = field(default_factory=list)
@@ -107,13 +136,13 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         self.abandoned_windows: list[GoCkptAbandonedWindow] = []
 
         self._active_runtime: GoCkptRuntime | None = None
-        self._pending_thread: threading.Thread | None = None
-        self._pending_result: GoCkptCheckpointResult | None = None
-        self._pending_error: BaseException | None = None
+        self._pending_workers: list[PendingCheckpointWorker] = []
         self._pending_lock = threading.Lock()
+        self._persist_lock = threading.Lock()
         self._transfer_stream = (
             torch.cuda.Stream() if torch.cuda.is_available() else None
         )
+        self._ds_cpu_adam_local = threading.local()
 
         self._named_parameters = list(self.model.named_parameters())
         self._params_by_name = {name: param for name, param in self._named_parameters}
@@ -127,6 +156,15 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             1,
             min(self.overlap_steps, os.cpu_count() or self.overlap_steps),
         )
+        queue_depth = getattr(self.config, "reconstruction_queue_depth", None)
+        env_queue_depth = os.environ.get("GOCKPT_RECONSTRUCTION_QUEUE_DEPTH")
+        if env_queue_depth is not None:
+            queue_depth = int(env_queue_depth)
+        if queue_depth is None:
+            queue_depth = self._reconstruction_workers * 4
+        self._reconstruction_queue_depth = int(queue_depth)
+        if self._reconstruction_queue_depth <= 0:
+            raise ValueError("reconstruction_queue_depth must be positive.")
 
     def save_checkpoint(self, step: int) -> None:
         self._join_previous_persist_if_needed()
@@ -257,32 +295,20 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         if step != runtime.request.target_step - 1:
             return
 
-        self._wait_for_reconstruction(runtime)
-        self._stop_reconstruction_worker(runtime)
-
-        expected_version = runtime.request.target_step
-        for snapshot in runtime.transferred_blocks.values():
-            if snapshot.version_step != expected_version:
-                raise RuntimeError(
-                    "GoCkpt reconstruction is incomplete; not all partitions "
-                    f"reached target step {expected_version}."
-                )
-
-        checkpoint = self._assemble_checkpoint(runtime)
         result = runtime.result
         if result is None:
             raise RuntimeError("GoCkpt runtime is missing checkpoint result metadata.")
 
+        pending = PendingCheckpointWorker(result=result)
         worker = threading.Thread(
-            target=self._persist_checkpoint_worker,
-            args=(checkpoint, result.path, result),
+            target=self._finalize_checkpoint_worker,
+            args=(runtime, pending),
             daemon=True,
-            name=f"gockpt-persist-{result.target_step}",
+            name=f"gockpt-finalize-{result.target_step}",
         )
+        pending.thread = worker
         with self._pending_lock:
-            self._pending_thread = worker
-            self._pending_result = result
-            self._pending_error = None
+            self._pending_workers.append(pending)
 
         self._active_runtime = None
         worker.start()
@@ -297,47 +323,44 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             self._stop_reconstruction_worker(runtime)
             self._active_runtime = None
 
-        thread: threading.Thread | None
-        with self._pending_lock:
-            thread = self._pending_thread
-
-        if thread is None:
-            return
-
-        thread.join()
-        self._finalize_pending_thread(thread)
-
-    def _join_previous_persist_if_needed(self) -> None:
-        thread: threading.Thread | None
-        with self._pending_lock:
-            thread = self._pending_thread
-
-        if thread is None:
-            return
-
-        if thread.is_alive():
-            thread.join()
-
-        self._finalize_pending_thread(thread)
-
-    def _finalize_pending_thread(self, thread: threading.Thread) -> None:
-        with self._pending_lock:
-            if self._pending_thread is not thread:
+        while True:
+            with self._pending_lock:
+                pending_workers = list(self._pending_workers)
+            if not pending_workers:
                 return
 
-            error = self._pending_error
-            result = self._pending_result
+            for pending in pending_workers:
+                if pending.thread is not None:
+                    pending.thread.join()
+            for pending in pending_workers:
+                self._finalize_pending_worker(pending)
 
-            self._pending_thread = None
-            self._pending_result = None
-            self._pending_error = None
+    def _join_previous_persist_if_needed(self) -> None:
+        self._finalize_completed_workers()
 
-        if result is not None:
-            self.last_result = result
-            self.history.append(result)
+    def _finalize_completed_workers(self) -> None:
+        with self._pending_lock:
+            pending_workers = list(self._pending_workers)
 
-        if error is not None:
-            raise RuntimeError("Background checkpoint persistence failed.") from error
+        for pending in pending_workers:
+            thread = pending.thread
+            if thread is not None and thread.is_alive():
+                continue
+            if thread is not None:
+                thread.join()
+            self._finalize_pending_worker(pending)
+
+    def _finalize_pending_worker(self, pending: PendingCheckpointWorker) -> None:
+        with self._pending_lock:
+            if pending not in self._pending_workers:
+                return
+            self._pending_workers.remove(pending)
+
+        self.last_result = pending.result
+        self.history.append(pending.result)
+
+        if pending.error is not None:
+            raise RuntimeError("Background checkpoint persistence failed.") from pending.error
 
     def _start_reconstruction_worker(self, runtime: GoCkptRuntime) -> None:
         runtime.reconstruction_executor = ThreadPoolExecutor(
@@ -347,7 +370,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         # Bounded in-flight tasks form a simple ring buffer. If CPU replay falls
         # too far behind, enqueue blocks instead of growing memory unboundedly.
         runtime.reconstruction_slots = threading.Semaphore(
-            max(1, self._reconstruction_workers * 2)
+            max(1, self._reconstruction_queue_depth)
         )
 
     def _enqueue_reconstruction(
@@ -380,7 +403,12 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             runtime.reconstruction_started_at = time.perf_counter()
 
         for partition_index, partition_gradients in gradients_by_partition.items():
+            acquire_start = time.perf_counter()
             slots.acquire()
+            if runtime.result is not None:
+                runtime.result.reconstruction_backpressure_sec += (
+                    time.perf_counter() - acquire_start
+                )
             previous_future = runtime.partition_futures.get(partition_index)
             future = executor.submit(
                 self._apply_reconstruction_partition_task,
@@ -437,17 +465,15 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             if partition_index in waited_partitions:
                 continue
             self._wait_partition_transfer(runtime, partition_index)
+            self._ensure_partition_flattened(runtime, partition_index)
             waited_partitions.add(partition_index)
 
-        for name, grad in gradients_for_step.items():
-            snapshot = runtime.transferred_blocks[name]
-            if grad is not None:
-                self._apply_cpu_adamw_update(
-                    snapshot,
-                    grad,
-                    optimizer_param_groups[name],
-                )
-            snapshot.version_step = step + 1
+        self._apply_cpu_adamw_updates(
+            runtime,
+            step,
+            gradients_for_step,
+            optimizer_param_groups,
+        )
 
         if runtime.result is not None:
             runtime.result.reconstruction_duration_sec += (
@@ -473,16 +499,14 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
 
             reconstruction_start = time.perf_counter()
             self._wait_partition_transfer(runtime, partition_index)
+            self._ensure_partition_flattened(runtime, partition_index)
 
-            for name, grad in gradients_for_step.items():
-                snapshot = runtime.transferred_blocks[name]
-                if grad is not None:
-                    self._apply_cpu_adamw_update(
-                        snapshot,
-                        grad,
-                        optimizer_param_groups[name],
-                    )
-                snapshot.version_step = step + 1
+            self._apply_cpu_adamw_updates(
+                runtime,
+                step,
+                gradients_for_step,
+                optimizer_param_groups,
+            )
 
             # Parallel reconstruction duration is reported as wall time from the
             # first submitted task until all partition futures complete.
@@ -688,6 +712,89 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             }
         return value
 
+    def _ensure_partition_flattened(
+        self,
+        runtime: GoCkptRuntime,
+        partition_index: int,
+    ) -> None:
+        if partition_index in runtime.flattened_partitions:
+            return
+
+        with runtime.flatten_lock:
+            if partition_index in runtime.flattened_partitions:
+                return
+            self._flatten_partition_snapshots(
+                runtime,
+                partition_index,
+                runtime.partitions[partition_index],
+            )
+            runtime.flattened_partitions.add(partition_index)
+
+    def _flatten_partition_snapshots(
+        self,
+        runtime: GoCkptRuntime,
+        partition_index: int,
+        partition: list[str],
+    ) -> None:
+        groups: dict[tuple[torch.dtype, torch.dtype, torch.dtype], list[str]] = {}
+        for name in partition:
+            snapshot = runtime.transferred_blocks[name]
+            key = (
+                snapshot.param.dtype,
+                snapshot.optimizer_state.exp_avg.dtype,
+                snapshot.optimizer_state.exp_avg_sq.dtype,
+            )
+            groups.setdefault(key, []).append(name)
+
+        for names in groups.values():
+            total_numel = sum(runtime.transferred_blocks[name].param.numel() for name in names)
+            if total_numel == 0:
+                continue
+
+            first = runtime.transferred_blocks[names[0]]
+            param_buffer = torch.empty(total_numel, dtype=first.param.dtype, device="cpu")
+            exp_avg_buffer = torch.empty(
+                total_numel,
+                dtype=first.optimizer_state.exp_avg.dtype,
+                device="cpu",
+            )
+            exp_avg_sq_buffer = torch.empty(
+                total_numel,
+                dtype=first.optimizer_state.exp_avg_sq.dtype,
+                device="cpu",
+            )
+
+            offsets: dict[str, tuple[int, int]] = {}
+            offset = 0
+            for name in names:
+                snapshot = runtime.transferred_blocks[name]
+                numel = snapshot.param.numel()
+                end = offset + numel
+                param_buffer[offset:end].copy_(snapshot.param.reshape(-1))
+                exp_avg_buffer[offset:end].copy_(snapshot.optimizer_state.exp_avg.reshape(-1))
+                exp_avg_sq_buffer[offset:end].copy_(snapshot.optimizer_state.exp_avg_sq.reshape(-1))
+
+                snapshot.param = param_buffer[offset:end].view_as(snapshot.param)
+                snapshot.optimizer_state.exp_avg = exp_avg_buffer[offset:end].view_as(
+                    snapshot.optimizer_state.exp_avg
+                )
+                snapshot.optimizer_state.exp_avg_sq = exp_avg_sq_buffer[offset:end].view_as(
+                    snapshot.optimizer_state.exp_avg_sq
+                )
+                offsets[name] = (offset, end)
+                offset = end
+
+            block = FlatReplayBlock(
+                partition_index=partition_index,
+                names=names,
+                offsets=offsets,
+                param_buffer=param_buffer,
+                exp_avg_buffer=exp_avg_buffer,
+                exp_avg_sq_buffer=exp_avg_sq_buffer,
+            )
+            for name in names:
+                runtime.flat_replay_blocks_by_name[name] = block
+
     def _copy_tensor_to_cpu(self, tensor: torch.Tensor) -> torch.Tensor:
         if tensor.device.type != "cuda" or self._transfer_stream is None:
             return tensor.cpu().clone()
@@ -775,6 +882,364 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         else:
             snapshot.optimizer_state.step = next_step
 
+    def _apply_cpu_adamw_updates(
+        self,
+        runtime: GoCkptRuntime,
+        step: int,
+        gradients_for_step: dict[str, torch.Tensor | None],
+        optimizer_param_groups: dict[str, dict[str, Any]],
+    ) -> None:
+        if self._apply_flat_cpu_adamw_updates(
+            runtime,
+            step,
+            gradients_for_step,
+            optimizer_param_groups,
+        ):
+            return
+
+        buckets: dict[tuple[Any, ...], tuple[dict[str, Any], list[ParameterSnapshot], list[torch.Tensor]]] = {}
+
+        for name, grad in gradients_for_step.items():
+            snapshot = runtime.transferred_blocks[name]
+            if grad is None:
+                snapshot.version_step = step + 1
+                continue
+
+            param_group = optimizer_param_groups[name]
+            signature = self._adamw_bucket_signature(snapshot, param_group)
+            bucket = buckets.get(signature)
+            if bucket is None:
+                bucket = (param_group, [], [])
+                buckets[signature] = bucket
+
+            bucket[1].append(snapshot)
+            bucket[2].append(grad)
+
+        for param_group, snapshots, gradients in buckets.values():
+            self._apply_cpu_adamw_bucket(snapshots, gradients, param_group)
+
+        for name in gradients_for_step:
+            runtime.transferred_blocks[name].version_step = step + 1
+
+    def _apply_flat_cpu_adamw_updates(
+        self,
+        runtime: GoCkptRuntime,
+        step: int,
+        gradients_for_step: dict[str, torch.Tensor | None],
+        optimizer_param_groups: dict[str, dict[str, Any]],
+    ) -> bool:
+        if not gradients_for_step:
+            return True
+
+        blocks: dict[int, FlatReplayBlock] = {}
+        for name, grad in gradients_for_step.items():
+            if grad is None:
+                return False
+            block = runtime.flat_replay_blocks_by_name.get(name)
+            if block is None:
+                return False
+            blocks[id(block)] = block
+
+        for block in blocks.values():
+            block_names = [name for name in block.names if name in gradients_for_step]
+            if len(block_names) != len(block.names):
+                return False
+
+            first_name = block_names[0]
+            first_snapshot = runtime.transferred_blocks[first_name]
+            first_group = optimizer_param_groups[first_name]
+            signature = self._adamw_bucket_signature(first_snapshot, first_group)
+            first_step = int(self._ensure_step_tensor(first_snapshot).item())
+            for name in block_names[1:]:
+                snapshot = runtime.transferred_blocks[name]
+                if self._adamw_bucket_signature(snapshot, optimizer_param_groups[name]) != signature:
+                    return False
+                if int(self._ensure_step_tensor(snapshot).item()) != first_step:
+                    return False
+
+        for block in blocks.values():
+            self._apply_flat_cpu_adamw_block(
+                runtime,
+                block,
+                gradients_for_step,
+                optimizer_param_groups[block.names[0]],
+            )
+
+        for name in gradients_for_step:
+            runtime.transferred_blocks[name].version_step = step + 1
+        return True
+
+    def _apply_flat_cpu_adamw_block(
+        self,
+        runtime: GoCkptRuntime,
+        block: FlatReplayBlock,
+        gradients_for_step: dict[str, torch.Tensor | None],
+        param_group: dict[str, Any],
+    ) -> None:
+        grad_buffer = torch.empty_like(block.param_buffer)
+        for name in block.names:
+            grad = gradients_for_step[name]
+            if grad is None:
+                raise RuntimeError("Flat GoCkpt replay received a missing gradient.")
+            start, end = block.offsets[name]
+            grad_buffer[start:end].copy_(
+                grad.to(device=block.param_buffer.device, dtype=block.param_buffer.dtype).reshape(-1)
+            )
+
+        first_snapshot = runtime.transferred_blocks[block.names[0]]
+        step_tensor = self._ensure_step_tensor(first_snapshot)
+        if self._apply_rust_cpu_adam_flat_block(
+            block,
+            grad_buffer,
+            step_tensor,
+            param_group,
+        ):
+            pass
+        elif self._apply_deepspeed_cpu_adam_flat_block(
+            block,
+            grad_buffer,
+            step_tensor,
+            param_group,
+        ):
+            pass
+        else:
+            beta1, beta2 = param_group.get("betas", (0.9, 0.999))
+            optim_functional.adamw(
+                params=[block.param_buffer],
+                grads=[grad_buffer],
+                exp_avgs=[block.exp_avg_buffer],
+                exp_avg_sqs=[block.exp_avg_sq_buffer],
+                max_exp_avg_sqs=[],
+                state_steps=[step_tensor],
+                foreach=True,
+                capturable=False,
+                differentiable=False,
+                fused=False,
+                grad_scale=None,
+                found_inf=None,
+                has_complex=torch.is_complex(block.param_buffer),
+                amsgrad=False,
+                beta1=float(beta1),
+                beta2=float(beta2),
+                lr=float(param_group.get("lr", 1e-3)),
+                weight_decay=float(param_group.get("weight_decay", 0.0)),
+                eps=float(param_group.get("eps", 1e-8)),
+                maximize=bool(param_group.get("maximize", False)),
+            )
+
+        for name in block.names:
+            runtime.transferred_blocks[name].optimizer_state.step = step_tensor.clone()
+
+    def _apply_rust_cpu_adam_flat_block(
+        self,
+        block: FlatReplayBlock,
+        grad_buffer: torch.Tensor,
+        step_tensor: torch.Tensor,
+        param_group: dict[str, Any],
+    ) -> bool:
+        if os.environ.get("GOCKPT_CPU_REPLAY_BACKEND", "rust") != "rust":
+            return False
+        if bool(param_group.get("amsgrad", False)):
+            return False
+        if torch.is_complex(block.param_buffer):
+            return False
+
+        beta1, beta2 = param_group.get("betas", (0.9, 0.999))
+        next_step = rust_adamw_update(
+            block.param_buffer,
+            grad_buffer,
+            block.exp_avg_buffer,
+            block.exp_avg_sq_buffer,
+            int(step_tensor.item()),
+            float(param_group.get("lr", 1e-3)),
+            float(beta1),
+            float(beta2),
+            float(param_group.get("eps", 1e-8)),
+            float(param_group.get("weight_decay", 0.0)),
+            bool(param_group.get("maximize", False)),
+        )
+        if next_step is None:
+            return False
+
+        step_tensor.fill_(int(next_step))
+        return True
+
+    def _apply_deepspeed_cpu_adam_flat_block(
+        self,
+        block: FlatReplayBlock,
+        grad_buffer: torch.Tensor,
+        step_tensor: torch.Tensor,
+        param_group: dict[str, Any],
+    ) -> bool:
+        if os.environ.get("GOCKPT_CPU_REPLAY_BACKEND") != "deepspeed":
+            return False
+        if DeepSpeedCPUAdam is None:
+            return False
+        if bool(param_group.get("amsgrad", False)):
+            return False
+        if torch.is_complex(block.param_buffer):
+            return False
+
+        opt = self._get_deepspeed_cpu_adam()
+        beta1, beta2 = param_group.get("betas", (0.9, 0.999))
+        next_step = int(step_tensor.item()) + 1
+        grad = grad_buffer
+        if bool(param_group.get("maximize", False)):
+            grad = -grad
+
+        opt.ds_opt_adam.adam_update(
+            opt.opt_id,
+            next_step,
+            float(param_group.get("lr", 1e-3)),
+            float(beta1),
+            float(beta2),
+            float(param_group.get("eps", 1e-8)),
+            float(param_group.get("weight_decay", 0.0)),
+            bool(param_group.get("bias_correction", True)),
+            block.param_buffer,
+            grad,
+            block.exp_avg_buffer,
+            block.exp_avg_sq_buffer,
+        )
+        step_tensor.fill_(next_step)
+        return True
+
+    def _adamw_bucket_signature(
+        self,
+        snapshot: ParameterSnapshot,
+        param_group: dict[str, Any],
+    ) -> tuple[Any, ...]:
+        betas = param_group.get("betas", (0.9, 0.999))
+        return (
+            snapshot.param.dtype,
+            float(param_group.get("lr", 1e-3)),
+            float(betas[0]),
+            float(betas[1]),
+            float(param_group.get("eps", 1e-8)),
+            float(param_group.get("weight_decay", 0.0)),
+            bool(param_group.get("maximize", False)),
+            bool(param_group.get("amsgrad", False)),
+        )
+
+    def _apply_cpu_adamw_bucket(
+        self,
+        snapshots: list[ParameterSnapshot],
+        gradients: list[torch.Tensor],
+        param_group: dict[str, Any],
+    ) -> None:
+        if not snapshots:
+            return
+
+        amsgrad = bool(param_group.get("amsgrad", False))
+        if amsgrad:
+            raise NotImplementedError("GoCkpt CPU replay does not support AdamW amsgrad.")
+
+        if self._apply_deepspeed_cpu_adam_bucket(snapshots, gradients, param_group):
+            return
+
+        params: list[torch.Tensor] = []
+        grads: list[torch.Tensor] = []
+        exp_avgs: list[torch.Tensor] = []
+        exp_avg_sqs: list[torch.Tensor] = []
+        state_steps: list[torch.Tensor] = []
+
+        for snapshot, grad in zip(snapshots, gradients):
+            param = snapshot.param
+            params.append(param)
+            grads.append(grad.to(device=param.device, dtype=param.dtype))
+            exp_avgs.append(snapshot.optimizer_state.exp_avg)
+            exp_avg_sqs.append(snapshot.optimizer_state.exp_avg_sq)
+            state_steps.append(self._ensure_step_tensor(snapshot))
+
+        beta1, beta2 = param_group.get("betas", (0.9, 0.999))
+        optim_functional.adamw(
+            params=params,
+            grads=grads,
+            exp_avgs=exp_avgs,
+            exp_avg_sqs=exp_avg_sqs,
+            max_exp_avg_sqs=[],
+            state_steps=state_steps,
+            foreach=True,
+            capturable=False,
+            differentiable=False,
+            fused=False,
+            grad_scale=None,
+            found_inf=None,
+            has_complex=any(torch.is_complex(param) for param in params),
+            amsgrad=False,
+            beta1=float(beta1),
+            beta2=float(beta2),
+            lr=float(param_group.get("lr", 1e-3)),
+            weight_decay=float(param_group.get("weight_decay", 0.0)),
+            eps=float(param_group.get("eps", 1e-8)),
+            maximize=bool(param_group.get("maximize", False)),
+        )
+
+    def _apply_deepspeed_cpu_adam_bucket(
+        self,
+        snapshots: list[ParameterSnapshot],
+        gradients: list[torch.Tensor],
+        param_group: dict[str, Any],
+    ) -> bool:
+        if os.environ.get("GOCKPT_CPU_REPLAY_BACKEND") != "deepspeed":
+            return False
+        if DeepSpeedCPUAdam is None:
+            return False
+        if bool(param_group.get("amsgrad", False)):
+            return False
+        if any(torch.is_complex(snapshot.param) for snapshot in snapshots):
+            return False
+
+        opt = self._get_deepspeed_cpu_adam()
+        beta1, beta2 = param_group.get("betas", (0.9, 0.999))
+        lr = float(param_group.get("lr", 1e-3))
+        eps = float(param_group.get("eps", 1e-8))
+        weight_decay = float(param_group.get("weight_decay", 0.0))
+        bias_correction = bool(param_group.get("bias_correction", True))
+        maximize = bool(param_group.get("maximize", False))
+
+        for snapshot, grad in zip(snapshots, gradients):
+            param = snapshot.param
+            step_tensor = self._ensure_step_tensor(snapshot)
+            next_step = int(step_tensor.item()) + 1
+            grad_tensor = grad.to(device=param.device, dtype=param.dtype)
+            if maximize:
+                grad_tensor = -grad_tensor
+
+            opt.ds_opt_adam.adam_update(
+                opt.opt_id,
+                next_step,
+                lr,
+                float(beta1),
+                float(beta2),
+                eps,
+                weight_decay,
+                bias_correction,
+                param,
+                grad_tensor,
+                snapshot.optimizer_state.exp_avg,
+                snapshot.optimizer_state.exp_avg_sq,
+            )
+            step_tensor.fill_(next_step)
+        return True
+
+    def _get_deepspeed_cpu_adam(self):
+        opt = getattr(self._ds_cpu_adam_local, "optimizer", None)
+        if opt is None:
+            dummy = torch.nn.Parameter(torch.empty(0, dtype=torch.float32))
+            opt = DeepSpeedCPUAdam([dummy], adamw_mode=True, fp32_optimizer_states=True)
+            self._ds_cpu_adam_local.optimizer = opt
+        return opt
+
+    def _ensure_step_tensor(self, snapshot: ParameterSnapshot) -> torch.Tensor:
+        step_state = snapshot.optimizer_state.step
+        if isinstance(step_state, torch.Tensor):
+            return step_state
+
+        step_tensor = torch.tensor(float(step_state), dtype=torch.float32)
+        snapshot.optimizer_state.step = step_tensor
+        return step_tensor
+
     def _assemble_checkpoint(self, runtime: GoCkptRuntime) -> dict[str, Any]:
         model_state: dict[str, Any] = {}
         for name, value in self.model.state_dict().items():
@@ -813,6 +1278,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             "start_step": runtime.request.start_step,
             "target_step": runtime.request.target_step,
             "overlap_steps": self.overlap_steps,
+            "reconstruction_queue_depth": self._reconstruction_queue_depth,
             "num_partitions": len(runtime.partitions),
         }
         return checkpoint
@@ -842,17 +1308,48 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             stacklevel=2,
         )
 
+    def _finalize_checkpoint_worker(
+        self,
+        runtime: GoCkptRuntime,
+        pending: PendingCheckpointWorker,
+    ) -> None:
+        result = runtime.result
+        if result is None:
+            pending.error = RuntimeError("GoCkpt runtime is missing checkpoint result metadata.")
+            return
+
+        try:
+            self._stop_reconstruction_worker(runtime)
+
+            for partition_index in range(len(runtime.partitions)):
+                self._wait_partition_transfer(runtime, partition_index)
+                self._ensure_partition_flattened(runtime, partition_index)
+
+            expected_version = runtime.request.target_step
+            for snapshot in runtime.transferred_blocks.values():
+                if snapshot.version_step != expected_version:
+                    raise RuntimeError(
+                        "GoCkpt reconstruction is incomplete; not all partitions "
+                        f"reached target step {expected_version}."
+                    )
+
+            checkpoint = self._assemble_checkpoint(runtime)
+            pending.error = self._persist_checkpoint_worker(checkpoint, result.path, result)
+        except BaseException as exc:
+            pending.error = exc
+
     def _persist_checkpoint_worker(
         self,
         checkpoint: dict[str, Any],
         checkpoint_path: Path,
         result: GoCkptCheckpointResult,
-    ) -> None:
+    ) -> BaseException | None:
         persistence_start = time.perf_counter()
         error: BaseException | None = None
 
         try:
-            torch.save(checkpoint, checkpoint_path)
+            with self._persist_lock:
+                torch.save(checkpoint, checkpoint_path)
         except BaseException as exc:
             error = exc
 
@@ -862,11 +1359,11 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             result.transfer_duration_sec
             + result.gradient_duration_sec
             + result.reconstruction_duration_sec
+            + result.reconstruction_backpressure_sec
             + persistence_duration
         )
 
-        with self._pending_lock:
-            self._pending_error = error
+        return error
 
 
 class _nullcontext:
