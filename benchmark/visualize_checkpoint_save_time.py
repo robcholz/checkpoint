@@ -114,7 +114,9 @@ def foreground_phase_names(run: dict[str, Any]) -> list[str]:
     return ["hook.save_checkpoint"]
 
 
-def collect_foreground_times(report: dict[str, Any]) -> list[tuple[str, float, float | None]]:
+def collect_foreground_times(
+    report: dict[str, Any],
+) -> list[tuple[str, float, float | None]]:
     by_hook: dict[str, tuple[float, float | None]] = {}
     for run in get_runs(report):
         hook_type = run.get("hook_type")
@@ -190,9 +192,7 @@ def plot_foreground_times(
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
-    max_value = max(
-        values + [value for value in wrapup_values if value is not None]
-    )
+    max_value = max(values + [value for value in wrapup_values if value is not None])
     ax.set_ylim(0, max_value * 1.18 if max_value > 0 else 1.0)
     for bar, value in zip(bars, values):
         ax.text(
@@ -236,7 +236,9 @@ def main() -> None:
     report = read_report(args.report)
     foreground_times = collect_foreground_times(report)
     plot_foreground_times(foreground_times, args.output, args.title, args.report)
-    print(f"saved {len(foreground_times)} foreground checkpoint-time bars to {args.output}")
+    print(
+        f"saved {len(foreground_times)} foreground checkpoint-time bars to {args.output}"
+    )
 
 
 if __name__ == "__main__":

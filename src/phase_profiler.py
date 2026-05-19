@@ -60,7 +60,9 @@ class PhaseProfiler:
 
 
 class PhaseProfilingHook(PyTorchCheckpointHook):
-    def __init__(self, wrapped: PyTorchCheckpointHook, profiler: PhaseProfiler | None = None) -> None:
+    def __init__(
+        self, wrapped: PyTorchCheckpointHook, profiler: PhaseProfiler | None = None
+    ) -> None:
         self.wrapped = wrapped
         self.profiler = profiler or PhaseProfiler()
 

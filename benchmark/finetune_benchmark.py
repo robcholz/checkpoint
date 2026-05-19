@@ -66,7 +66,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--warmup-ratio", type=float, default=0.03)
     parser.add_argument("--logging-steps", type=int, default=10)
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--output-dir", type=Path, default=Path("benchmark/finetune_runs"))
+    parser.add_argument(
+        "--output-dir", type=Path, default=Path("benchmark/finetune_runs")
+    )
     parser.add_argument("--python", type=Path, default=Path(sys.executable))
     parser.add_argument("--gradient-checkpointing", action="store_true")
     parser.add_argument("--keep-output", action="store_true")
@@ -171,7 +173,9 @@ def query_gpu_power_w(gpu_index: int) -> tuple[float | None, str | None]:
         return None, f"unable to parse nvidia-smi power sample: {raw!r}"
 
 
-def summarize_power_samples(samples: list[dict[str, float]]) -> dict[str, float | int | None]:
+def summarize_power_samples(
+    samples: list[dict[str, float]],
+) -> dict[str, float | int | None]:
     if not samples:
         return {
             "sample_count": 0,
@@ -315,10 +319,12 @@ def build_command(args: argparse.Namespace, hook_type: str, run_dir: Path) -> li
         "--profile-phases",
     ]
     if args.gockpt_reconstruction_queue_depth is not None:
-        command.extend([
-            "--gockpt-inflight-packets",
-            str(args.gockpt_reconstruction_queue_depth),
-        ])
+        command.extend(
+            [
+                "--gockpt-inflight-packets",
+                str(args.gockpt_reconstruction_queue_depth),
+            ]
+        )
     if args.gradient_checkpointing:
         command.append("--gradient-checkpointing")
     if not args.save_final_model:

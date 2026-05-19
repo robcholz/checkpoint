@@ -106,9 +106,9 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
         if runtime is None or not self._is_step_in_request(runtime, step):
             return
 
-        runtime.optimizer_param_groups_by_step[
-            step
-        ] = self._snapshot_optimizer_param_groups_by_name()
+        runtime.optimizer_param_groups_by_step[step] = (
+            self._snapshot_optimizer_param_groups_by_name()
+        )
 
     def update_end(self, step: int) -> None:
         runtime = self._active_runtime
@@ -146,7 +146,9 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
     ) -> None:
         result = runtime.result
         if result is None:
-            pending.error = RuntimeError("GoCkpt-O runtime is missing checkpoint metadata.")
+            pending.error = RuntimeError(
+                "GoCkpt-O runtime is missing checkpoint metadata."
+            )
             return
 
         try:
@@ -166,7 +168,9 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
                     )
 
             checkpoint = self._assemble_checkpoint(runtime)
-            pending.error = self._persist_checkpoint_worker(checkpoint, result.path, result)
+            pending.error = self._persist_checkpoint_worker(
+                checkpoint, result.path, result
+            )
         except BaseException as exc:
             pending.error = exc
 

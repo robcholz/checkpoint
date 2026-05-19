@@ -80,7 +80,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--steps", type=int, default=14)
     parser.add_argument("--save-step", type=int, default=4)
     parser.add_argument("--overlap-steps", type=int, default=4)
-    parser.add_argument("--output-dir", type=Path, default=Path("benchmark/checkpoint_runs"))
+    parser.add_argument(
+        "--output-dir", type=Path, default=Path("benchmark/checkpoint_runs")
+    )
     parser.add_argument("--device", type=str, default="cuda")
     parser.add_argument("--seed", type=int, default=1234)
     parser.add_argument("--atol", type=float, default=2e-5)
@@ -96,7 +98,9 @@ def set_seed(seed: int) -> None:
         torch.cuda.manual_seed_all(seed)
 
 
-def create_batches(device: torch.device, steps: int, seed: int) -> list[tuple[torch.Tensor, torch.Tensor]]:
+def create_batches(
+    device: torch.device, steps: int, seed: int
+) -> list[tuple[torch.Tensor, torch.Tensor]]:
     generator = torch.Generator(device="cpu")
     generator.manual_seed(seed + 17)
     batches = []
@@ -108,7 +112,9 @@ def create_batches(device: torch.device, steps: int, seed: int) -> list[tuple[to
 
 
 def clone_model_state(model: nn.Module) -> dict[str, torch.Tensor]:
-    return {name: value.detach().cpu().clone() for name, value in model.state_dict().items()}
+    return {
+        name: value.detach().cpu().clone() for name, value in model.state_dict().items()
+    }
 
 
 def clone_optimizer_state_portable(optimizer: AdamW) -> dict[str, Any]:
@@ -133,16 +139,25 @@ def max_state_diff(left: dict[str, Any], right: dict[str, Any]) -> float:
     for key, left_value in left.items():
         right_value = right[key]
         if isinstance(left_value, torch.Tensor):
-            diff = (left_value.detach().cpu() - right_value.detach().cpu()).abs().max().item()
+            diff = (
+                (left_value.detach().cpu() - right_value.detach().cpu())
+                .abs()
+                .max()
+                .item()
+            )
             max_diff = max(max_diff, float(diff))
     return max_diff
 
 
-def is_within_tolerance(diff: float, reference: dict[str, Any], atol: float, rtol: float) -> bool:
+def is_within_tolerance(
+    diff: float, reference: dict[str, Any], atol: float, rtol: float
+) -> bool:
     max_reference = 0.0
     for value in reference.values():
         if isinstance(value, torch.Tensor):
-            max_reference = max(max_reference, float(value.detach().cpu().abs().max().item()))
+            max_reference = max(
+                max_reference, float(value.detach().cpu().abs().max().item())
+            )
     return diff <= atol + rtol * max_reference
 
 
@@ -163,19 +178,28 @@ def max_optimizer_diff(left: dict[str, Any], right: dict[str, Any]) -> float:
         for key, left_value in left_entry.items():
             right_value = right_entry[key]
             if isinstance(left_value, torch.Tensor):
-                diff = (left_value.detach().cpu() - right_value.detach().cpu()).abs().max().item()
+                diff = (
+                    (left_value.detach().cpu() - right_value.detach().cpu())
+                    .abs()
+                    .max()
+                    .item()
+                )
                 max_diff = max(max_diff, float(diff))
             elif left_value != right_value:
                 return float("inf")
     return max_diff
 
 
-def is_optimizer_within_tolerance(diff: float, reference: dict[str, Any], atol: float, rtol: float) -> bool:
+def is_optimizer_within_tolerance(
+    diff: float, reference: dict[str, Any], atol: float, rtol: float
+) -> bool:
     max_reference = 0.0
     for entry in reference["state"].values():
         for value in entry.values():
             if isinstance(value, torch.Tensor):
-                max_reference = max(max_reference, float(value.detach().cpu().abs().max().item()))
+                max_reference = max(
+                    max_reference, float(value.detach().cpu().abs().max().item())
+                )
     return diff <= atol + rtol * max_reference
 
 
@@ -216,7 +240,10 @@ def train_one_hook(args: argparse.Namespace, hook_type: str) -> BenchmarkResult:
     if device.type == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA requested but unavailable.")
 
-    if hook_type in {"gockpt", "gockpt_o"} and args.save_step + args.overlap_steps > args.steps:
+    if (
+        hook_type in {"gockpt", "gockpt_o"}
+        and args.save_step + args.overlap_steps > args.steps
+    ):
         raise ValueError("steps must be >= save_step + overlap_steps for GoCkpt hooks.")
 
     set_seed(args.seed)
@@ -260,7 +287,9 @@ def train_one_hook(args: argparse.Namespace, hook_type: str) -> BenchmarkResult:
         hook.update_end(step)
 
     reference_model_by_step[args.steps + 1] = clone_model_state(model)
-    reference_optimizer_by_step[args.steps + 1] = clone_optimizer_state_portable(optimizer)
+    reference_optimizer_by_step[args.steps + 1] = clone_optimizer_state_portable(
+        optimizer
+    )
     hook.wait_for_pending_persistence()
     if device.type == "cuda":
         torch.cuda.synchronize()
@@ -296,7 +325,9 @@ def train_one_hook(args: argparse.Namespace, hook_type: str) -> BenchmarkResult:
 
     loaded_model_state = clone_model_state(loaded_model)
     loaded_optimizer_state = clone_optimizer_state_portable(loaded_optimizer)
-    model_diff = max_state_diff(loaded_model_state, reference_model_by_step[checkpoint_step])
+    model_diff = max_state_diff(
+        loaded_model_state, reference_model_by_step[checkpoint_step]
+    )
     optimizer_diff = max_optimizer_diff(
         loaded_optimizer_state,
         reference_optimizer_by_step[checkpoint_step],
@@ -323,7 +354,9 @@ def train_one_hook(args: argparse.Namespace, hook_type: str) -> BenchmarkResult:
         reference_optimizer_by_step[args.steps + 1],
     )
     passed = (
-        is_within_tolerance(model_diff, reference_model_by_step[checkpoint_step], args.atol, args.rtol)
+        is_within_tolerance(
+            model_diff, reference_model_by_step[checkpoint_step], args.atol, args.rtol
+        )
         and is_optimizer_within_tolerance(
             optimizer_diff,
             reference_optimizer_by_step[checkpoint_step],
@@ -385,7 +418,14 @@ def build_performance_checks(results: list[dict[str, Any]]) -> list[dict[str, An
     by_hook = {result["hook_type"]: result for result in results if result["passed"]}
     checks: list[dict[str, Any]] = []
 
-    def add_check(name: str, left_hook: str, left_phase: str, op: str, right_hook: str, right_phase: str) -> None:
+    def add_check(
+        name: str,
+        left_hook: str,
+        left_phase: str,
+        op: str,
+        right_hook: str,
+        right_phase: str,
+    ) -> None:
         left_result = by_hook.get(left_hook)
         right_result = by_hook.get(right_hook)
         left_value = phase_total(left_result, left_phase) if left_result else None
@@ -402,9 +442,17 @@ def build_performance_checks(results: list[dict[str, Any]]) -> list[dict[str, An
         checks.append(
             {
                 "name": name,
-                "left": {"hook": left_hook, "phase": left_phase, "value_sec": left_value},
+                "left": {
+                    "hook": left_hook,
+                    "phase": left_phase,
+                    "value_sec": left_value,
+                },
                 "operator": op,
-                "right": {"hook": right_hook, "phase": right_phase, "value_sec": right_value},
+                "right": {
+                    "hook": right_hook,
+                    "phase": right_phase,
+                    "value_sec": right_value,
+                },
                 "passed": passed,
             }
         )

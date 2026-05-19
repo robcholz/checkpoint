@@ -126,7 +126,9 @@ def save_tradeoff_plot(plt, runs: list[dict[str, Any]], output_path: Path) -> No
     plt.figure(figsize=(8.5, 6))
     plt.scatter(checkpoint_totals, steps_per_sec, s=80, color="#6a994e")
     for hook, x_value, y_value in zip(hooks, checkpoint_totals, steps_per_sec):
-        plt.annotate(hook, (x_value, y_value), xytext=(6, 6), textcoords="offset points")
+        plt.annotate(
+            hook, (x_value, y_value), xytext=(6, 6), textcoords="offset points"
+        )
     plt.title("Checkpoint Cost vs Training Throughput")
     plt.xlabel("Total checkpoint save time (sec)")
     plt.ylabel("Steps / sec")
@@ -162,9 +164,13 @@ def main() -> None:
 
     plt = setup_matplotlib()
     save_throughput_plot(plt, runs, args.output_dir / "throughput.png")
-    save_checkpoint_overhead_plot(plt, runs, args.output_dir / "checkpoint_overhead.png")
+    save_checkpoint_overhead_plot(
+        plt, runs, args.output_dir / "checkpoint_overhead.png"
+    )
     save_tradeoff_plot(plt, runs, args.output_dir / "tradeoff.png")
-    save_checkpoint_timeline_plot(plt, runs, args.output_dir / "checkpoint_timeline.png")
+    save_checkpoint_timeline_plot(
+        plt, runs, args.output_dir / "checkpoint_timeline.png"
+    )
 
     print(f"saved 4 plots to {args.output_dir}")
 

@@ -70,7 +70,9 @@ def get_runs(report: dict[str, Any]) -> list[dict[str, Any]]:
     return runs
 
 
-def collect_power_series(report: dict[str, Any]) -> list[tuple[str, list[tuple[float, float]]]]:
+def collect_power_series(
+    report: dict[str, Any],
+) -> list[tuple[str, list[tuple[float, float]]]]:
     by_hook: dict[str, list[tuple[float, float]]] = {}
     for run in get_runs(report):
         hook_type = run.get("hook_type")
@@ -98,7 +100,9 @@ def collect_power_series(report: dict[str, Any]) -> list[tuple[str, list[tuple[f
 
     ordered = [(hook, by_hook[hook]) for hook in HOOK_ORDER if hook in by_hook]
     if not ordered:
-        raise ValueError("no successful runs with power samples were found in the report")
+        raise ValueError(
+            "no successful runs with power samples were found in the report"
+        )
     return ordered
 
 

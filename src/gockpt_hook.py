@@ -83,8 +83,12 @@ class GoCkptRuntime:
     transferred_partitions: set[int] = field(default_factory=set)
     partition_events: dict[int, torch.cuda.Event | None] = field(default_factory=dict)
     transferred_blocks: dict[str, ParameterSnapshot] = field(default_factory=dict)
-    gradients_by_step: dict[int, dict[str, torch.Tensor | None]] = field(default_factory=dict)
-    optimizer_param_groups_by_step: dict[int, dict[str, dict[str, Any]]] = field(default_factory=dict)
+    gradients_by_step: dict[int, dict[str, torch.Tensor | None]] = field(
+        default_factory=dict
+    )
+    optimizer_param_groups_by_step: dict[int, dict[str, dict[str, Any]]] = field(
+        default_factory=dict
+    )
     flat_replay_blocks_by_name: dict[str, FlatReplayBlock] = field(default_factory=dict)
     flattened_partitions: set[int] = field(default_factory=set)
     flatten_lock: threading.Lock = field(default_factory=threading.Lock)
@@ -146,7 +150,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
 
         self._named_parameters = list(self.model.named_parameters())
         self._params_by_name = {name: param for name, param in self._named_parameters}
-        self._param_name_by_obj = {id(param): name for name, param in self._named_parameters}
+        self._param_name_by_obj = {
+            id(param): name for name, param in self._named_parameters
+        }
         self._buffers_by_name = dict(self.model.named_buffers())
 
         self._param_to_group: dict[int, dict[str, Any]] = {}
@@ -360,7 +366,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         self.history.append(pending.result)
 
         if pending.error is not None:
-            raise RuntimeError("Background checkpoint persistence failed.") from pending.error
+            raise RuntimeError(
+                "Background checkpoint persistence failed."
+            ) from pending.error
 
     def _start_reconstruction_worker(self, runtime: GoCkptRuntime) -> None:
         runtime.reconstruction_executor = ThreadPoolExecutor(
@@ -381,7 +389,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         optimizer_param_groups: dict[str, dict[str, Any]],
     ) -> None:
         if runtime.reconstruction_error is not None:
-            raise RuntimeError("Background checkpoint reconstruction failed.") from runtime.reconstruction_error
+            raise RuntimeError(
+                "Background checkpoint reconstruction failed."
+            ) from runtime.reconstruction_error
 
         executor = runtime.reconstruction_executor
         slots = runtime.reconstruction_slots
@@ -428,7 +438,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             wait(futures)
 
         if runtime.reconstruction_error is not None:
-            raise RuntimeError("Background checkpoint reconstruction failed.") from runtime.reconstruction_error
+            raise RuntimeError(
+                "Background checkpoint reconstruction failed."
+            ) from runtime.reconstruction_error
 
         if (
             runtime.reconstruction_started_at is not None
@@ -523,7 +535,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
 
         state_id = 0
         for group in self.optimizer.param_groups:
-            group_template = {key: value for key, value in group.items() if key != "params"}
+            group_template = {
+                key: value for key, value in group.items() if key != "params"
+            }
             group_param_ids: list[int] = []
             for param in group["params"]:
                 param_id = id(param)
@@ -568,7 +582,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
     def _estimate_parameter_bytes(self, name: str) -> int:
         param = self._params_by_name[name]
         size = param.numel() * param.element_size()
-        opt_state = self.optimizer.state.get(param, {}) if self.optimizer is not None else {}
+        opt_state = (
+            self.optimizer.state.get(param, {}) if self.optimizer is not None else {}
+        )
         exp_avg = opt_state.get("exp_avg")
         exp_avg_sq = opt_state.get("exp_avg_sq")
         if isinstance(exp_avg, torch.Tensor):
@@ -593,11 +609,17 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         partition = runtime.partitions[partition_index]
         transfer_start = time.perf_counter()
 
-        current_stream = torch.cuda.current_stream() if self._transfer_stream is not None else None
+        current_stream = (
+            torch.cuda.current_stream() if self._transfer_stream is not None else None
+        )
         if self._transfer_stream is not None and current_stream is not None:
             self._transfer_stream.wait_stream(current_stream)
 
-        with torch.cuda.stream(self._transfer_stream) if self._transfer_stream is not None else _nullcontext():
+        with (
+            torch.cuda.stream(self._transfer_stream)
+            if self._transfer_stream is not None
+            else _nullcontext()
+        ):
             for name in partition:
                 param = self._params_by_name[name]
                 optimizer_state = self._snapshot_optimizer_state(param)
@@ -620,7 +642,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         if runtime.result is not None:
             runtime.result.transfer_duration_sec += time.perf_counter() - transfer_start
 
-    def _snapshot_optimizer_state(self, param: torch.nn.Parameter) -> OptimizerParamSnapshot:
+    def _snapshot_optimizer_state(
+        self, param: torch.nn.Parameter
+    ) -> OptimizerParamSnapshot:
         if self.optimizer is None:
             raise RuntimeError("GoCkpt requires an optimizer to snapshot state.")
 
@@ -707,8 +731,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             return tuple(self._clone_optimizer_value(item) for item in value)
         if isinstance(value, dict):
             return {
-                key: self._clone_optimizer_value(item)
-                for key, item in value.items()
+                key: self._clone_optimizer_value(item) for key, item in value.items()
             }
         return value
 
@@ -747,12 +770,16 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             groups.setdefault(key, []).append(name)
 
         for names in groups.values():
-            total_numel = sum(runtime.transferred_blocks[name].param.numel() for name in names)
+            total_numel = sum(
+                runtime.transferred_blocks[name].param.numel() for name in names
+            )
             if total_numel == 0:
                 continue
 
             first = runtime.transferred_blocks[names[0]]
-            param_buffer = torch.empty(total_numel, dtype=first.param.dtype, device="cpu")
+            param_buffer = torch.empty(
+                total_numel, dtype=first.param.dtype, device="cpu"
+            )
             exp_avg_buffer = torch.empty(
                 total_numel,
                 dtype=first.optimizer_state.exp_avg.dtype,
@@ -771,16 +798,20 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
                 numel = snapshot.param.numel()
                 end = offset + numel
                 param_buffer[offset:end].copy_(snapshot.param.reshape(-1))
-                exp_avg_buffer[offset:end].copy_(snapshot.optimizer_state.exp_avg.reshape(-1))
-                exp_avg_sq_buffer[offset:end].copy_(snapshot.optimizer_state.exp_avg_sq.reshape(-1))
+                exp_avg_buffer[offset:end].copy_(
+                    snapshot.optimizer_state.exp_avg.reshape(-1)
+                )
+                exp_avg_sq_buffer[offset:end].copy_(
+                    snapshot.optimizer_state.exp_avg_sq.reshape(-1)
+                )
 
                 snapshot.param = param_buffer[offset:end].view_as(snapshot.param)
                 snapshot.optimizer_state.exp_avg = exp_avg_buffer[offset:end].view_as(
                     snapshot.optimizer_state.exp_avg
                 )
-                snapshot.optimizer_state.exp_avg_sq = exp_avg_sq_buffer[offset:end].view_as(
-                    snapshot.optimizer_state.exp_avg_sq
-                )
+                snapshot.optimizer_state.exp_avg_sq = exp_avg_sq_buffer[
+                    offset:end
+                ].view_as(snapshot.optimizer_state.exp_avg_sq)
                 offsets[name] = (offset, end)
                 offset = end
 
@@ -829,7 +860,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         event.synchronize()
         return copied
 
-    def _wait_partition_transfer(self, runtime: GoCkptRuntime, partition_index: int) -> None:
+    def _wait_partition_transfer(
+        self, runtime: GoCkptRuntime, partition_index: int
+    ) -> None:
         event = runtime.partition_events.get(partition_index)
         if event is None:
             return
@@ -897,7 +930,10 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         ):
             return
 
-        buckets: dict[tuple[Any, ...], tuple[dict[str, Any], list[ParameterSnapshot], list[torch.Tensor]]] = {}
+        buckets: dict[
+            tuple[Any, ...],
+            tuple[dict[str, Any], list[ParameterSnapshot], list[torch.Tensor]],
+        ] = {}
 
         for name, grad in gradients_for_step.items():
             snapshot = runtime.transferred_blocks[name]
@@ -952,7 +988,10 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             first_step = int(self._ensure_step_tensor(first_snapshot).item())
             for name in block_names[1:]:
                 snapshot = runtime.transferred_blocks[name]
-                if self._adamw_bucket_signature(snapshot, optimizer_param_groups[name]) != signature:
+                if (
+                    self._adamw_bucket_signature(snapshot, optimizer_param_groups[name])
+                    != signature
+                ):
                     return False
                 if int(self._ensure_step_tensor(snapshot).item()) != first_step:
                     return False
@@ -983,7 +1022,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
                 raise RuntimeError("Flat GoCkpt replay received a missing gradient.")
             start, end = block.offsets[name]
             grad_buffer[start:end].copy_(
-                grad.to(device=block.param_buffer.device, dtype=block.param_buffer.dtype).reshape(-1)
+                grad.to(
+                    device=block.param_buffer.device, dtype=block.param_buffer.dtype
+                ).reshape(-1)
             )
 
         first_snapshot = runtime.transferred_blocks[block.names[0]]
@@ -1132,7 +1173,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
 
         amsgrad = bool(param_group.get("amsgrad", False))
         if amsgrad:
-            raise NotImplementedError("GoCkpt CPU replay does not support AdamW amsgrad.")
+            raise NotImplementedError(
+                "GoCkpt CPU replay does not support AdamW amsgrad."
+            )
 
         if self._apply_deepspeed_cpu_adam_bucket(snapshots, gradients, param_group):
             return
@@ -1315,7 +1358,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
     ) -> None:
         result = runtime.result
         if result is None:
-            pending.error = RuntimeError("GoCkpt runtime is missing checkpoint result metadata.")
+            pending.error = RuntimeError(
+                "GoCkpt runtime is missing checkpoint result metadata."
+            )
             return
 
         try:
@@ -1334,7 +1379,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
                     )
 
             checkpoint = self._assemble_checkpoint(runtime)
-            pending.error = self._persist_checkpoint_worker(checkpoint, result.path, result)
+            pending.error = self._persist_checkpoint_worker(
+                checkpoint, result.path, result
+            )
         except BaseException as exc:
             pending.error = exc
 
