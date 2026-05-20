@@ -42,7 +42,7 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
 
     Difference from GoCkpt:
     - model/optimizer partition transfer is unchanged
-    - gradient GPU->CPU transfer is submitted asynchronously after backward
+    - gradient GPU->CPU transfer is submitted asynchronously at update_begin
     - that transfer may overlap with the current update and the next step's
       forward pass
     - the transfer must complete before the next backward begins, because that
@@ -98,8 +98,7 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
         if not gradients:
             return
 
-        transfer = self._submit_async_gradient_transfer(step, gradients)
-        self._pending_gradient_transfers[step] = transfer
+        self._pending_gradient_refs[step] = gradients
 
     def update_begin(self, step: int) -> None:
         runtime = self._active_runtime
@@ -109,6 +108,12 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
         runtime.optimizer_param_groups_by_step[step] = (
             self._snapshot_optimizer_param_groups_by_name()
         )
+        gradients = self._pending_gradient_refs.pop(step, None)
+        if gradients:
+            self._pending_gradient_transfers[step] = (
+                self._submit_async_gradient_transfer(step, gradients)
+            )
+        self._wait_current_partition_transfer_before_update(runtime, step)
 
     def update_end(self, step: int) -> None:
         runtime = self._active_runtime

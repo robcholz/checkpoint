@@ -31,8 +31,8 @@ class AsyncOCheckpointHook(BaselineCheckpointHook):
     2. That transfer is allowed to overlap with the same step's forward and
        backward passes because those phases do not mutate model / optimizer
        state.
-    3. `update_begin(step)` is the synchronization barrier. If the transfer for
-       that same step has not finished yet, the update phase waits there before
+    3. `backward_end(step)` is the synchronization barrier. If the transfer for
+       that same step has not finished yet, training waits there before
        optimizer state mutation begins.
     4. After transfer completes, checkpoint persistence continues in a
        background CPU thread via `torch.save`.
@@ -123,12 +123,12 @@ class AsyncOCheckpointHook(BaselineCheckpointHook):
         return
 
     def backward_end(self, step: int) -> None:
-        return
-
-    def update_begin(self, step: int) -> None:
         pending_started_step = self._pending_started_step
         if pending_started_step is not None and step == pending_started_step:
             self.wait_for_pending_transfer()
+
+    def update_begin(self, step: int) -> None:
+        return
 
     def update_end(self, step: int) -> None:
         return

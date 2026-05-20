@@ -67,6 +67,15 @@ class PendingCheckpointWorker:
 
 
 @dataclass
+class GoCkptPendingGradientTransfer:
+    step: int
+    gradients: dict[str, torch.Tensor | None]
+    source_refs: dict[str, torch.Tensor]
+    event: torch.cuda.Event | None
+    submitted_at: float
+
+
+@dataclass
 class FlatReplayBlock:
     partition_index: int
     names: list[str]
@@ -84,9 +93,6 @@ class GoCkptRuntime:
     transferred_partitions: set[int] = field(default_factory=set)
     partition_events: dict[int, torch.cuda.Event | None] = field(default_factory=dict)
     transferred_blocks: dict[str, ParameterSnapshot] = field(default_factory=dict)
-    gradients_by_step: dict[int, dict[str, torch.Tensor | None]] = field(
-        default_factory=dict
-    )
     optimizer_param_groups_by_step: dict[int, dict[str, dict[str, Any]]] = field(
         default_factory=dict
     )
@@ -147,6 +153,13 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         self._transfer_stream = (
             torch.cuda.Stream() if torch.cuda.is_available() else None
         )
+        self._gradient_stream = (
+            torch.cuda.Stream() if torch.cuda.is_available() else None
+        )
+        self._pending_gradient_refs: dict[
+            int, dict[str, torch.Tensor | None]
+        ] = {}
+        self._pending_gradient_transfers: dict[int, GoCkptPendingGradientTransfer] = {}
         self._ds_cpu_adam_local = threading.local()
         self._ringbuffer_pressure_lock = threading.Lock()
         self._ringbuffer_pressure_t0 = time.perf_counter()
@@ -315,9 +328,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         if runtime is None or not self._is_step_in_request(runtime, step):
             return
 
-        grad_start = time.perf_counter()
         gradients_for_step: dict[str, torch.Tensor | None] = {}
-        gradient_refs: dict[str, torch.Tensor] = {}
         for name, snapshot in runtime.transferred_blocks.items():
             if snapshot.version_step > step:
                 continue
@@ -328,36 +339,36 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
                 gradients_for_step[name] = None
                 continue
 
-            gradient_refs[name] = grad.detach()
+            gradients_for_step[name] = grad.detach()
 
-        gradients_for_step.update(self._copy_gradients_to_cpu_blocking(gradient_refs))
+        if not gradients_for_step:
+            return
 
-        runtime.gradients_by_step[step] = gradients_for_step
-        if runtime.result is not None:
-            runtime.result.gradient_duration_sec += time.perf_counter() - grad_start
+        self._pending_gradient_refs[step] = gradients_for_step
 
     def update_begin(self, step: int) -> None:
         runtime = self._active_runtime
         if runtime is None or not self._is_step_in_request(runtime, step):
             return
 
-        gradients_for_step = runtime.gradients_by_step.pop(step, {})
-        if not gradients_for_step:
-            return
-
-        optimizer_param_groups = self._snapshot_optimizer_param_groups_by_name()
-        runtime.optimizer_param_groups_by_step[step] = optimizer_param_groups
-        self._enqueue_reconstruction(
-            runtime,
-            step,
-            gradients_for_step,
-            optimizer_param_groups,
-        )
+        runtime.optimizer_param_groups_by_step[
+            step
+        ] = self._snapshot_optimizer_param_groups_by_name()
+        gradients_for_step = self._pending_gradient_refs.pop(step, None)
+        if gradients_for_step:
+            self._pending_gradient_transfers[step] = (
+                self._submit_async_gradient_transfer(step, gradients_for_step)
+            )
+        self._wait_current_partition_transfer_before_update(runtime, step)
 
     def update_end(self, step: int) -> None:
         runtime = self._active_runtime
         if runtime is None:
             return
+
+        if self._is_step_in_request(runtime, step):
+            self._finish_pending_gradient_transfer(runtime, step)
+
         if step != runtime.request.target_step - 1:
             return
 
@@ -387,6 +398,8 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
                 "training ended before checkpoint target step was reached",
             )
             self._stop_reconstruction_worker(runtime)
+            self._pending_gradient_refs.clear()
+            self._pending_gradient_transfers.clear()
             self._active_runtime = None
 
         while True:
@@ -915,29 +928,76 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             target_flat[start:end].copy_(source_flat[start:end], non_blocking=True)
         return cpu_tensor
 
-    def _copy_gradients_to_cpu_blocking(
+    def _submit_async_gradient_transfer(
         self,
-        gradients: dict[str, torch.Tensor],
-    ) -> dict[str, torch.Tensor]:
-        if not gradients:
-            return {}
+        step: int,
+        gradients: dict[str, torch.Tensor | None],
+    ) -> GoCkptPendingGradientTransfer:
+        cpu_gradients: dict[str, torch.Tensor | None] = {}
+        source_refs: dict[str, torch.Tensor] = {}
+        submitted_at = time.perf_counter()
 
-        if self._transfer_stream is None:
-            return {name: grad.cpu().clone() for name, grad in gradients.items()}
+        if self._gradient_stream is None:
+            for name, grad in gradients.items():
+                if grad is None:
+                    cpu_gradients[name] = None
+                    continue
+                source_refs[name] = grad
+                cpu_gradients[name] = grad.cpu().clone()
+            return GoCkptPendingGradientTransfer(
+                step=step,
+                gradients=cpu_gradients,
+                source_refs=source_refs,
+                event=None,
+                submitted_at=submitted_at,
+            )
 
-        copied: dict[str, torch.Tensor] = {}
-        stream = torch.cuda.current_stream()
-        for name, grad in gradients.items():
-            if grad.device.type != "cuda":
-                copied[name] = grad.cpu().clone()
-                continue
-
-            copied[name] = self._copy_cuda_tensor_to_pinned_cpu(grad)
+        current_stream = torch.cuda.current_stream()
+        self._gradient_stream.wait_stream(current_stream)
+        with torch.cuda.stream(self._gradient_stream):
+            for name, grad in gradients.items():
+                if grad is None:
+                    cpu_gradients[name] = None
+                    continue
+                source_refs[name] = grad
+                cpu_gradients[name] = self._copy_cuda_tensor_to_pinned_cpu(grad)
 
         event = torch.cuda.Event()
-        event.record(stream)
-        event.synchronize()
-        return copied
+        event.record(self._gradient_stream)
+        return GoCkptPendingGradientTransfer(
+            step=step,
+            gradients=cpu_gradients,
+            source_refs=source_refs,
+            event=event,
+            submitted_at=submitted_at,
+        )
+
+    def _finish_pending_gradient_transfer(
+        self,
+        runtime: GoCkptRuntime,
+        step: int,
+    ) -> None:
+        pending = self._pending_gradient_transfers.pop(step, None)
+        if pending is None:
+            return
+
+        if pending.event is not None:
+            pending.event.synchronize()
+
+        optimizer_param_groups = runtime.optimizer_param_groups_by_step.get(step)
+        if optimizer_param_groups is None:
+            optimizer_param_groups = self._snapshot_optimizer_param_groups_by_name()
+            runtime.optimizer_param_groups_by_step[step] = optimizer_param_groups
+
+        self._enqueue_reconstruction(
+            runtime,
+            step,
+            pending.gradients,
+            optimizer_param_groups,
+        )
+
+        if runtime.result is not None:
+            runtime.result.gradient_duration_sec += time.perf_counter() - pending.submitted_at
 
     def _wait_partition_transfer(
         self, runtime: GoCkptRuntime, partition_index: int
@@ -948,6 +1008,21 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
 
         event.synchronize()
         runtime.partition_events[partition_index] = None
+
+    def _wait_current_partition_transfer_before_update(
+        self,
+        runtime: GoCkptRuntime,
+        step: int,
+    ) -> None:
+        partition_index = step - runtime.request.start_step
+        if partition_index < 0 or partition_index >= len(runtime.partitions):
+            return
+        if partition_index not in runtime.transferred_partitions:
+            return
+
+        # The partition snapshot reads model parameters and optimizer states.
+        # It must complete before optimizer.step() mutates those tensors.
+        self._wait_partition_transfer(runtime, partition_index)
 
     def _apply_cpu_adamw_update(
         self,
