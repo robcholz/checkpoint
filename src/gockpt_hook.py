@@ -156,9 +156,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         self._gradient_stream = (
             torch.cuda.Stream() if torch.cuda.is_available() else None
         )
-        self._pending_gradient_refs: dict[
-            int, dict[str, torch.Tensor | None]
-        ] = {}
+        self._pending_gradient_refs: dict[int, dict[str, torch.Tensor | None]] = {}
         self._pending_gradient_transfers: dict[int, GoCkptPendingGradientTransfer] = {}
         self._ds_cpu_adam_local = threading.local()
         self._ringbuffer_pressure_lock = threading.Lock()
@@ -351,9 +349,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         if runtime is None or not self._is_step_in_request(runtime, step):
             return
 
-        runtime.optimizer_param_groups_by_step[
-            step
-        ] = self._snapshot_optimizer_param_groups_by_name()
+        runtime.optimizer_param_groups_by_step[step] = (
+            self._snapshot_optimizer_param_groups_by_name()
+        )
         gradients_for_step = self._pending_gradient_refs.pop(step, None)
         if gradients_for_step:
             self._pending_gradient_transfers[step] = (
@@ -997,7 +995,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         )
 
         if runtime.result is not None:
-            runtime.result.gradient_duration_sec += time.perf_counter() - pending.submitted_at
+            runtime.result.gradient_duration_sec += (
+                time.perf_counter() - pending.submitted_at
+            )
 
     def _wait_partition_transfer(
         self, runtime: GoCkptRuntime, partition_index: int
