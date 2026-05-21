@@ -50,7 +50,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--batch-size",
         type=int,
-        default=1,
+        default=4,
         help="Per-device train batch size. Spec requires 1.",
     )
     parser.add_argument(

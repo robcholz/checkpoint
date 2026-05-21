@@ -37,14 +37,14 @@ conda run -n checkpoint python benchmark/finetune_benchmark.py \
   --overlap-steps 7 \
   --gockpt-inflight-packets 64 \
   --gradient-checkpointing \
-  --output-dir benchmark/finetune_runs
+  --output-dir /tmp/zsheng1/finetune_runs
 ```
 
 ## Benchmark Image
 
 ```bash
 conda run -n checkpoint python benchmark/visualize_checkpoint_save_time.py \
-    --report benchmark/finetune_runs/report.json \
+    --report /tmp/zsheng1/finetune_runs/report.json \
     --output benchmark/images/foreground_checkpoint_time.png \
     --title "Foreground Checkpoint Stall Time vs Algorithms"
 ```
@@ -53,7 +53,7 @@ conda run -n checkpoint python benchmark/visualize_checkpoint_save_time.py \
 
 ```bash
 conda run -n checkpoint python benchmark/visualize_checkpoint_power.py \
-    --report benchmark/finetune_runs/power.json \
+    --report /tmp/zsheng1/finetune_runs/power.json \
     --output benchmark/images/checkpoint_power.png
 ```
 
