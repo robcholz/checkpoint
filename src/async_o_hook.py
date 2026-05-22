@@ -17,6 +17,9 @@ class AsyncOCheckpointResult:
     tag: str
     path: Path
     transfer_duration_sec: float | None = None
+    transfer_sync_duration_sec: float | None = None
+    transfer_full_duration_sec: float | None = None
+    transfer_enqueue_started_at: float | None = None
     persistence_duration_sec: float | None = None
     total_duration_sec: float | None = None
 
@@ -135,13 +138,24 @@ class AsyncOCheckpointHook(BaselineCheckpointHook):
 
     def wait_for_pending_transfer(self) -> None:
         event: torch.cuda.Event | None
+        result: AsyncOCheckpointResult | None
         with self._pending_lock:
             event = self._pending_transfer_event
+            result = self._pending_result
 
         if event is None:
             return
 
+        sync_start = time.perf_counter()
         event.synchronize()
+        sync_duration = time.perf_counter() - sync_start
+
+        if result is not None:
+            result.transfer_sync_duration_sec = sync_duration
+            if result.transfer_enqueue_started_at is not None:
+                result.transfer_full_duration_sec = (
+                    time.perf_counter() - result.transfer_enqueue_started_at
+                )
 
         with self._pending_lock:
             if self._pending_transfer_event is event:
@@ -157,6 +171,38 @@ class AsyncOCheckpointHook(BaselineCheckpointHook):
 
         thread.join()
         self._finalize_pending_thread(thread)
+
+    def transfer_timing_summary(self) -> dict[str, float | None]:
+        total_enqueue = 0.0
+        total_sync = 0.0
+        total_full = 0.0
+        count = 0
+
+        for result in self.history:
+            if result.transfer_duration_sec is not None:
+                total_enqueue += result.transfer_duration_sec
+            if result.transfer_sync_duration_sec is not None:
+                total_sync += result.transfer_sync_duration_sec
+            if result.transfer_full_duration_sec is not None:
+                total_full += result.transfer_full_duration_sec
+            count += 1
+
+        return {
+            "mo_foreground_avg_sec": (
+                (total_enqueue + total_sync) / count if count > 0 else None
+            ),
+            "mo_full_avg_sec": (
+                total_full / count if count > 0 else None
+            ),
+            "mo_foreground_total_sec": total_enqueue + total_sync,
+            "mo_full_total_sec": total_full,
+            "mo_count": count,
+            "gradient_foreground_avg_sec": None,
+            "gradient_full_avg_sec": None,
+            "gradient_foreground_total_sec": 0.0,
+            "gradient_full_total_sec": 0.0,
+            "gradient_count": 0,
+        }
 
     def _join_previous_persist_if_needed(self) -> None:
         thread: threading.Thread | None
@@ -233,7 +279,11 @@ class AsyncOCheckpointHook(BaselineCheckpointHook):
         if self._transfer_stream is None:
             transfer_start = time.perf_counter()
             cpu_checkpoint = self._clone_to_cpu_sync(checkpoint)
-            result.transfer_duration_sec = time.perf_counter() - transfer_start
+            duration = time.perf_counter() - transfer_start
+            result.transfer_duration_sec = duration
+            result.transfer_enqueue_started_at = transfer_start
+            result.transfer_full_duration_sec = duration
+            result.transfer_sync_duration_sec = 0.0
             return cpu_checkpoint, None
 
         transfer_start = time.perf_counter()
@@ -247,9 +297,8 @@ class AsyncOCheckpointHook(BaselineCheckpointHook):
         event = torch.cuda.Event()
         event.record(transfer_stream)
 
-        # Measure host-side time until the transfer pipeline is enqueued. The
-        # actual device copy duration is completed when the event fires.
         result.transfer_duration_sec = time.perf_counter() - transfer_start
+        result.transfer_enqueue_started_at = transfer_start
         return cpu_checkpoint, event
 
     def _clone_to_cpu_sync(self, value: Any) -> Any:

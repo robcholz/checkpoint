@@ -91,6 +91,20 @@ class BaselineCheckpointHook(PyTorchCheckpointHook):
         self.last_result = result
         self.history.append(result)
 
+    def transfer_timing_summary(self) -> dict[str, float | None]:
+        return {
+            "mo_foreground_avg_sec": None,
+            "mo_full_avg_sec": None,
+            "mo_foreground_total_sec": 0.0,
+            "mo_full_total_sec": 0.0,
+            "mo_count": 0,
+            "gradient_foreground_avg_sec": None,
+            "gradient_full_avg_sec": None,
+            "gradient_foreground_total_sec": 0.0,
+            "gradient_full_total_sec": 0.0,
+            "gradient_count": 0,
+        }
+
     def forward_begin(self, step: int) -> None:
         # Baseline checkpoint does not need pre-forward synchronization.
         return

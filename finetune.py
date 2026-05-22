@@ -293,6 +293,14 @@ def save_training_metadata(
         metadata["raw_foreground_summary"] = raw_foreground_profiler.summary()
         metadata["raw_foreground_records"] = raw_foreground_profiler.as_dicts()
 
+    transfer_timing_fn = getattr(hook, "transfer_timing_summary", None)
+    if transfer_timing_fn is None:
+        wrapped = getattr(hook, "wrapped", None)
+        if wrapped is not None:
+            transfer_timing_fn = getattr(wrapped, "transfer_timing_summary", None)
+    if transfer_timing_fn is not None:
+        metadata["transfer_timing_summary"] = transfer_timing_fn()
+
     ringbuffer_pressure_samples = getattr(hook, "ringbuffer_pressure_samples", None)
     if ringbuffer_pressure_samples is not None:
         metadata["ringbuffer_pressure_samples"] = list(ringbuffer_pressure_samples)

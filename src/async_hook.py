@@ -134,6 +134,30 @@ class AsyncCheckpointHook(BaselineCheckpointHook):
         thread.join()
         self._finalize_pending_thread(thread)
 
+    def transfer_timing_summary(self) -> dict[str, float | None]:
+        total_transfer = 0.0
+        count = 0
+        for result in self.history:
+            total_transfer += result.transfer_duration_sec
+            count += 1
+
+        return {
+            "mo_foreground_avg_sec": (
+                total_transfer / count if count > 0 else None
+            ),
+            "mo_full_avg_sec": (
+                total_transfer / count if count > 0 else None
+            ),
+            "mo_foreground_total_sec": total_transfer,
+            "mo_full_total_sec": total_transfer,
+            "mo_count": count,
+            "gradient_foreground_avg_sec": None,
+            "gradient_full_avg_sec": None,
+            "gradient_foreground_total_sec": 0.0,
+            "gradient_full_total_sec": 0.0,
+            "gradient_count": 0,
+        }
+
     def _join_previous_persist_if_needed(self) -> None:
         thread: threading.Thread | None
         with self._pending_lock:

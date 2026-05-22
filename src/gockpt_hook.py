@@ -40,7 +40,12 @@ class GoCkptCheckpointResult:
     tag: str
     path: Path
     transfer_duration_sec: float = 0.0
+    transfer_sync_duration_sec: float = 0.0
+    transfer_count: int = 0
     gradient_duration_sec: float = 0.0
+    gradient_submit_duration_sec: float = 0.0
+    gradient_sync_duration_sec: float = 0.0
+    gradient_count: int = 0
     reconstruction_duration_sec: float = 0.0
     reconstruction_backpressure_sec: float = 0.0
     persistence_duration_sec: float | None = None
@@ -73,6 +78,7 @@ class GoCkptPendingGradientTransfer:
     source_refs: dict[str, torch.Tensor]
     event: torch.cuda.Event | None
     submitted_at: float
+    submit_duration_sec: float = 0.0
 
 
 @dataclass
@@ -441,6 +447,59 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
                 "Background checkpoint persistence failed."
             ) from pending.error
 
+    def transfer_timing_summary(self) -> dict[str, float | None]:
+        total_transfer_enqueue = 0.0
+        total_transfer_sync = 0.0
+        total_transfer_full = 0.0
+        total_transfer_count = 0
+        total_gradient_submit = 0.0
+        total_gradient_sync = 0.0
+        total_gradient_full = 0.0
+        total_gradient_count = 0
+
+        for result in self.history:
+            total_transfer_enqueue += result.transfer_duration_sec
+            total_transfer_sync += result.transfer_sync_duration_sec
+            total_transfer_full += (
+                result.transfer_duration_sec + result.transfer_sync_duration_sec
+            )
+            total_transfer_count += result.transfer_count
+            total_gradient_submit += result.gradient_submit_duration_sec
+            total_gradient_sync += result.gradient_sync_duration_sec
+            total_gradient_full += result.gradient_duration_sec
+            total_gradient_count += result.gradient_count
+
+        return {
+            "mo_foreground_avg_sec": (
+                (total_transfer_enqueue + total_transfer_sync) / total_transfer_count
+                if total_transfer_count > 0
+                else None
+            ),
+            "mo_full_avg_sec": (
+                total_transfer_full / total_transfer_count
+                if total_transfer_count > 0
+                else None
+            ),
+            "mo_foreground_total_sec": total_transfer_enqueue + total_transfer_sync,
+            "mo_full_total_sec": total_transfer_full,
+            "mo_count": total_transfer_count,
+            "gradient_foreground_avg_sec": (
+                (total_gradient_submit + total_gradient_sync) / total_gradient_count
+                if total_gradient_count > 0
+                else None
+            ),
+            "gradient_full_avg_sec": (
+                total_gradient_full / total_gradient_count
+                if total_gradient_count > 0
+                else None
+            ),
+            "gradient_foreground_total_sec": (
+                total_gradient_submit + total_gradient_sync
+            ),
+            "gradient_full_total_sec": total_gradient_full,
+            "gradient_count": total_gradient_count,
+        }
+
     def _start_reconstruction_worker(self, runtime: GoCkptRuntime) -> None:
         runtime.reconstruction_executor = ThreadPoolExecutor(
             max_workers=self._reconstruction_workers,
@@ -715,6 +774,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         runtime.transferred_partitions.add(partition_index)
         if runtime.result is not None:
             runtime.result.transfer_duration_sec += time.perf_counter() - transfer_start
+            runtime.result.transfer_count += 1
 
     def _snapshot_optimizer_state(
         self, param: torch.nn.Parameter
@@ -942,12 +1002,14 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
                     continue
                 source_refs[name] = grad
                 cpu_gradients[name] = grad.cpu().clone()
+            submit_duration = time.perf_counter() - submitted_at
             return GoCkptPendingGradientTransfer(
                 step=step,
                 gradients=cpu_gradients,
                 source_refs=source_refs,
                 event=None,
                 submitted_at=submitted_at,
+                submit_duration_sec=submit_duration,
             )
 
         current_stream = torch.cuda.current_stream()
@@ -962,12 +1024,14 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
 
         event = torch.cuda.Event()
         event.record(self._gradient_stream)
+        submit_duration = time.perf_counter() - submitted_at
         return GoCkptPendingGradientTransfer(
             step=step,
             gradients=cpu_gradients,
             source_refs=source_refs,
             event=event,
             submitted_at=submitted_at,
+            submit_duration_sec=submit_duration,
         )
 
     def _finish_pending_gradient_transfer(
@@ -979,8 +1043,11 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         if pending is None:
             return
 
+        sync_duration = 0.0
         if pending.event is not None:
+            sync_start = time.perf_counter()
             pending.event.synchronize()
+            sync_duration = time.perf_counter() - sync_start
 
         optimizer_param_groups = runtime.optimizer_param_groups_by_step.get(step)
         if optimizer_param_groups is None:
@@ -998,6 +1065,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             runtime.result.gradient_duration_sec += (
                 time.perf_counter() - pending.submitted_at
             )
+            runtime.result.gradient_submit_duration_sec += pending.submit_duration_sec
+            runtime.result.gradient_sync_duration_sec += sync_duration
+            runtime.result.gradient_count += 1
 
     def _wait_partition_transfer(
         self, runtime: GoCkptRuntime, partition_index: int
@@ -1006,7 +1076,12 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         if event is None:
             return
 
+        sync_start = time.perf_counter()
         event.synchronize()
+        if runtime.result is not None:
+            runtime.result.transfer_sync_duration_sec += (
+                time.perf_counter() - sync_start
+            )
         runtime.partition_events[partition_index] = None
 
     def _wait_current_partition_transfer_before_update(

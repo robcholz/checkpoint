@@ -34,6 +34,7 @@ class PendingGradientTransfer:
     source_refs: dict[str, torch.Tensor]
     event: torch.cuda.Event | None
     submitted_at: float
+    submit_duration_sec: float = 0.0
 
 
 class GoCkptOCheckpointHook(GoCkptCheckpointHook):
@@ -208,6 +209,7 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
         source_refs: dict[str, torch.Tensor] = {}
 
         if self._gradient_stream is None:
+            submitted_at = time.perf_counter()
             for name, grad in gradients.items():
                 if grad is None:
                     cpu_gradients[name] = None
@@ -215,12 +217,14 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
                 source_refs[name] = grad
                 cpu_gradients[name] = grad.cpu().clone()
 
+            submit_duration = time.perf_counter() - submitted_at
             return PendingGradientTransfer(
                 step=step,
                 gradients=cpu_gradients,
                 source_refs=source_refs,
                 event=None,
-                submitted_at=time.perf_counter(),
+                submitted_at=submitted_at,
+                submit_duration_sec=submit_duration,
             )
 
         current_stream = torch.cuda.current_stream()
@@ -238,12 +242,14 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
 
         event = torch.cuda.Event()
         event.record(self._gradient_stream)
+        submit_duration = time.perf_counter() - submitted_at
         return PendingGradientTransfer(
             step=step,
             gradients=cpu_gradients,
             source_refs=source_refs,
             event=event,
             submitted_at=submitted_at,
+            submit_duration_sec=submit_duration,
         )
 
     def _finish_pending_gradient_transfer(
@@ -255,8 +261,11 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
         if pending is None:
             return
 
+        sync_duration = 0.0
         if pending.event is not None:
+            sync_start = time.perf_counter()
             pending.event.synchronize()
+            sync_duration = time.perf_counter() - sync_start
 
         optimizer_param_groups = runtime.optimizer_param_groups_by_step.get(step)
         if optimizer_param_groups is None:
@@ -274,6 +283,9 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
             runtime.result.gradient_duration_sec += (
                 time.perf_counter() - pending.submitted_at
             )
+            runtime.result.gradient_submit_duration_sec += pending.submit_duration_sec
+            runtime.result.gradient_sync_duration_sec += sync_duration
+            runtime.result.gradient_count += 1
 
     def _finish_pending_gradient_transfer_if_ready(
         self,
