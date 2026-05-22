@@ -65,6 +65,9 @@ class PhaseProfilingHook(PyTorchCheckpointHook):
     ) -> None:
         self.wrapped = wrapped
         self.profiler = profiler or PhaseProfiler()
+        self.raw_foreground_profiler = PhaseProfiler()
+        self._raw_foreground_step: int | None = None
+        self._raw_foreground_start: float | None = None
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self.wrapped, name)
@@ -76,6 +79,23 @@ class PhaseProfilingHook(PyTorchCheckpointHook):
     @property
     def last_result(self) -> Any:
         return self.wrapped.last_result
+
+    def _begin_raw_foreground(self, step: int) -> None:
+        self._raw_foreground_step = step
+        self._raw_foreground_start = time.perf_counter()
+
+    def _end_raw_foreground(self, phase: str) -> None:
+        if self._raw_foreground_start is not None:
+            duration = time.perf_counter() - self._raw_foreground_start
+            self.raw_foreground_profiler.records.append(
+                PhaseRecord(
+                    phase=phase,
+                    step=self._raw_foreground_step,
+                    duration_sec=duration,
+                )
+            )
+        self._raw_foreground_start = None
+        self._raw_foreground_step = None
 
     def save_checkpoint(self, step: int) -> None:
         return self.profiler.time_phase(
@@ -96,13 +116,16 @@ class PhaseProfilingHook(PyTorchCheckpointHook):
         )
 
     def forward_begin(self, step: int) -> None:
-        return self.profiler.time_phase(
+        result = self.profiler.time_phase(
             "hook.forward_begin",
             step,
             lambda: self.wrapped.forward_begin(step),
         )
+        self._begin_raw_foreground(step)
+        return result
 
     def forward_end(self, step: int) -> None:
+        self._end_raw_foreground("raw_foreground_forward")
         return self.profiler.time_phase(
             "hook.forward_end",
             step,
@@ -110,13 +133,16 @@ class PhaseProfilingHook(PyTorchCheckpointHook):
         )
 
     def backward_begin(self, step: int) -> None:
-        return self.profiler.time_phase(
+        result = self.profiler.time_phase(
             "hook.backward_begin",
             step,
             lambda: self.wrapped.backward_begin(step),
         )
+        self._begin_raw_foreground(step)
+        return result
 
     def backward_end(self, step: int) -> None:
+        self._end_raw_foreground("raw_foreground_backward")
         return self.profiler.time_phase(
             "hook.backward_end",
             step,
@@ -124,13 +150,16 @@ class PhaseProfilingHook(PyTorchCheckpointHook):
         )
 
     def update_begin(self, step: int) -> None:
-        return self.profiler.time_phase(
+        result = self.profiler.time_phase(
             "hook.update_begin",
             step,
             lambda: self.wrapped.update_begin(step),
         )
+        self._begin_raw_foreground(step)
+        return result
 
     def update_end(self, step: int) -> None:
+        self._end_raw_foreground("raw_foreground_update")
         return self.profiler.time_phase(
             "hook.update_end",
             step,

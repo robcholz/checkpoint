@@ -288,6 +288,11 @@ def save_training_metadata(
         metadata["phase_summary"] = profiler.summary()
         metadata["phase_records"] = profiler.as_dicts()
 
+    raw_foreground_profiler = getattr(hook, "raw_foreground_profiler", None)
+    if raw_foreground_profiler is not None:
+        metadata["raw_foreground_summary"] = raw_foreground_profiler.summary()
+        metadata["raw_foreground_records"] = raw_foreground_profiler.as_dicts()
+
     ringbuffer_pressure_samples = getattr(hook, "ringbuffer_pressure_samples", None)
     if ringbuffer_pressure_samples is not None:
         metadata["ringbuffer_pressure_samples"] = list(ringbuffer_pressure_samples)

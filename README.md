@@ -67,6 +67,14 @@ conda run -n checkpoint python benchmark/visualize_checkpoint_memory.py \
     --title "Host Memory Usage Over Time"
 ```
 
+## Visualize Phase
+
+```bash
+conda run -n checkpoint python benchmark/visualize_checkpoint_phase.py  \
+    --report benchmark/finetune_runs/report.json \
+    -o benchmark/images/checkpoint_phase.png
+```
+
 ## Copy
 
 ```bash

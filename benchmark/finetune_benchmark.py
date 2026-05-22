@@ -28,6 +28,7 @@ class FinetuneBenchmarkRun:
     checkpoint_count: int
     checkpoint_files: list[str]
     phase_summary: dict[str, Any]
+    raw_foreground_summary: dict[str, Any]
     checkpoint_results: list[dict[str, Any]]
     ringbuffer_pressure_samples: list[dict[str, Any]]
     host_memory_samples_file: str | None
@@ -934,6 +935,7 @@ def run_one(args: argparse.Namespace, hook_type: str) -> FinetuneBenchmarkRun:
         checkpoint_count=len(checkpoint_files),
         checkpoint_files=checkpoint_files,
         phase_summary=summary.get("phase_summary", {}),
+        raw_foreground_summary=summary.get("raw_foreground_summary", {}),
         checkpoint_results=summary.get("checkpoint_results", []),
         ringbuffer_pressure_samples=summary.get("ringbuffer_pressure_samples", []),
         host_memory_samples_file=str(host_memory_samples_path),
