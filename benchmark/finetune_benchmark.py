@@ -30,6 +30,17 @@ class FinetuneBenchmarkRun:
     phase_summary: dict[str, Any]
     checkpoint_results: list[dict[str, Any]]
     ringbuffer_pressure_samples: list[dict[str, Any]]
+    host_memory_samples_file: str | None
+    host_memory_stream_file: str | None
+    host_memory_sample_count: int
+    host_memory_peak_process_tree_rss_gb: float | None
+    host_memory_peak_system_used_gb: float | None
+    host_memory_min_system_available_gb: float | None
+    host_memory_peak_cgroup_current_gb: float | None
+    host_memory_cgroup_limit_gb: float | None
+    host_memory_cgroup_oom_events_delta: int | None
+    host_memory_cgroup_oom_kill_events_delta: int | None
+    host_memory_sampling_error: str | None
     power_samples_file: str | None
     power_sample_count: int
     power_avg_w: float | None
@@ -52,7 +63,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--seq-len", type=int, default=512, choices=(256, 512))
     parser.add_argument("--max-steps", type=int, default=200)
-    parser.add_argument("--save-steps", type=int, default=20, choices=(10, 20))
+    parser.add_argument("--save-steps", type=int, default=20)
     parser.add_argument("--overlap-steps", type=int, default=7)
     parser.add_argument(
         "--gockpt-inflight-packets",
@@ -102,6 +113,12 @@ def parse_args() -> argparse.Namespace:
         default=0,
         help="GPU index for nvidia-smi power sampling.",
     )
+    parser.add_argument(
+        "--host-memory-sample-interval-sec",
+        type=float,
+        default=0.5,
+        help="Host memory sampling interval in seconds. Set to 0 to disable host memory sampling.",
+    )
     args = parser.parse_args()
     if args.gockpt_transfer_chunk_mb < 0:
         raise ValueError("--gockpt-transfer-chunk-mb must be >= 0.")
@@ -109,6 +126,8 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("--power-sample-interval-sec must be >= 0.")
     if args.power_gpu_index < 0:
         raise ValueError("--power-gpu-index must be >= 0.")
+    if args.host_memory_sample_interval_sec < 0:
+        raise ValueError("--host-memory-sample-interval-sec must be >= 0.")
     return args
 
 
@@ -241,6 +260,384 @@ def sample_gpu_power_until_stopped(
             break
 
 
+
+def _kb_to_gb(kb: int | float) -> float:
+    return float(kb) / (1024.0 * 1024.0)
+
+
+def _bytes_to_gb(value: int | float) -> float:
+    return float(value) / (1024.0 * 1024.0 * 1024.0)
+
+
+def _read_key_value_ints(path: Path) -> dict[str, int]:
+    values: dict[str, int] = {}
+    try:
+        with path.open("r", encoding="utf-8") as handle:
+            for line in handle:
+                parts = line.strip().split()
+                if len(parts) >= 2:
+                    try:
+                        values[parts[0]] = int(parts[1])
+                    except ValueError:
+                        continue
+    except OSError:
+        return {}
+    return values
+
+
+def read_proc_meminfo_kb() -> dict[str, int]:
+    meminfo: dict[str, int] = {}
+    with Path("/proc/meminfo").open("r", encoding="utf-8") as handle:
+        for line in handle:
+            key, _, raw_value = line.partition(":")
+            parts = raw_value.strip().split()
+            if not parts:
+                continue
+            try:
+                meminfo[key] = int(parts[0])
+            except ValueError:
+                continue
+    return meminfo
+
+
+def _read_process_rss_kb(pid: int) -> int:
+    try:
+        with (Path("/proc") / str(pid) / "status").open("r", encoding="utf-8") as handle:
+            for line in handle:
+                if line.startswith("VmRSS:"):
+                    parts = line.split()
+                    if len(parts) >= 2:
+                        return int(parts[1])
+    except (OSError, ValueError):
+        return 0
+    return 0
+
+
+def _read_process_children(pid: int) -> list[int]:
+    children_path = Path("/proc") / str(pid) / "task" / str(pid) / "children"
+    try:
+        raw = children_path.read_text(encoding="utf-8").strip()
+    except OSError:
+        return []
+    children: list[int] = []
+    for item in raw.split():
+        try:
+            children.append(int(item))
+        except ValueError:
+            continue
+    return children
+
+
+def process_tree_pids(root_pid: int) -> list[int]:
+    pids: list[int] = []
+    stack = [root_pid]
+    seen: set[int] = set()
+    while stack:
+        pid = stack.pop()
+        if pid in seen:
+            continue
+        if not (Path("/proc") / str(pid)).exists():
+            continue
+        seen.add(pid)
+        pids.append(pid)
+        stack.extend(_read_process_children(pid))
+    return pids
+
+
+def _decode_mount_path(raw: str) -> Path:
+    return Path(raw.replace("\\040", " "))
+
+
+def _cgroup_mounts() -> tuple[Path | None, Path | None]:
+    cgroup2_mount: Path | None = None
+    memory_mount: Path | None = None
+    try:
+        with Path("/proc/self/mountinfo").open("r", encoding="utf-8") as handle:
+            for line in handle:
+                parts = line.split()
+                if "-" not in parts:
+                    continue
+                separator = parts.index("-")
+                if separator + 3 >= len(parts):
+                    continue
+                mount_point = _decode_mount_path(parts[4])
+                fs_type = parts[separator + 1]
+                super_options = parts[separator + 3].split(",")
+                if fs_type == "cgroup2":
+                    cgroup2_mount = mount_point
+                elif fs_type == "cgroup" and "memory" in super_options:
+                    memory_mount = mount_point
+    except OSError:
+        return None, None
+    return cgroup2_mount, memory_mount
+
+
+def resolve_memory_cgroup(pid: int) -> tuple[str, Path] | None:
+    cgroup2_mount, memory_mount = _cgroup_mounts()
+    try:
+        lines = (Path("/proc") / str(pid) / "cgroup").read_text(
+            encoding="utf-8"
+        ).splitlines()
+    except OSError:
+        return None
+
+    for line in lines:
+        parts = line.split(":", 2)
+        if len(parts) != 3:
+            continue
+        hierarchy, controllers, cgroup_path = parts
+        relative = cgroup_path.lstrip("/")
+        if hierarchy == "0" and controllers == "" and cgroup2_mount is not None:
+            return "v2", cgroup2_mount / relative
+        if memory_mount is not None and "memory" in controllers.split(","):
+            return "v1", memory_mount / relative
+    return None
+
+
+def query_cgroup_memory(cgroup_memory: tuple[str, Path] | None) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "cgroup_memory_current_gb": None,
+        "cgroup_memory_limit_gb": None,
+        "cgroup_memory_used_percent": None,
+        "cgroup_memory_oom_events": None,
+        "cgroup_memory_oom_kill_events": None,
+    }
+    if cgroup_memory is None:
+        return payload
+
+    version, cgroup_dir = cgroup_memory
+    try:
+        if version == "v2":
+            current = int((cgroup_dir / "memory.current").read_text().strip())
+            raw_limit = (cgroup_dir / "memory.max").read_text().strip()
+            limit = None if raw_limit == "max" else int(raw_limit)
+            events = _read_key_value_ints(cgroup_dir / "memory.events")
+            payload["cgroup_memory_current_gb"] = _bytes_to_gb(current)
+            payload["cgroup_memory_limit_gb"] = (
+                _bytes_to_gb(limit) if limit is not None else None
+            )
+            if limit:
+                payload["cgroup_memory_used_percent"] = current / limit * 100.0
+            payload["cgroup_memory_oom_events"] = events.get("oom")
+            payload["cgroup_memory_oom_kill_events"] = events.get("oom_kill")
+        else:
+            current = int((cgroup_dir / "memory.usage_in_bytes").read_text().strip())
+            raw_limit = int((cgroup_dir / "memory.limit_in_bytes").read_text().strip())
+            # Very large v1 limits usually mean "unlimited".
+            limit = None if raw_limit >= (1 << 60) else raw_limit
+            payload["cgroup_memory_current_gb"] = _bytes_to_gb(current)
+            payload["cgroup_memory_limit_gb"] = (
+                _bytes_to_gb(limit) if limit is not None else None
+            )
+            if limit:
+                payload["cgroup_memory_used_percent"] = current / limit * 100.0
+            failcnt_path = cgroup_dir / "memory.failcnt"
+            if failcnt_path.exists():
+                payload["cgroup_memory_oom_events"] = int(
+                    failcnt_path.read_text().strip()
+                )
+    except (OSError, ValueError):
+        return payload
+    return payload
+
+
+def query_host_memory(
+    root_pid: int,
+    cgroup_memory: tuple[str, Path] | None,
+) -> tuple[dict[str, Any] | None, str | None]:
+    try:
+        meminfo = read_proc_meminfo_kb()
+    except OSError as exc:
+        return None, f"unable to read /proc/meminfo: {exc}"
+
+    total_kb = meminfo.get("MemTotal")
+    available_kb = meminfo.get("MemAvailable")
+    if available_kb is None:
+        available_kb = (
+            meminfo.get("MemFree", 0)
+            + meminfo.get("Buffers", 0)
+            + meminfo.get("Cached", 0)
+            + meminfo.get("SReclaimable", 0)
+        )
+    if total_kb is None or total_kb <= 0:
+        return None, "/proc/meminfo did not include MemTotal"
+
+    used_kb = max(0, total_kb - available_kb)
+    pids = process_tree_pids(root_pid)
+    process_tree_rss_kb = sum(_read_process_rss_kb(pid) for pid in pids)
+    sample: dict[str, Any] = {
+        "system_total_gb": _kb_to_gb(total_kb),
+        "system_available_gb": _kb_to_gb(available_kb),
+        "system_used_gb": _kb_to_gb(used_kb),
+        "system_used_percent": used_kb / total_kb * 100.0,
+        "process_tree_rss_gb": _kb_to_gb(process_tree_rss_kb),
+        "process_tree_pid_count": len(pids),
+        "process_tree_pids": pids,
+    }
+    sample.update(query_cgroup_memory(cgroup_memory))
+    return sample, None
+
+
+def _numeric_samples(samples: list[dict[str, Any]], key: str) -> list[dict[str, Any]]:
+    return [sample for sample in samples if isinstance(sample.get(key), (int, float))]
+
+
+def _first_numeric(samples: list[dict[str, Any]], key: str) -> int | float | None:
+    values = _numeric_samples(samples, key)
+    if not values:
+        return None
+    return values[0][key]
+
+
+def _last_numeric(samples: list[dict[str, Any]], key: str) -> int | float | None:
+    values = _numeric_samples(samples, key)
+    if not values:
+        return None
+    return values[-1][key]
+
+
+def _max_numeric(samples: list[dict[str, Any]], key: str) -> int | float | None:
+    values = _numeric_samples(samples, key)
+    if not values:
+        return None
+    return max(float(sample[key]) for sample in values)
+
+
+def _min_numeric(samples: list[dict[str, Any]], key: str) -> int | float | None:
+    values = _numeric_samples(samples, key)
+    if not values:
+        return None
+    return min(float(sample[key]) for sample in values)
+
+
+def _time_for_extreme(
+    samples: list[dict[str, Any]], key: str, *, find_max: bool
+) -> float | None:
+    values = _numeric_samples(samples, key)
+    if not values:
+        return None
+    selected = max(values, key=lambda sample: float(sample[key])) if find_max else min(
+        values, key=lambda sample: float(sample[key])
+    )
+    return float(selected.get("time_sec", 0.0))
+
+
+def _counter_delta(samples: list[dict[str, Any]], key: str) -> int | None:
+    first = _first_numeric(samples, key)
+    last = _last_numeric(samples, key)
+    if first is None or last is None:
+        return None
+    return max(0, int(last) - int(first))
+
+
+def summarize_host_memory_samples(
+    samples: list[dict[str, Any]],
+) -> dict[str, float | int | None]:
+    if not samples:
+        return {
+            "sample_count": 0,
+            "duration_sec": None,
+            "peak_process_tree_rss_gb": None,
+            "peak_process_tree_rss_time_sec": None,
+            "peak_system_used_gb": None,
+            "peak_system_used_time_sec": None,
+            "min_system_available_gb": None,
+            "min_system_available_time_sec": None,
+            "peak_system_used_percent": None,
+            "peak_cgroup_current_gb": None,
+            "peak_cgroup_current_time_sec": None,
+            "cgroup_limit_gb": None,
+            "peak_cgroup_used_percent": None,
+            "cgroup_oom_events_delta": None,
+            "cgroup_oom_kill_events_delta": None,
+            "last_process_tree_rss_gb": None,
+            "last_system_available_gb": None,
+            "last_cgroup_current_gb": None,
+        }
+
+    duration_sec = float(samples[-1].get("time_sec", 0.0)) - float(
+        samples[0].get("time_sec", 0.0)
+    )
+    if duration_sec < 0:
+        duration_sec = 0.0
+
+    return {
+        "sample_count": len(samples),
+        "duration_sec": duration_sec,
+        "peak_process_tree_rss_gb": _max_numeric(samples, "process_tree_rss_gb"),
+        "peak_process_tree_rss_time_sec": _time_for_extreme(
+            samples, "process_tree_rss_gb", find_max=True
+        ),
+        "peak_system_used_gb": _max_numeric(samples, "system_used_gb"),
+        "peak_system_used_time_sec": _time_for_extreme(
+            samples, "system_used_gb", find_max=True
+        ),
+        "min_system_available_gb": _min_numeric(samples, "system_available_gb"),
+        "min_system_available_time_sec": _time_for_extreme(
+            samples, "system_available_gb", find_max=False
+        ),
+        "peak_system_used_percent": _max_numeric(samples, "system_used_percent"),
+        "peak_cgroup_current_gb": _max_numeric(samples, "cgroup_memory_current_gb"),
+        "peak_cgroup_current_time_sec": _time_for_extreme(
+            samples, "cgroup_memory_current_gb", find_max=True
+        ),
+        "cgroup_limit_gb": _first_numeric(samples, "cgroup_memory_limit_gb"),
+        "peak_cgroup_used_percent": _max_numeric(
+            samples, "cgroup_memory_used_percent"
+        ),
+        "cgroup_oom_events_delta": _counter_delta(
+            samples, "cgroup_memory_oom_events"
+        ),
+        "cgroup_oom_kill_events_delta": _counter_delta(
+            samples, "cgroup_memory_oom_kill_events"
+        ),
+        "last_process_tree_rss_gb": _last_numeric(samples, "process_tree_rss_gb"),
+        "last_system_available_gb": _last_numeric(samples, "system_available_gb"),
+        "last_cgroup_current_gb": _last_numeric(samples, "cgroup_memory_current_gb"),
+    }
+
+
+def record_host_memory_sample(
+    samples: list[dict[str, Any]],
+    sample: dict[str, Any],
+    stream_path: Path | None,
+) -> None:
+    samples.append(sample)
+    if stream_path is None:
+        return
+    try:
+        with stream_path.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(sample, sort_keys=True))
+            handle.write("\n")
+    except OSError:
+        return
+
+
+def sample_host_memory_until_stopped(
+    *,
+    stop_event: threading.Event,
+    root_pid: int,
+    cgroup_memory: tuple[str, Path] | None,
+    interval_sec: float,
+    start_time: float,
+    samples: list[dict[str, Any]],
+    stream_path: Path | None,
+    error_box: list[str],
+) -> None:
+    while True:
+        sample, error = query_host_memory(root_pid, cgroup_memory)
+        elapsed = time.perf_counter() - start_time
+        if sample is not None:
+            sample["time_sec"] = elapsed
+            sample["event"] = "sample"
+            record_host_memory_sample(samples, sample, stream_path)
+        elif error and not error_box:
+            error_box.append(error)
+            break
+
+        if stop_event.wait(interval_sec):
+            break
+
 def build_power_report(
     args: argparse.Namespace,
     runs: list[dict[str, Any]],
@@ -280,6 +677,47 @@ def build_power_report(
             "power_gpu_index": args.power_gpu_index,
         },
         "runs": power_runs,
+    }
+
+
+def build_host_memory_report(
+    args: argparse.Namespace,
+    runs: list[dict[str, Any]],
+) -> dict[str, Any]:
+    memory_runs: list[dict[str, Any]] = []
+    for run in runs:
+        run_dir = Path(run["output_dir"])
+        samples_path = run_dir / "host_memory_samples.json"
+        samples_payload: dict[str, Any] = {}
+        if samples_path.exists():
+            with samples_path.open("r", encoding="utf-8") as handle:
+                samples_payload = json.load(handle)
+
+        memory_runs.append(
+            {
+                "hook_type": run["hook_type"],
+                "output_dir": run["output_dir"],
+                "returncode": run["returncode"],
+                "wall_time_sec": run["wall_time_sec"],
+                "host_memory_sampling_error": run.get("host_memory_sampling_error"),
+                "host_memory_summary": samples_payload.get("summary", {}),
+                "host_memory_samples": samples_payload.get("samples", []),
+            }
+        )
+
+    return {
+        "config": {
+            "hook_types": args.hook_types,
+            "seq_len": args.seq_len,
+            "max_steps": args.max_steps,
+            "save_steps": args.save_steps,
+            "overlap_steps": args.overlap_steps,
+            "gockpt_reconstruction_queue_depth": args.gockpt_reconstruction_queue_depth,
+            "gockpt_transfer_chunk_mb": args.gockpt_transfer_chunk_mb,
+            "gradient_checkpointing": args.gradient_checkpointing,
+            "host_memory_sample_interval_sec": args.host_memory_sample_interval_sec,
+        },
+        "runs": memory_runs,
     }
 
 
@@ -369,6 +807,16 @@ def run_one(args: argparse.Namespace, hook_type: str) -> FinetuneBenchmarkRun:
         )
         power_thread.start()
 
+    host_memory_samples: list[dict[str, Any]] = []
+    host_memory_stream_path = run_dir / "host_memory_samples.jsonl"
+    if host_memory_stream_path.exists():
+        host_memory_stream_path.unlink()
+    host_memory_error_box: list[str] = []
+    host_memory_stop_event = threading.Event()
+    host_memory_thread: threading.Thread | None = None
+    host_memory_start: float | None = None
+    host_memory_cgroup: tuple[str, Path] | None = None
+
     with log_path.open("w", encoding="utf-8") as log_file:
         process = subprocess.Popen(
             command,
@@ -377,7 +825,53 @@ def run_one(args: argparse.Namespace, hook_type: str) -> FinetuneBenchmarkRun:
             stderr=subprocess.STDOUT,
             text=True,
         )
+        if args.host_memory_sample_interval_sec > 0:
+            host_memory_start = time.perf_counter()
+            host_memory_cgroup = resolve_memory_cgroup(process.pid)
+            initial_sample, initial_error = query_host_memory(
+                process.pid, host_memory_cgroup
+            )
+            if initial_sample is not None:
+                initial_sample["time_sec"] = 0.0
+                initial_sample["event"] = "process_start"
+                record_host_memory_sample(
+                    host_memory_samples, initial_sample, host_memory_stream_path
+                )
+            elif initial_error and not host_memory_error_box:
+                host_memory_error_box.append(initial_error)
+            host_memory_thread = threading.Thread(
+                target=sample_host_memory_until_stopped,
+                kwargs={
+                    "stop_event": host_memory_stop_event,
+                    "root_pid": process.pid,
+                    "cgroup_memory": host_memory_cgroup,
+                    "interval_sec": args.host_memory_sample_interval_sec,
+                    "start_time": host_memory_start,
+                    "samples": host_memory_samples,
+                    "stream_path": host_memory_stream_path,
+                    "error_box": host_memory_error_box,
+                },
+                daemon=True,
+                name=f"host-memory-sampler-{hook_type}",
+            )
+            host_memory_thread.start()
         returncode = process.wait()
+
+    if host_memory_thread is not None:
+        host_memory_stop_event.set()
+        host_memory_thread.join()
+        if host_memory_start is not None:
+            final_sample, final_error = query_host_memory(
+                process.pid, host_memory_cgroup
+            )
+            if final_sample is not None:
+                final_sample["time_sec"] = time.perf_counter() - host_memory_start
+                final_sample["event"] = "process_exit"
+                record_host_memory_sample(
+                    host_memory_samples, final_sample, host_memory_stream_path
+                )
+            elif final_error and not host_memory_error_box:
+                host_memory_error_box.append(final_error)
 
     if power_thread is not None:
         power_stop_event.set()
@@ -396,6 +890,22 @@ def run_one(args: argparse.Namespace, hook_type: str) -> FinetuneBenchmarkRun:
                 "summary": power_summary,
                 "error": power_error_box[0] if power_error_box else None,
                 "samples": power_samples,
+            },
+            handle,
+            indent=2,
+        )
+
+    host_memory_summary = summarize_host_memory_samples(host_memory_samples)
+    host_memory_samples_path = run_dir / "host_memory_samples.json"
+    with host_memory_samples_path.open("w", encoding="utf-8") as handle:
+        json.dump(
+            {
+                "hook_type": hook_type,
+                "sample_interval_sec": args.host_memory_sample_interval_sec,
+                "stream_file": str(host_memory_stream_path),
+                "summary": host_memory_summary,
+                "error": host_memory_error_box[0] if host_memory_error_box else None,
+                "samples": host_memory_samples,
             },
             handle,
             indent=2,
@@ -426,6 +936,47 @@ def run_one(args: argparse.Namespace, hook_type: str) -> FinetuneBenchmarkRun:
         phase_summary=summary.get("phase_summary", {}),
         checkpoint_results=summary.get("checkpoint_results", []),
         ringbuffer_pressure_samples=summary.get("ringbuffer_pressure_samples", []),
+        host_memory_samples_file=str(host_memory_samples_path),
+        host_memory_stream_file=str(host_memory_stream_path),
+        host_memory_sample_count=int(host_memory_summary["sample_count"]),
+        host_memory_peak_process_tree_rss_gb=(
+            float(host_memory_summary["peak_process_tree_rss_gb"])
+            if host_memory_summary["peak_process_tree_rss_gb"] is not None
+            else None
+        ),
+        host_memory_peak_system_used_gb=(
+            float(host_memory_summary["peak_system_used_gb"])
+            if host_memory_summary["peak_system_used_gb"] is not None
+            else None
+        ),
+        host_memory_min_system_available_gb=(
+            float(host_memory_summary["min_system_available_gb"])
+            if host_memory_summary["min_system_available_gb"] is not None
+            else None
+        ),
+        host_memory_peak_cgroup_current_gb=(
+            float(host_memory_summary["peak_cgroup_current_gb"])
+            if host_memory_summary["peak_cgroup_current_gb"] is not None
+            else None
+        ),
+        host_memory_cgroup_limit_gb=(
+            float(host_memory_summary["cgroup_limit_gb"])
+            if host_memory_summary["cgroup_limit_gb"] is not None
+            else None
+        ),
+        host_memory_cgroup_oom_events_delta=(
+            int(host_memory_summary["cgroup_oom_events_delta"])
+            if host_memory_summary["cgroup_oom_events_delta"] is not None
+            else None
+        ),
+        host_memory_cgroup_oom_kill_events_delta=(
+            int(host_memory_summary["cgroup_oom_kill_events_delta"])
+            if host_memory_summary["cgroup_oom_kill_events_delta"] is not None
+            else None
+        ),
+        host_memory_sampling_error=(
+            host_memory_error_box[0] if host_memory_error_box else None
+        ),
         power_samples_file=str(power_samples_path),
         power_sample_count=int(power_summary["sample_count"]),
         power_avg_w=(
@@ -512,6 +1063,7 @@ def main() -> None:
             "min_free_gb": args.min_free_gb,
             "power_sample_interval_sec": args.power_sample_interval_sec,
             "power_gpu_index": args.power_gpu_index,
+            "host_memory_sample_interval_sec": args.host_memory_sample_interval_sec,
         },
         "runs": runs,
         "comparison": build_comparison(runs),
@@ -525,8 +1077,13 @@ def main() -> None:
     with power_report_path.open("w", encoding="utf-8") as handle:
         json.dump(build_power_report(args, runs), handle, indent=2)
 
+    host_memory_report_path = args.output_dir / "host_memory.json"
+    with host_memory_report_path.open("w", encoding="utf-8") as handle:
+        json.dump(build_host_memory_report(args, runs), handle, indent=2)
+
     print(json.dumps(report, indent=2))
     print(f"power report saved to {power_report_path}")
+    print(f"host memory report saved to {host_memory_report_path}")
     if any(run["returncode"] != 0 for run in runs):
         raise SystemExit(1)
 

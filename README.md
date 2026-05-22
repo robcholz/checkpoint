@@ -32,10 +32,11 @@ It also writes phase timing summaries and expectation checks to
 conda run -n checkpoint python benchmark/finetune_benchmark.py \
   --hook-types baseline async async_o gockpt gockpt_o \
   --seq-len 512 \
-  --max-steps 200 \
-  --save-steps 20 \
+  --max-steps 207 \
+  --save-steps 50 \
   --overlap-steps 7 \
   --gockpt-inflight-packets 64 \
+  --gockpt-transfer-chunk-mb 4 \
   --gradient-checkpointing \
   --output-dir /tmp/zsheng1/finetune_runs
 ```
@@ -55,6 +56,21 @@ conda run -n checkpoint python benchmark/visualize_checkpoint_save_time.py \
 conda run -n checkpoint python benchmark/visualize_checkpoint_power.py \
     --report /tmp/zsheng1/finetune_runs/power.json \
     --output benchmark/images/checkpoint_power.png
+```
+
+## Visualize Memory Metrics
+
+```bash
+conda run -n checkpoint python benchmark/visualize_checkpoint_memory.py \
+    --report benchmark/finetune_runs/host_memory.json \
+    --output benchmark/images/checkpoint_memory.png \
+    --title "Host Memory Usage Over Time"
+```
+
+## Copy
+
+```bash
+rsync -avh --progress --exclude='*.pt' /tmp/zsheng1/finetune_runs/ benchmark/finetune_runs/
 ```
 
 ## Sweep Overlap Steps (Serial)

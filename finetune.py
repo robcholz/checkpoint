@@ -63,7 +63,6 @@ def parse_args() -> argparse.Namespace:
         "--save-steps",
         type=int,
         default=10,
-        choices=(10, 20),
         help="Checkpoint interval.",
     )
     parser.add_argument(
