@@ -36,10 +36,14 @@ conda run -n checkpoint python benchmark/finetune_benchmark.py \
   --save-steps 50 \
   --overlap-steps 7 \
   --gockpt-inflight-packets 64 \
-  --gockpt-transfer-chunk-mb 4 \
+  --gockpt-transfer-chunk-mb 64 \
   --gradient-checkpointing \
   --output-dir /tmp/zsheng1/finetune_runs
 ```
+
+Use `--gockpt-transfer-chunk-mb 0` for the primary run to avoid 4 MiB copy
+chunking overhead on gradient transfers. Use the PCIe sweep below if you need
+to re-measure the best chunk size on a different machine.
 
 ## Benchmark Image
 
@@ -100,8 +104,8 @@ conda run -n checkpoint python benchmark/run_pcie_benchmark.py \
   --overlap-steps 7 \
   --gockpt-inflight-packets 64 \
   --gradient-checkpointing \
-  --transfer-chunk-mb 0,4,8,16,32 \
-  --images-folder transfer_chunk_0-32
+  --transfer-chunk-mb 0,16,32,64,128 \
+  --images-folder transfer_chunk_0-128
 ```
 
 ## Visualize Ringbuffer Pressure

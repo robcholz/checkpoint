@@ -5,7 +5,7 @@ conda run -n checkpoint python benchmark/finetune_benchmark.py \
   --save-steps 50 \
   --overlap-steps 7 \
   --gockpt-inflight-packets 64 \
-  --gockpt-transfer-chunk-mb 4 \
+  --gockpt-transfer-chunk-mb 64 \
   --gradient-checkpointing \
   --output-dir /tmp/zsheng1/finetune_runs
 
