@@ -3,7 +3,7 @@ conda run -n checkpoint python benchmark/finetune_benchmark.py \
   --seq-len 512 \
   --max-steps 207 \
   --save-steps 50 \
-  --overlap-steps 7 \
+  --overlap-steps 2 \
   --gockpt-inflight-packets 64 \
   --gockpt-transfer-chunk-mb 64 \
   --gradient-checkpointing \

@@ -91,6 +91,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-steps", type=int, default=200)
     parser.add_argument("--save-steps", type=int, default=20)
     parser.add_argument(
+        "--gockpt-transfer-chunk-mb",
+        type=float,
+        default=64.0,
+        help=(
+            "GoCkpt GPU-to-CPU transfer chunk size in MiB forwarded to "
+            "finetune_benchmark.py. Use the measured local best by default."
+        ),
+    )
+    parser.add_argument(
         "--gradient-checkpointing",
         action=argparse.BooleanOptionalAction,
         default=True,
@@ -150,6 +159,8 @@ def build_finetune_command(args: argparse.Namespace, overlap_step: int) -> list[
         str(args.save_steps),
         "--overlap-steps",
         str(overlap_step),
+        "--gockpt-transfer-chunk-mb",
+        str(args.gockpt_transfer_chunk_mb),
         "--output-dir",
         str(args.output_dir),
     ]

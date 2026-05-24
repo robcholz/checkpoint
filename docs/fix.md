@@ -75,3 +75,40 @@
   because it appears late and its total traffic is about 4 full-gradient copies per
   checkpoint for overlap_steps=7. That is why it worsens GoCkpt/GoCkpt-O versus Async-
   O.
+
+
+
+  The real solution is to change the inequality, not just tune chunk size.
+
+  Right now GoCkpt-O needs:
+
+  gradient transfer <= update + next forward
+
+  Your sweep shows gradient transfer is still about 0.14s per gradient-transfer step,
+  while the hide window is around 0.10s. Chunk tuning helps throughput a bit, but does
+  not solve the mismatch. 64 MiB is the best measured chunk size, so I fixed the stale
+  README note to match that; train.sh was already using 64.
+
+  The actual fixes are, in priority order:
+
+  1. Extend the gradient hide window
+     Change GoCkpt-O so it does not force gradient transfer to finish at the next
+     backward_begin. Keep old gradient tensors alive and allow a bounded lag of 2-3
+     steps, then finish transfers opportunistically. This is the most direct code fix.
+     Tradeoff: more GPU memory because pending gradients stay alive longer.
+  2. Reduce gradient transfer latency
+     Preallocate/reuse pinned CPU gradient buffers instead of allocating pinned memory
+     every transfer, and ideally bucket/flatten gradient copies. Current code copies
+     many tensors with repeated pinned allocations; that hurts effective bandwidth.
+  3. Fix system placement
+     Run with GPU-local NUMA binding/CPU affinity. The paper explicitly used CPU/GPU
+     affinity and strong NUMA placement. If pinned host memory is allocated on the
+     wrong NUMA node, GPU-to-CPU bandwidth can be much worse.
+  4. Increase compute window only for reproduction
+     Longer sequence length or heavier forward makes next forward longer, so gradient
+     transfer hides better. This may match the paper more closely, but it is not a
+     real systems fix because it changes the workload.
+
+  So the code-level solution I would target is: bounded delayed gradient completion
+  for GoCkpt-O plus pinned buffer reuse. Chunk size 64 is just the best current
+  setting, not the real fix.

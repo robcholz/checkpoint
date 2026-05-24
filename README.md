@@ -41,9 +41,9 @@ conda run -n checkpoint python benchmark/finetune_benchmark.py \
   --output-dir /tmp/zsheng1/finetune_runs
 ```
 
-Use `--gockpt-transfer-chunk-mb 0` for the primary run to avoid 4 MiB copy
-chunking overhead on gradient transfers. Use the PCIe sweep below if you need
-to re-measure the best chunk size on a different machine.
+Use `--gockpt-transfer-chunk-mb 64` for the primary run because the local PCIe
+sweep gave the best GoCkpt-O throughput at 64 MiB. Re-run the PCIe sweep below
+if you need to re-measure the best chunk size on a different machine.
 
 ## Benchmark Image
 
@@ -89,8 +89,9 @@ rsync -avh --progress --exclude='*.pt' /tmp/zsheng1/finetune_runs/ benchmark/fin
 
 ```bash
 conda run -n checkpoint python benchmark/run_overlap_steps_benchmark.py \
-  --overlap-steps 7,8,9,10,11,12,13,14 \
-  --images-folder overlap_steps_7-14
+  --overlap-steps 2,3,4,5,6,7 \
+  --gockpt-transfer-chunk-mb 64 \
+  --images-folder overlap_steps_2-7_chunk64
 ```
 
 ## Sweep PCIe Steps (Serial)
