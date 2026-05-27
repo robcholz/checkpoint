@@ -24,9 +24,9 @@ from src.gockpt_hook import GoCkptCheckpointConfig
 from src.phase_profiler import PhaseProfiler, PhaseProfilingHook
 from src.pytorch_hook import PyTorchCheckpointHook
 
-MODEL_NAME = "Qwen/Qwen3-0.6B"
+MODEL_NAME = "Qwen/Qwen3-8B"
 DATASET_NAME = "yahma/alpaca-cleaned"
-DEFAULT_OUTPUT_DIR = "checkpoints/qwen3-0.6b-full"
+DEFAULT_OUTPUT_DIR = "checkpoints/qwen3-8b-full"
 HOOK_SPECS = {
     "baseline": ("src.baseline_hook", "BaselineCheckpointHook"),
     "async": ("src.async_hook", "AsyncCheckpointHook"),
@@ -38,7 +38,7 @@ HOOK_SPECS = {
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Full finetuning for Qwen/Qwen3-0.6B on yahma/alpaca-cleaned."
+        description="Full finetuning for Qwen/Qwen3-8B on yahma/alpaca-cleaned."
     )
     parser.add_argument(
         "--seq-len",
