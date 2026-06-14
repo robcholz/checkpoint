@@ -63,6 +63,11 @@ def parse_args() -> argparse.Namespace:
         choices=HOOK_TYPES,
         help="Hook implementations to benchmark.",
     )
+    parser.add_argument(
+        "--model",
+        required=True,
+        help="Qwen model id, such as Qwen3-8B, or a full Hugging Face model id.",
+    )
     parser.add_argument("--seq-len", type=int, default=512, choices=(256, 512))
     parser.add_argument("--max-steps", type=int, default=200)
     parser.add_argument("--save-steps", type=int, default=20)
@@ -122,6 +127,9 @@ def parse_args() -> argparse.Namespace:
         help="Host memory sampling interval in seconds. Set to 0 to disable host memory sampling.",
     )
     args = parser.parse_args()
+    args.model = args.model.strip()
+    if not args.model:
+        raise ValueError("--model must not be empty.")
     if args.gockpt_transfer_chunk_mb < 0:
         raise ValueError("--gockpt-transfer-chunk-mb must be >= 0.")
     if args.power_sample_interval_sec < 0:
@@ -742,6 +750,8 @@ def build_command(args: argparse.Namespace, hook_type: str, run_dir: Path) -> li
     command = [
         str(args.python),
         str(REPO_ROOT / "finetune.py"),
+        "--model",
+        args.model,
         "--hook-type",
         hook_type,
         "--seq-len",

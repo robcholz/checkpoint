@@ -24,9 +24,8 @@ from src.gockpt_hook import GoCkptCheckpointConfig
 from src.phase_profiler import PhaseProfiler, PhaseProfilingHook
 from src.pytorch_hook import PyTorchCheckpointHook
 
-MODEL_NAME = "Qwen/Qwen3-8B"
+MODEL_NAMESPACE = "Qwen"
 DATASET_NAME = "yahma/alpaca-cleaned"
-DEFAULT_OUTPUT_DIR = "checkpoints/qwen3-8b-full"
 HOOK_SPECS = {
     "baseline": ("src.baseline_hook", "BaselineCheckpointHook"),
     "async": ("src.async_hook", "AsyncCheckpointHook"),
@@ -36,9 +35,25 @@ HOOK_SPECS = {
 }
 
 
+def resolve_model_name(model: str) -> str:
+    if "/" in model:
+        return model
+    return f"{MODEL_NAMESPACE}/{model}"
+
+
+def default_output_dir(model: str) -> Path:
+    return Path("checkpoints") / model
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Full finetuning for Qwen/Qwen3-8B on yahma/alpaca-cleaned."
+        description="Full finetuning for a Qwen model on yahma/alpaca-cleaned."
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        required=True,
+        help="Qwen model id, such as Qwen3-8B, or a full Hugging Face model id.",
     )
     parser.add_argument(
         "--seq-len",
@@ -86,8 +101,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-dir",
         type=str,
-        default=DEFAULT_OUTPUT_DIR,
-        help="Directory for checkpoints and final model.",
+        default=None,
+        help="Directory for checkpoints and final model. Defaults to checkpoints/{model}.",
     )
     parser.add_argument("--seed", type=int, default=42, help="Random seed.")
     parser.add_argument(
@@ -139,6 +154,12 @@ def parse_args() -> argparse.Namespace:
         help="Skip final Hugging Face model/tokenizer save. Useful for timing-only benchmark runs.",
     )
     args = parser.parse_args()
+
+    args.model = args.model.strip()
+    if not args.model:
+        raise ValueError("--model must not be empty.")
+    if args.output_dir is None:
+        args.output_dir = str(default_output_dir(args.model))
 
     if args.batch_size != 1:
         raise ValueError(
@@ -250,6 +271,7 @@ def get_train_dtype() -> torch.dtype:
 
 def save_training_metadata(
     args: argparse.Namespace,
+    model_name: str,
     output_dir: Path,
     hook: PyTorchCheckpointHook,
     losses: List[dict],
@@ -263,7 +285,8 @@ def save_training_metadata(
         checkpoint_durations.append(duration)
 
     metadata = {
-        "model_name": MODEL_NAME,
+        "model": args.model,
+        "model_name": model_name,
         "dataset_name": DATASET_NAME,
         "hook_type": args.hook_type,
         "seq_len": args.seq_len,
@@ -381,6 +404,7 @@ def create_checkpoint_hook(
 
 def main() -> None:
     args = parse_args()
+    model_name = resolve_model_name(args.model)
     set_seed(args.seed)
 
     if not torch.cuda.is_available():
@@ -391,7 +415,7 @@ def main() -> None:
     hook_checkpoint_dir = output_dir / args.hook_type
     hook_checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "right"
@@ -399,7 +423,7 @@ def main() -> None:
     train_dtype = get_train_dtype()
     device = torch.device("cuda")
     model = AutoModelForCausalLM.from_pretrained(
-        MODEL_NAME,
+        model_name,
         torch_dtype=train_dtype,
         trust_remote_code=True,
     )
@@ -515,7 +539,14 @@ def main() -> None:
     if not args.skip_final_model_save:
         model.save_pretrained(output_dir)
         tokenizer.save_pretrained(output_dir)
-    save_training_metadata(args, output_dir, hook, loss_history, total_runtime)
+    save_training_metadata(
+        args,
+        model_name,
+        output_dir,
+        hook,
+        loss_history,
+        total_runtime,
+    )
 
 
 if __name__ == "__main__":
