@@ -39,7 +39,10 @@ fi
 tmp_run_dir="/tmp/zsheng1/${benchmark}"
 run_dir="${benchmark}/run"
 
-conda run -n checkpoint python "${benchmark}/finetune_benchmark.py" \
+mkdir "${tmp_run_dir}"
+mkdir logs
+
+conda run -n checkpoint python "benchmark/finetune_benchmark.py" \
   --model "${model}" \
   --hook-types baseline async async_o gockpt gockpt_o \
   --seq-len 512 \
@@ -53,20 +56,20 @@ conda run -n checkpoint python "${benchmark}/finetune_benchmark.py" \
 
 rsync -avh --delete --progress --exclude='*.pt' "${tmp_run_dir}/" "${run_dir}/"
 
-conda run -n checkpoint python "${benchmark}/visualize_checkpoint_power.py" \
+conda run -n checkpoint python "benchmark/visualize_checkpoint_power.py" \
     --report "${tmp_run_dir}/power.json" \
     --output "${benchmark}/images/checkpoint_power.png"
 
-conda run -n checkpoint python "${benchmark}/visualize_checkpoint_save_time.py" \
+conda run -n checkpoint python "benchmark/visualize_checkpoint_save_time.py" \
     --report "${tmp_run_dir}/report.json" \
     --output "${benchmark}/images/foreground_checkpoint_time.png" \
     --title "Foreground Checkpoint Stall Time vs Algorithms"
 
-conda run -n checkpoint python "${benchmark}/visualize_checkpoint_memory.py" \
+conda run -n checkpoint python "benchmark/visualize_checkpoint_memory.py" \
     --report "${run_dir}/host_memory.json" \
     --output "${benchmark}/images/checkpoint_memory.png" \
     --title "Host Memory Usage Over Time"
 
-conda run -n checkpoint python "${benchmark}/visualize_checkpoint_phase.py" \
+conda run -n checkpoint python "benchmark/visualize_checkpoint_phase.py" \
     --report "${run_dir}/report.json" \
     -o "${benchmark}/images/checkpoint_phase.png"

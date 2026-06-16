@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Plot average per-step foreground phase times and M+O / gradient transfer times.
+"""Plot checkpoint foreground hook time and overlapped checkpoint work.
 
 Input must be a JSON report produced by benchmark/finetune_benchmark.py.
 
 Each algorithm gets its own track on the y-axis with two sub-rows:
-  - Top: raw foreground computation (forward=yellow, backward=orange, update=red)
-  - Bottom: transfer timing (M+O foreground, M+O full, gradient foreground, gradient full)
+  - Top: total blocking time spent inside checkpoint hook callbacks
+  - Bottom: total elapsed checkpoint work recorded by each checkpoint result
 """
 
 from __future__ import annotations
@@ -25,39 +25,53 @@ HOOK_LABELS = {
     "gockpt_o": "GoCkpt-O",
 }
 
-PHASE_KEYS = {
-    "forward": "raw_foreground_forward",
-    "backward": "raw_foreground_backward",
-    "update": "raw_foreground_update",
+FOREGROUND_PHASES = {
+    "save": "hook.save_checkpoint",
+    "forward_begin": "hook.forward_begin",
+    "backward_begin": "hook.backward_begin",
+    "backward_end": "hook.backward_end",
+    "update_begin": "hook.update_begin",
+    "update_end": "hook.update_end",
+    "final_drain": "hook.wait_for_pending_persistence",
 }
-PHASE_COLORS = {
-    "forward": "#fdd835",
-    "backward": "#fb8c00",
-    "update": "#e53935",
+FOREGROUND_COLORS = {
+    "save": "#263238",
+    "forward_begin": "#fdd835",
+    "backward_begin": "#fb8c00",
+    "backward_end": "#e53935",
+    "update_begin": "#00897b",
+    "update_end": "#1565c0",
+    "final_drain": "#757575",
 }
-PHASE_LABELS = {
-    "forward": "Forward",
-    "backward": "Backward",
-    "update": "Update",
+FOREGROUND_LABELS = {
+    "save": "Save hook",
+    "forward_begin": "Forward hook",
+    "backward_begin": "Backward begin hook",
+    "backward_end": "Backward end hook",
+    "update_begin": "Update begin hook",
+    "update_end": "Update end hook",
+    "final_drain": "Final drain",
 }
 
-TRANSFER_COLORS = {
-    "mo_foreground": "#1565c0",
-    "mo_full": "#90caf9",
-    "gradient_foreground": "#6a1b9a",
-    "gradient_full": "#ce93d8",
+WORK_COLORS = {
+    "transfer": "#90caf9",
+    "gradient": "#ce93d8",
+    "reconstruction": "#ffcc80",
+    "backpressure": "#bcaaa4",
+    "persistence": "#a5d6a7",
 }
-TRANSFER_LABELS = {
-    "mo_foreground": "M+O foreground",
-    "mo_full": "M+O full",
-    "gradient_foreground": "Gradient foreground",
-    "gradient_full": "Gradient full",
+WORK_LABELS = {
+    "transfer": "Transfer elapsed",
+    "gradient": "Gradient elapsed",
+    "reconstruction": "Reconstruction",
+    "backpressure": "Backpressure",
+    "persistence": "Persistence",
 }
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Visualize average per-step foreground phase overhead and transfer times."
+        description="Visualize checkpoint foreground hook time and overlapped work."
     )
     parser.add_argument(
         "--report",
@@ -74,7 +88,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--title",
-        default="Average Per-Step Phase & Transfer Overhead",
+        default="Checkpoint Foreground Time and Overlapped Work",
         help="Plot title.",
     )
     return parser.parse_args()
@@ -95,18 +109,58 @@ def get_runs(report: dict[str, Any]) -> list[dict[str, Any]]:
     return runs
 
 
-def phase_avg(run: dict[str, Any], phase_key: str) -> float:
-    raw_summary = run.get("raw_foreground_summary", {})
-    data = raw_summary.get(phase_key)
-    if isinstance(data, dict) and data.get("avg_sec") is not None:
-        return float(data["avg_sec"])
+def numeric(value: Any) -> float:
+    if isinstance(value, (int, float)):
+        return float(value)
     return 0.0
+
+
+def phase_total(run: dict[str, Any], phase_key: str) -> float:
+    phase_summary = run.get("phase_summary", {})
+    data = phase_summary.get(phase_key)
+    if isinstance(data, dict):
+        return numeric(data.get("total_sec"))
+    return 0.0
+
+
+def collect_foreground_phases(run: dict[str, Any]) -> dict[str, float]:
+    return {
+        group_name: phase_total(run, phase_key)
+        for group_name, phase_key in FOREGROUND_PHASES.items()
+    }
+
+
+def checkpoint_work_totals(run: dict[str, Any]) -> dict[str, float]:
+    totals = {key: 0.0 for key in WORK_LABELS}
+    raw_results = run.get("checkpoint_results", [])
+    if not isinstance(raw_results, list):
+        return totals
+
+    for result in raw_results:
+        if not isinstance(result, dict):
+            continue
+
+        transfer_full = numeric(result.get("transfer_full_duration_sec"))
+        if transfer_full > 0:
+            totals["transfer"] += transfer_full
+        else:
+            totals["transfer"] += numeric(result.get("transfer_duration_sec"))
+            totals["transfer"] += numeric(result.get("transfer_sync_duration_sec"))
+
+        totals["gradient"] += numeric(result.get("gradient_duration_sec"))
+        totals["reconstruction"] += numeric(result.get("reconstruction_duration_sec"))
+        totals["backpressure"] += numeric(
+            result.get("reconstruction_backpressure_sec")
+        )
+        totals["persistence"] += numeric(result.get("persistence_duration_sec"))
+
+    return totals
 
 
 def collect_data(
     report: dict[str, Any],
 ) -> list[tuple[str, dict[str, float], dict[str, float]]]:
-    """Returns (hook_type, phase_times, transfer_times) for each algorithm."""
+    """Returns (hook_type, foreground_phases, checkpoint_work) for each algorithm."""
     by_hook: dict[str, tuple[dict[str, float], dict[str, float]]] = {}
     for run in get_runs(report):
         hook_type = run.get("hook_type")
@@ -115,18 +169,10 @@ def collect_data(
         if run.get("returncode") != 0:
             continue
 
-        phases: dict[str, float] = {}
-        for group_name, phase_key in PHASE_KEYS.items():
-            phases[group_name] = phase_avg(run, phase_key)
-
-        tts = run.get("transfer_timing_summary", {})
-        transfers: dict[str, float] = {
-            "mo_foreground": float(tts.get("mo_foreground_avg_sec") or 0.0),
-            "mo_full": float(tts.get("mo_full_avg_sec") or 0.0),
-            "gradient_foreground": float(tts.get("gradient_foreground_avg_sec") or 0.0),
-            "gradient_full": float(tts.get("gradient_full_avg_sec") or 0.0),
-        }
-        by_hook[hook_type] = (phases, transfers)
+        by_hook[hook_type] = (
+            collect_foreground_phases(run),
+            checkpoint_work_totals(run),
+        )
 
     ordered = [
         (hook, by_hook[hook][0], by_hook[hook][1])
@@ -134,7 +180,7 @@ def collect_data(
         if hook in by_hook
     ]
     if not ordered:
-        raise ValueError("no phase timing data found in report")
+        raise ValueError("no checkpoint phase timing data found in report")
     return ordered
 
 
@@ -160,27 +206,47 @@ def plot_phase_times(
     y_tick_positions = []
     y_tick_labels = []
 
-    phase_order = ["forward", "backward", "update"]
-    transfer_order = ["mo_foreground", "mo_full", "gradient_foreground", "gradient_full"]
+    foreground_order = list(FOREGROUND_LABELS)
+    work_order = list(WORK_LABELS)
 
     legend_handles: dict[str, Any] = {}
 
-    for idx, (hook_type, phases, transfers) in enumerate(data):
+    for idx, (hook_type, foreground, work) in enumerate(data):
         y_top = idx * row_spacing
         y_bottom = y_top + bar_height + 0.05
 
         y_tick_positions.append(y_top + bar_height / 2 + 0.025)
         y_tick_labels.append(HOOK_LABELS.get(hook_type, hook_type))
+        ax.text(
+            -0.01,
+            y_top,
+            "foreground",
+            transform=ax.get_yaxis_transform(),
+            ha="right",
+            va="center",
+            fontsize=7,
+            color="#555555",
+        )
+        ax.text(
+            -0.01,
+            y_bottom,
+            "work",
+            transform=ax.get_yaxis_transform(),
+            ha="right",
+            va="center",
+            fontsize=7,
+            color="#555555",
+        )
 
         left = 0.0
-        for phase_name in phase_order:
-            width = phases.get(phase_name, 0.0)
+        for phase_name in foreground_order:
+            width = foreground.get(phase_name, 0.0)
             bar = ax.barh(
                 y_top,
                 width,
                 left=left,
                 height=bar_height,
-                color=PHASE_COLORS[phase_name],
+                color=FOREGROUND_COLORS[phase_name],
                 zorder=2,
             )
             if phase_name not in legend_handles:
@@ -188,39 +254,39 @@ def plot_phase_times(
             left += width
 
         left = 0.0
-        for t_key in transfer_order:
-            width = transfers.get(t_key, 0.0)
+        for work_key in work_order:
+            width = work.get(work_key, 0.0)
             bar = ax.barh(
                 y_bottom,
                 width,
                 left=left,
                 height=bar_height,
-                color=TRANSFER_COLORS[t_key],
+                color=WORK_COLORS[work_key],
                 zorder=2,
             )
-            if t_key not in legend_handles:
-                legend_handles[t_key] = bar[0]
+            if work_key not in legend_handles:
+                legend_handles[work_key] = bar[0]
             left += width
 
     ax.set_yticks(y_tick_positions)
     ax.set_yticklabels(y_tick_labels)
     ax.invert_yaxis()
-    ax.set_xlabel("Time (sec)")
+    ax.set_xlabel("Total time over run (sec)")
     ax.set_title(title)
     ax.grid(axis="x", alpha=0.25)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
     all_widths = []
-    for _, phases, transfers in data:
-        all_widths.append(sum(phases.values()))
-        all_widths.append(sum(transfers.values()))
+    for _, foreground, work in data:
+        all_widths.append(sum(foreground.values()))
+        all_widths.append(sum(work.values()))
     x_max = max(all_widths) if all_widths else 0.0
     if x_max > 0:
         ax.set_xlim(0, x_max * 1.15)
 
-    all_labels = list(PHASE_LABELS.values()) + list(TRANSFER_LABELS.values())
-    all_keys = list(PHASE_LABELS.keys()) + list(TRANSFER_LABELS.keys())
+    all_labels = list(FOREGROUND_LABELS.values()) + list(WORK_LABELS.values())
+    all_keys = list(FOREGROUND_LABELS.keys()) + list(WORK_LABELS.keys())
     handles = [legend_handles[k] for k in all_keys if k in legend_handles]
     labels = [
         lbl for k, lbl in zip(all_keys, all_labels) if k in legend_handles
