@@ -39,8 +39,9 @@ fi
 tmp_run_dir="/tmp/zsheng1/${benchmark}"
 run_dir="${benchmark}/run"
 
-mkdir "${tmp_run_dir}"
-mkdir logs
+mkdir -p "${tmp_run_dir}"
+mkdir -p "${run_dir}"
+mkdir -p logs
 
 conda run -n checkpoint python "benchmark/finetune_benchmark.py" \
   --model "${model}" \
@@ -57,11 +58,11 @@ conda run -n checkpoint python "benchmark/finetune_benchmark.py" \
 rsync -avh --delete --progress --exclude='*.pt' "${tmp_run_dir}/" "${run_dir}/"
 
 conda run -n checkpoint python "benchmark/visualize_checkpoint_power.py" \
-    --report "${tmp_run_dir}/power.json" \
+    --report "${run_dir}/power.json" \
     --output "${benchmark}/images/checkpoint_power.png"
 
 conda run -n checkpoint python "benchmark/visualize_checkpoint_save_time.py" \
-    --report "${tmp_run_dir}/report.json" \
+    --report "${run_dir}/report.json" \
     --output "${benchmark}/images/foreground_checkpoint_time.png" \
     --title "Foreground Checkpoint Stall Time vs Algorithms"
 

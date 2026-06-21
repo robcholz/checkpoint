@@ -2,7 +2,7 @@
 #SBATCH --job-name=qwen3-8b
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:h200:1
-#SBATCH --mem=128G
+#SBATCH --mem=256G
 #SBATCH --cpus-per-task=64
 #SBATCH --time=4:00:00
 #SBATCH --output=logs/%x-%j.out
