@@ -53,19 +53,26 @@ FOREGROUND_LABELS = {
     "final_drain": "Final drain",
 }
 
-WORK_COLORS = {
+# Row 2: Transfer and Gradient
+TRANSFER_GRADIENT_COLORS = {
     "transfer": "#90caf9",
     "gradient": "#ce93d8",
-    "reconstruction": "#ffcc80",
-    "backpressure": "#bcaaa4",
-    "persistence": "#a5d6a7",
 }
-WORK_LABELS = {
+TRANSFER_GRADIENT_LABELS = {
     "transfer": "Transfer elapsed",
     "gradient": "Gradient elapsed",
+}
+
+# Row 3: Reconstruction, Persistence, and Backpressure
+PERSIST_COLORS = {
+    "reconstruction": "#ffcc80",
+    "persistence": "#a5d6a7",
+    "backpressure": "#bcaaa4",
+}
+PERSIST_LABELS = {
     "reconstruction": "Reconstruction",
-    "backpressure": "Backpressure",
     "persistence": "Persistence",
+    "backpressure": "Backpressure",
 }
 
 
@@ -130,11 +137,15 @@ def collect_foreground_phases(run: dict[str, Any]) -> dict[str, float]:
     }
 
 
-def checkpoint_work_totals(run: dict[str, Any]) -> dict[str, float]:
-    totals = {key: 0.0 for key in WORK_LABELS}
+def checkpoint_work_totals(
+    run: dict[str, Any],
+) -> tuple[dict[str, float], dict[str, float]]:
+    """Returns (transfer_gradient_totals, persist_totals)."""
+    transfer_gradient = {key: 0.0 for key in TRANSFER_GRADIENT_LABELS}
+    persist = {key: 0.0 for key in PERSIST_LABELS}
     raw_results = run.get("checkpoint_results", [])
     if not isinstance(raw_results, list):
-        return totals
+        return transfer_gradient, persist
 
     for result in raw_results:
         if not isinstance(result, dict):
@@ -142,26 +153,26 @@ def checkpoint_work_totals(run: dict[str, Any]) -> dict[str, float]:
 
         transfer_full = numeric(result.get("transfer_full_duration_sec"))
         if transfer_full > 0:
-            totals["transfer"] += transfer_full
+            transfer_gradient["transfer"] += transfer_full
         else:
-            totals["transfer"] += numeric(result.get("transfer_duration_sec"))
-            totals["transfer"] += numeric(result.get("transfer_sync_duration_sec"))
+            transfer_gradient["transfer"] += numeric(result.get("transfer_duration_sec"))
+            transfer_gradient["transfer"] += numeric(result.get("transfer_sync_duration_sec"))
 
-        totals["gradient"] += numeric(result.get("gradient_duration_sec"))
-        totals["reconstruction"] += numeric(result.get("reconstruction_duration_sec"))
-        totals["backpressure"] += numeric(
+        transfer_gradient["gradient"] += numeric(result.get("gradient_duration_sec"))
+        persist["reconstruction"] += numeric(result.get("reconstruction_duration_sec"))
+        persist["backpressure"] += numeric(
             result.get("reconstruction_backpressure_sec")
         )
-        totals["persistence"] += numeric(result.get("persistence_duration_sec"))
+        persist["persistence"] += numeric(result.get("persistence_duration_sec"))
 
-    return totals
+    return transfer_gradient, persist
 
 
 def collect_data(
     report: dict[str, Any],
-) -> list[tuple[str, dict[str, float], dict[str, float]]]:
-    """Returns (hook_type, foreground_phases, checkpoint_work) for each algorithm."""
-    by_hook: dict[str, tuple[dict[str, float], dict[str, float]]] = {}
+) -> list[tuple[str, dict[str, float], dict[str, float], dict[str, float]]]:
+    """Returns (hook_type, foreground_phases, transfer_gradient, persist) for each algorithm."""
+    by_hook: dict[str, tuple[dict[str, float], dict[str, float], dict[str, float]]] = {}
     for run in get_runs(report):
         hook_type = run.get("hook_type")
         if not isinstance(hook_type, str):
@@ -169,13 +180,15 @@ def collect_data(
         if run.get("returncode") != 0:
             continue
 
+        transfer_gradient, persist = checkpoint_work_totals(run)
         by_hook[hook_type] = (
             collect_foreground_phases(run),
-            checkpoint_work_totals(run),
+            transfer_gradient,
+            persist,
         )
 
     ordered = [
-        (hook, by_hook[hook][0], by_hook[hook][1])
+        (hook, by_hook[hook][0], by_hook[hook][1], by_hook[hook][2])
         for hook in HOOK_ORDER
         if hook in by_hook
     ]
@@ -185,7 +198,7 @@ def collect_data(
 
 
 def plot_phase_times(
-    data: list[tuple[str, dict[str, float], dict[str, float]]],
+    data: list[tuple[str, dict[str, float], dict[str, float], dict[str, float]]],
     output_path: Path,
     title: str,
     report_path: Path,
@@ -198,8 +211,8 @@ def plot_phase_times(
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     n_hooks = len(data)
-    bar_height = 0.35
-    row_spacing = 1.2
+    bar_height = 0.28
+    row_spacing = 1.5  # Increased to accommodate 3 rows
 
     fig, ax = plt.subplots(figsize=(10, 1.5 + n_hooks * row_spacing))
 
@@ -207,20 +220,22 @@ def plot_phase_times(
     y_tick_labels = []
 
     foreground_order = list(FOREGROUND_LABELS)
-    work_order = list(WORK_LABELS)
+    transfer_gradient_order = list(TRANSFER_GRADIENT_LABELS)
+    persist_order = list(PERSIST_LABELS)
 
     legend_handles: dict[str, Any] = {}
 
-    for idx, (hook_type, foreground, work) in enumerate(data):
-        y_top = idx * row_spacing
-        y_bottom = y_top + bar_height + 0.05
+    for idx, (hook_type, foreground, transfer_gradient, persist) in enumerate(data):
+        y_row1 = idx * row_spacing  # Foreground (hooks)
+        y_row2 = y_row1 + bar_height + 0.05  # Transfer + Gradient
+        y_row3 = y_row2 + bar_height + 0.05  # Reconstruction + Persistence + Backpressure
 
-        y_tick_positions.append(y_top + bar_height / 2 + 0.025)
+        y_tick_positions.append(y_row2)  # Center label on middle row
         y_tick_labels.append(HOOK_LABELS.get(hook_type, hook_type))
         ax.text(
             -0.01,
-            y_top,
-            "foreground",
+            y_row1,
+            "hooks",
             transform=ax.get_yaxis_transform(),
             ha="right",
             va="center",
@@ -229,8 +244,18 @@ def plot_phase_times(
         )
         ax.text(
             -0.01,
-            y_bottom,
-            "work",
+            y_row2,
+            "transfer",
+            transform=ax.get_yaxis_transform(),
+            ha="right",
+            va="center",
+            fontsize=7,
+            color="#555555",
+        )
+        ax.text(
+            -0.01,
+            y_row3,
+            "persist",
             transform=ax.get_yaxis_transform(),
             ha="right",
             va="center",
@@ -238,11 +263,12 @@ def plot_phase_times(
             color="#555555",
         )
 
+        # Row 1: Foreground hooks
         left = 0.0
         for phase_name in foreground_order:
             width = foreground.get(phase_name, 0.0)
             bar = ax.barh(
-                y_top,
+                y_row1,
                 width,
                 left=left,
                 height=bar_height,
@@ -253,15 +279,32 @@ def plot_phase_times(
                 legend_handles[phase_name] = bar[0]
             left += width
 
+        # Row 2: Transfer and Gradient
         left = 0.0
-        for work_key in work_order:
-            width = work.get(work_key, 0.0)
+        for work_key in transfer_gradient_order:
+            width = transfer_gradient.get(work_key, 0.0)
             bar = ax.barh(
-                y_bottom,
+                y_row2,
                 width,
                 left=left,
                 height=bar_height,
-                color=WORK_COLORS[work_key],
+                color=TRANSFER_GRADIENT_COLORS[work_key],
+                zorder=2,
+            )
+            if work_key not in legend_handles:
+                legend_handles[work_key] = bar[0]
+            left += width
+
+        # Row 3: Reconstruction, Persistence, Backpressure
+        left = 0.0
+        for work_key in persist_order:
+            width = persist.get(work_key, 0.0)
+            bar = ax.barh(
+                y_row3,
+                width,
+                left=left,
+                height=bar_height,
+                color=PERSIST_COLORS[work_key],
                 zorder=2,
             )
             if work_key not in legend_handles:
@@ -278,15 +321,24 @@ def plot_phase_times(
     ax.spines["right"].set_visible(False)
 
     all_widths = []
-    for _, foreground, work in data:
+    for _, foreground, transfer_gradient, persist in data:
         all_widths.append(sum(foreground.values()))
-        all_widths.append(sum(work.values()))
+        all_widths.append(sum(transfer_gradient.values()))
+        all_widths.append(sum(persist.values()))
     x_max = max(all_widths) if all_widths else 0.0
     if x_max > 0:
         ax.set_xlim(0, x_max * 1.15)
 
-    all_labels = list(FOREGROUND_LABELS.values()) + list(WORK_LABELS.values())
-    all_keys = list(FOREGROUND_LABELS.keys()) + list(WORK_LABELS.keys())
+    all_labels = (
+        list(FOREGROUND_LABELS.values())
+        + list(TRANSFER_GRADIENT_LABELS.values())
+        + list(PERSIST_LABELS.values())
+    )
+    all_keys = (
+        list(FOREGROUND_LABELS.keys())
+        + list(TRANSFER_GRADIENT_LABELS.keys())
+        + list(PERSIST_LABELS.keys())
+    )
     handles = [legend_handles[k] for k in all_keys if k in legend_handles]
     labels = [
         lbl for k, lbl in zip(all_keys, all_labels) if k in legend_handles
