@@ -162,6 +162,8 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
             self._stop_reconstruction_worker(runtime)
 
             for partition_index in range(len(runtime.partitions)):
+                # Wait for background transfer thread first
+                self._wait_partition_transfer_thread(runtime, partition_index)
                 self._wait_partition_transfer(runtime, partition_index)
                 self._ensure_partition_flattened(runtime, partition_index)
 
@@ -186,7 +188,12 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
         step: int,
     ) -> dict[str, torch.Tensor | None]:
         gradients: dict[str, torch.Tensor | None] = {}
-        for name, snapshot in runtime.transferred_blocks.items():
+        # Thread-safe copy of transferred_blocks to avoid iteration issues
+        # while background transfer thread may be adding to it
+        with runtime.transfer_blocks_lock:
+            transferred_blocks_snapshot = dict(runtime.transferred_blocks)
+
+        for name, snapshot in transferred_blocks_snapshot.items():
             if snapshot.version_step > step:
                 continue
 

@@ -114,6 +114,10 @@ class GoCkptRuntime:
     reconstruction_lock: threading.Lock = field(default_factory=threading.Lock)
     reconstruction_started_at: float | None = None
     reconstruction_finished_at: float | None = None
+    # Background transfer threads for overlapping with forward/backward
+    partition_transfer_threads: dict[int, threading.Thread] = field(default_factory=dict)
+    partition_transfer_errors: dict[int, BaseException | None] = field(default_factory=dict)
+    transfer_blocks_lock: threading.Lock = field(default_factory=threading.Lock)
 
 
 class GoCkptCheckpointHook(BaselineCheckpointHook):
@@ -319,7 +323,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         if partition_index in runtime.transferred_partitions:
             return
 
-        self._schedule_partition_transfer(runtime, partition_index, step)
+        # Spawn background thread for transfer so forward pass can proceed immediately
+        # This overlaps GPU->CPU transfer with forward+backward computation
+        self._spawn_partition_transfer_thread(runtime, partition_index, step)
 
     def forward_end(self, step: int) -> None:
         return
@@ -333,7 +339,12 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             return
 
         gradients_for_step: dict[str, torch.Tensor | None] = {}
-        for name, snapshot in runtime.transferred_blocks.items():
+        # Thread-safe copy of transferred_blocks to avoid iteration issues
+        # while background transfer thread may be adding to it
+        with runtime.transfer_blocks_lock:
+            transferred_blocks_snapshot = dict(runtime.transferred_blocks)
+
+        for name, snapshot in transferred_blocks_snapshot.items():
             if snapshot.version_step > step:
                 continue
 
@@ -733,6 +744,51 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
     def _is_step_in_request(self, runtime: GoCkptRuntime, step: int) -> bool:
         return runtime.request.start_step <= step < runtime.request.target_step
 
+    def _spawn_partition_transfer_thread(
+        self,
+        runtime: GoCkptRuntime,
+        partition_index: int,
+        step: int,
+    ) -> None:
+        """Spawn a background thread to do partition transfer.
+
+        This allows forward_begin to return immediately, overlapping the
+        GPU->CPU transfer with the forward+backward computation.
+        """
+        # Mark partition as being transferred (prevents duplicate transfers)
+        runtime.transferred_partitions.add(partition_index)
+
+        def transfer_worker():
+            try:
+                self._schedule_partition_transfer(runtime, partition_index, step)
+            except BaseException as exc:
+                runtime.partition_transfer_errors[partition_index] = exc
+
+        thread = threading.Thread(
+            target=transfer_worker,
+            daemon=True,
+            name=f"gockpt-transfer-{runtime.request.target_step}-p{partition_index}",
+        )
+        runtime.partition_transfer_threads[partition_index] = thread
+        thread.start()
+
+    def _wait_partition_transfer_thread(
+        self,
+        runtime: GoCkptRuntime,
+        partition_index: int,
+    ) -> None:
+        """Wait for background transfer thread to complete."""
+        thread = runtime.partition_transfer_threads.get(partition_index)
+        if thread is not None:
+            thread.join()
+            runtime.partition_transfer_threads.pop(partition_index, None)
+
+        error = runtime.partition_transfer_errors.get(partition_index)
+        if error is not None:
+            raise RuntimeError(
+                f"Background partition transfer failed for partition {partition_index}"
+            ) from error
+
     def _schedule_partition_transfer(
         self,
         runtime: GoCkptRuntime,
@@ -763,7 +819,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
                     optimizer_state=optimizer_state,
                     version_step=step,
                 )
-                runtime.transferred_blocks[name] = snapshot
+                # Thread-safe write to transferred_blocks
+                with runtime.transfer_blocks_lock:
+                    runtime.transferred_blocks[name] = snapshot
 
         event: torch.cuda.Event | None = None
         if self._transfer_stream is not None:
@@ -771,7 +829,7 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             event.record(self._transfer_stream)
 
         runtime.partition_events[partition_index] = event
-        runtime.transferred_partitions.add(partition_index)
+        # Note: transferred_partitions is already set by _spawn_partition_transfer_thread
         if runtime.result is not None:
             runtime.result.transfer_duration_sec += time.perf_counter() - transfer_start
             runtime.result.transfer_count += 1
@@ -1094,6 +1152,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             return
         if partition_index not in runtime.transferred_partitions:
             return
+
+        # Wait for background transfer thread to complete first
+        self._wait_partition_transfer_thread(runtime, partition_index)
 
         # The partition snapshot reads model parameters and optimizer states.
         # It must complete before optimizer.step() mutates those tensors.
@@ -1597,6 +1658,8 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             self._stop_reconstruction_worker(runtime)
 
             for partition_index in range(len(runtime.partitions)):
+                # Wait for background transfer thread first
+                self._wait_partition_transfer_thread(runtime, partition_index)
                 self._wait_partition_transfer(runtime, partition_index)
                 self._ensure_partition_flattened(runtime, partition_index)
 

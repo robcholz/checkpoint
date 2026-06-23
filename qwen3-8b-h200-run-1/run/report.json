@@ -1,0 +1,1624 @@
+{
+  "config": {
+    "hook_types": [
+      "baseline",
+      "async",
+      "async_o",
+      "gockpt",
+      "gockpt_o"
+    ],
+    "seq_len": 512,
+    "max_steps": 207,
+    "save_steps": 50,
+    "overlap_steps": 2,
+    "gockpt_reconstruction_queue_depth": 64,
+    "gockpt_transfer_chunk_mb": 64.0,
+    "learning_rate": 2e-05,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.03,
+    "seed": 42,
+    "gradient_checkpointing": true,
+    "save_final_model": false,
+    "min_free_gb": 12.0,
+    "power_sample_interval_sec": 0.5,
+    "power_gpu_index": 0,
+    "host_memory_sample_interval_sec": 0.5
+  },
+  "runs": [
+    {
+      "hook_type": "baseline",
+      "output_dir": "/tmp/zsheng1/qwen3-8b-h200-run-1/baseline",
+      "command": [
+        "/hpc/home/zsheng1/miniconda3/envs/checkpoint/bin/python",
+        "/hpc/home/zsheng1/checkpoint/finetune.py",
+        "--model",
+        "Qwen3-8B",
+        "--hook-type",
+        "baseline",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "207",
+        "--save-steps",
+        "50",
+        "--overlap-steps",
+        "2",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/baseline",
+        "--profile-phases",
+        "--gockpt-inflight-packets",
+        "64",
+        "--gockpt-transfer-chunk-mb",
+        "64.0",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 519.4893941748887,
+      "train_runtime_sec": 345.0520642166957,
+      "train_steps_per_sec": 0.5999094671985564,
+      "checkpoint_count": 4,
+      "checkpoint_files": [
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/baseline/baseline/baseline_step_50.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/baseline/baseline/baseline_step_100.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/baseline/baseline/baseline_step_150.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/baseline/baseline/baseline_step_200.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 207,
+          "total_sec": 0.0002465704455971718,
+          "avg_sec": 1.191161572933197e-06,
+          "max_sec": 4.893168807029724e-06
+        },
+        "hook.forward_end": {
+          "count": 207,
+          "total_sec": 0.00026465021073818207,
+          "avg_sec": 1.2785034335177878e-06,
+          "max_sec": 7.96094536781311e-06
+        },
+        "hook.backward_begin": {
+          "count": 207,
+          "total_sec": 0.00012282002717256546,
+          "avg_sec": 5.933334646017655e-07,
+          "max_sec": 2.2957101464271545e-06
+        },
+        "hook.backward_end": {
+          "count": 207,
+          "total_sec": 0.0002356087788939476,
+          "avg_sec": 1.1382066613234184e-06,
+          "max_sec": 5.1120296120643616e-06
+        },
+        "hook.update_begin": {
+          "count": 207,
+          "total_sec": 0.00010878127068281174,
+          "avg_sec": 5.255133849411195e-07,
+          "max_sec": 3.092922270298004e-06
+        },
+        "hook.update_end": {
+          "count": 207,
+          "total_sec": 0.00021597836166620255,
+          "avg_sec": 1.043373727856051e-06,
+          "max_sec": 2.332031726837158e-06
+        },
+        "hook.save_checkpoint": {
+          "count": 4,
+          "total_sec": 258.6468169223517,
+          "avg_sec": 64.66170423058793,
+          "max_sec": 65.95922330021858
+        }
+      },
+      "raw_foreground_summary": {
+        "raw_foreground_forward": {
+          "count": 207,
+          "total_sec": 21.08730354066938,
+          "avg_sec": 0.10187103159743663,
+          "max_sec": 0.4406923931092024
+        },
+        "raw_foreground_backward": {
+          "count": 207,
+          "total_sec": 39.97139104641974,
+          "avg_sec": 0.19309850747062676,
+          "max_sec": 0.419099535793066
+        },
+        "raw_foreground_update": {
+          "count": 207,
+          "total_sec": 16.314064303413033,
+          "avg_sec": 0.07881190484740595,
+          "max_sec": 0.17786607425659895
+        }
+      },
+      "transfer_timing_summary": {
+        "mo_foreground_avg_sec": null,
+        "mo_full_avg_sec": null,
+        "mo_foreground_total_sec": 0.0,
+        "mo_full_total_sec": 0.0,
+        "mo_count": 0,
+        "gradient_foreground_avg_sec": null,
+        "gradient_full_avg_sec": null,
+        "gradient_foreground_total_sec": 0.0,
+        "gradient_full_total_sec": 0.0,
+        "gradient_count": 0
+      },
+      "checkpoint_results": [
+        {
+          "step": 50,
+          "tag": "baseline_step_50",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/baseline/baseline/baseline_step_50.pt",
+          "duration_sec": 61.54112262185663
+        },
+        {
+          "step": 100,
+          "tag": "baseline_step_100",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/baseline/baseline/baseline_step_100.pt",
+          "duration_sec": 65.75588990282267
+        },
+        {
+          "step": 150,
+          "tag": "baseline_step_150",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/baseline/baseline/baseline_step_150.pt",
+          "duration_sec": 65.3840969093144
+        },
+        {
+          "step": 200,
+          "tag": "baseline_step_200",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/baseline/baseline/baseline_step_200.pt",
+          "duration_sec": 65.9571642903611
+        }
+      ],
+      "ringbuffer_pressure_samples": [],
+      "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/baseline/host_memory_samples.json",
+      "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/baseline/host_memory_samples.jsonl",
+      "host_memory_sample_count": 1041,
+      "host_memory_peak_process_tree_rss_gb": 17.289852142333984,
+      "host_memory_peak_system_used_gb": 84.06995010375977,
+      "host_memory_min_system_available_gb": 1931.4741516113281,
+      "host_memory_peak_cgroup_current_gb": 204.63416290283203,
+      "host_memory_cgroup_limit_gb": null,
+      "host_memory_cgroup_oom_events_delta": 0,
+      "host_memory_cgroup_oom_kill_events_delta": 0,
+      "host_memory_sampling_error": null,
+      "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/baseline/power_samples.json",
+      "power_sample_count": 988,
+      "power_avg_w": 129.395617408907,
+      "power_peak_w": 355.47,
+      "power_energy_j": 67139.14257909602,
+      "power_sampling_error": null,
+      "error": null
+    },
+    {
+      "hook_type": "async",
+      "output_dir": "/tmp/zsheng1/qwen3-8b-h200-run-1/async",
+      "command": [
+        "/hpc/home/zsheng1/miniconda3/envs/checkpoint/bin/python",
+        "/hpc/home/zsheng1/checkpoint/finetune.py",
+        "--model",
+        "Qwen3-8B",
+        "--hook-type",
+        "async",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "207",
+        "--save-steps",
+        "50",
+        "--overlap-steps",
+        "2",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/async",
+        "--profile-phases",
+        "--gockpt-inflight-packets",
+        "64",
+        "--gockpt-transfer-chunk-mb",
+        "64.0",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 390.2633035136387,
+      "train_runtime_sec": 282.8242154167965,
+      "train_steps_per_sec": 0.7319033827953707,
+      "checkpoint_count": 4,
+      "checkpoint_files": [
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/async/async/async_step_50.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/async/async/async_step_100.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/async/async/async_step_150.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/async/async/async_step_200.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 207,
+          "total_sec": 0.00023795105516910553,
+          "avg_sec": 1.1495220056478528e-06,
+          "max_sec": 4.394911229610443e-06
+        },
+        "hook.forward_end": {
+          "count": 207,
+          "total_sec": 0.0003058146685361862,
+          "avg_sec": 1.4773655484839914e-06,
+          "max_sec": 3.230758011341095e-06
+        },
+        "hook.backward_begin": {
+          "count": 207,
+          "total_sec": 0.00013869069516658783,
+          "avg_sec": 6.700033582926948e-07,
+          "max_sec": 1.06077641248703e-06
+        },
+        "hook.backward_end": {
+          "count": 207,
+          "total_sec": 0.00027818791568279266,
+          "avg_sec": 1.343902974313008e-06,
+          "max_sec": 4.252418875694275e-06
+        },
+        "hook.update_begin": {
+          "count": 207,
+          "total_sec": 0.00010317284613847733,
+          "avg_sec": 4.984195465626924e-07,
+          "max_sec": 1.759268343448639e-06
+        },
+        "hook.update_end": {
+          "count": 207,
+          "total_sec": 0.00022733397781848907,
+          "avg_sec": 1.0982317769009133e-06,
+          "max_sec": 4.740431904792786e-06
+        },
+        "hook.save_checkpoint": {
+          "count": 4,
+          "total_sec": 198.56867019459605,
+          "avg_sec": 49.64216754864901,
+          "max_sec": 56.52706710714847
+        },
+        "hook.wait_for_pending_persistence": {
+          "count": 1,
+          "total_sec": 44.474340066313744,
+          "avg_sec": 44.474340066313744,
+          "max_sec": 44.474340066313744
+        }
+      },
+      "raw_foreground_summary": {
+        "raw_foreground_forward": {
+          "count": 207,
+          "total_sec": 21.183728897944093,
+          "avg_sec": 0.10233685457944006,
+          "max_sec": 0.7531690811738372
+        },
+        "raw_foreground_backward": {
+          "count": 207,
+          "total_sec": 40.255887740291655,
+          "avg_sec": 0.1944728876342592,
+          "max_sec": 0.9748015068471432
+        },
+        "raw_foreground_update": {
+          "count": 207,
+          "total_sec": 16.39796348940581,
+          "avg_sec": 0.07921721492466575,
+          "max_sec": 0.17751689720898867
+        }
+      },
+      "transfer_timing_summary": {
+        "mo_foreground_avg_sec": 29.702299528522417,
+        "mo_full_avg_sec": 29.702299528522417,
+        "mo_foreground_total_sec": 118.80919811408967,
+        "mo_full_total_sec": 118.80919811408967,
+        "mo_count": 4,
+        "gradient_foreground_avg_sec": null,
+        "gradient_full_avg_sec": null,
+        "gradient_foreground_total_sec": 0.0,
+        "gradient_full_total_sec": 0.0,
+        "gradient_count": 0
+      },
+      "checkpoint_results": [
+        {
+          "step": 50,
+          "tag": "async_step_50",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/async/async/async_step_50.pt",
+          "transfer_duration_sec": 31.813278381712735,
+          "persistence_duration_sec": 41.69105877634138,
+          "total_duration_sec": 73.50433715805411
+        },
+        {
+          "step": 100,
+          "tag": "async_step_100",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/async/async/async_step_100.pt",
+          "transfer_duration_sec": 28.66985008865595,
+          "persistence_duration_sec": 45.20598837453872,
+          "total_duration_sec": 73.87583846319467
+        },
+        {
+          "step": 150,
+          "tag": "async_step_150",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/async/async/async_step_150.pt",
+          "transfer_duration_sec": 28.995070192031562,
+          "persistence_duration_sec": 43.07172572426498,
+          "total_duration_sec": 72.06679591629654
+        },
+        {
+          "step": 200,
+          "tag": "async_step_200",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/async/async/async_step_200.pt",
+          "transfer_duration_sec": 29.330999451689422,
+          "persistence_duration_sec": 44.96587439626455,
+          "total_duration_sec": 74.29687384795398
+        }
+      ],
+      "ringbuffer_pressure_samples": [],
+      "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/async/host_memory_samples.json",
+      "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/async/host_memory_samples.jsonl",
+      "host_memory_sample_count": 782,
+      "host_memory_peak_process_tree_rss_gb": 50.875343322753906,
+      "host_memory_peak_system_used_gb": 119.81340026855469,
+      "host_memory_min_system_available_gb": 1895.7307014465332,
+      "host_memory_peak_cgroup_current_gb": 255.96569061279297,
+      "host_memory_cgroup_limit_gb": null,
+      "host_memory_cgroup_oom_events_delta": 0,
+      "host_memory_cgroup_oom_kill_events_delta": 0,
+      "host_memory_sampling_error": null,
+      "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/async/power_samples.json",
+      "power_sample_count": 742,
+      "power_avg_w": 143.84474393530996,
+      "power_peak_w": 349.99,
+      "power_energy_j": 56064.2871924617,
+      "power_sampling_error": null,
+      "error": null
+    },
+    {
+      "hook_type": "async_o",
+      "output_dir": "/tmp/zsheng1/qwen3-8b-h200-run-1/async_o",
+      "command": [
+        "/hpc/home/zsheng1/miniconda3/envs/checkpoint/bin/python",
+        "/hpc/home/zsheng1/checkpoint/finetune.py",
+        "--model",
+        "Qwen3-8B",
+        "--hook-type",
+        "async_o",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "207",
+        "--save-steps",
+        "50",
+        "--overlap-steps",
+        "2",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/async_o",
+        "--profile-phases",
+        "--gockpt-inflight-packets",
+        "64",
+        "--gockpt-transfer-chunk-mb",
+        "64.0",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 288.1367262993008,
+      "train_runtime_sec": 190.71095731575042,
+      "train_steps_per_sec": 1.0854122013413243,
+      "checkpoint_count": 4,
+      "checkpoint_files": [
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/async_o/async_o/async_o_step_50.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/async_o/async_o/async_o_step_100.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/async_o/async_o/async_o_step_150.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/async_o/async_o/async_o_step_200.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 207,
+          "total_sec": 0.0002904757857322693,
+          "avg_sec": 1.4032646653732815e-06,
+          "max_sec": 5.933456122875214e-06
+        },
+        "hook.forward_end": {
+          "count": 207,
+          "total_sec": 0.0003446890041232109,
+          "avg_sec": 1.6651642711266228e-06,
+          "max_sec": 1.0197050869464874e-05
+        },
+        "hook.backward_begin": {
+          "count": 207,
+          "total_sec": 0.00016056746244430542,
+          "avg_sec": 7.756882243686252e-07,
+          "max_sec": 4.270114004611969e-06
+        },
+        "hook.backward_end": {
+          "count": 207,
+          "total_sec": 0.0005125636234879494,
+          "avg_sec": 2.4761527704731853e-06,
+          "max_sec": 3.474671393632889e-05
+        },
+        "hook.update_begin": {
+          "count": 207,
+          "total_sec": 0.00014129001647233963,
+          "avg_sec": 6.825604660499499e-07,
+          "max_sec": 2.4046748876571655e-06
+        },
+        "hook.update_end": {
+          "count": 207,
+          "total_sec": 0.000240362249314785,
+          "avg_sec": 1.161170286544855e-06,
+          "max_sec": 4.04752790927887e-06
+        },
+        "hook.save_checkpoint": {
+          "count": 4,
+          "total_sec": 100.71232763305306,
+          "avg_sec": 25.178081908263266,
+          "max_sec": 26.1507674632594
+        },
+        "hook.wait_for_pending_persistence": {
+          "count": 1,
+          "total_sec": 39.81977332290262,
+          "avg_sec": 39.81977332290262,
+          "max_sec": 39.81977332290262
+        }
+      },
+      "raw_foreground_summary": {
+        "raw_foreground_forward": {
+          "count": 207,
+          "total_sec": 24.77160421386361,
+          "avg_sec": 0.11966958557422035,
+          "max_sec": 0.8876188965514302
+        },
+        "raw_foreground_backward": {
+          "count": 207,
+          "total_sec": 42.36024849768728,
+          "avg_sec": 0.20463888163133953,
+          "max_sec": 0.46649424731731415
+        },
+        "raw_foreground_update": {
+          "count": 207,
+          "total_sec": 16.513202553614974,
+          "avg_sec": 0.07977392537978248,
+          "max_sec": 0.1883737863972783
+        }
+      },
+      "transfer_timing_summary": {
+        "mo_foreground_avg_sec": 6.030602042097598,
+        "mo_full_avg_sec": 6.856639816658571,
+        "mo_foreground_total_sec": 24.122408168390393,
+        "mo_full_total_sec": 27.426559266634285,
+        "mo_count": 4,
+        "gradient_foreground_avg_sec": null,
+        "gradient_full_avg_sec": null,
+        "gradient_foreground_total_sec": 0.0,
+        "gradient_full_total_sec": 0.0,
+        "gradient_count": 0
+      },
+      "checkpoint_results": [
+        {
+          "step": 50,
+          "tag": "async_o_step_50",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/async_o/async_o/async_o_step_50.pt",
+          "transfer_duration_sec": 23.711522654630244,
+          "transfer_sync_duration_sec": 1.3567507266998291e-05,
+          "transfer_full_duration_sec": 24.029275086708367,
+          "transfer_enqueue_started_at": 4540723.314995158,
+          "persistence_duration_sec": 51.488710090518,
+          "total_duration_sec": 75.20023274514824
+        },
+        {
+          "step": 100,
+          "tag": "async_o_step_100",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/async_o/async_o/async_o_step_100.pt",
+          "transfer_duration_sec": 0.13690277747809887,
+          "transfer_sync_duration_sec": 2.166908234357834e-05,
+          "transfer_full_duration_sec": 1.0855795685201883,
+          "transfer_enqueue_started_at": 4540798.54643852,
+          "persistence_duration_sec": 44.83020846545696,
+          "total_duration_sec": 44.96711124293506
+        },
+        {
+          "step": 150,
+          "tag": "async_o_step_150",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/async_o/async_o/async_o_step_150.pt",
+          "transfer_duration_sec": 0.13708668388426304,
+          "transfer_sync_duration_sec": 1.473166048526764e-05,
+          "transfer_full_duration_sec": 1.232289263047278,
+          "transfer_enqueue_started_at": 4540844.279790907,
+          "persistence_duration_sec": 44.46962820272893,
+          "total_duration_sec": 44.60671488661319
+        },
+        {
+          "step": 200,
+          "tag": "async_o_step_200",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/async_o/async_o/async_o_step_200.pt",
+          "transfer_duration_sec": 0.13683000952005386,
+          "transfer_sync_duration_sec": 1.607462763786316e-05,
+          "transfer_full_duration_sec": 1.0794153483584523,
+          "transfer_enqueue_started_at": 4540889.65037399,
+          "persistence_duration_sec": 42.63150239735842,
+          "total_duration_sec": 42.76833240687847
+        }
+      ],
+      "ringbuffer_pressure_samples": [],
+      "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/async_o/host_memory_samples.json",
+      "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/async_o/host_memory_samples.jsonl",
+      "host_memory_sample_count": 578,
+      "host_memory_peak_process_tree_rss_gb": 63.27935028076172,
+      "host_memory_peak_system_used_gb": 132.60399627685547,
+      "host_memory_min_system_available_gb": 1882.9401054382324,
+      "host_memory_peak_cgroup_current_gb": 255.9654541015625,
+      "host_memory_cgroup_limit_gb": null,
+      "host_memory_cgroup_oom_events_delta": 0,
+      "host_memory_cgroup_oom_kill_events_delta": 0,
+      "host_memory_sampling_error": null,
+      "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/async_o/power_samples.json",
+      "power_sample_count": 540,
+      "power_avg_w": 156.68051851851837,
+      "power_peak_w": 344.14,
+      "power_energy_j": 45012.461042523966,
+      "power_sampling_error": null,
+      "error": null
+    },
+    {
+      "hook_type": "gockpt",
+      "output_dir": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt",
+      "command": [
+        "/hpc/home/zsheng1/miniconda3/envs/checkpoint/bin/python",
+        "/hpc/home/zsheng1/checkpoint/finetune.py",
+        "--model",
+        "Qwen3-8B",
+        "--hook-type",
+        "gockpt",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "207",
+        "--save-steps",
+        "50",
+        "--overlap-steps",
+        "2",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt",
+        "--profile-phases",
+        "--gockpt-inflight-packets",
+        "64",
+        "--gockpt-transfer-chunk-mb",
+        "64.0",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 362.29826611373574,
+      "train_runtime_sec": 154.61849369015545,
+      "train_steps_per_sec": 1.33877904938599,
+      "checkpoint_count": 4,
+      "checkpoint_files": [
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt/gockpt/gockpt_step_52.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt/gockpt/gockpt_step_102.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt/gockpt/gockpt_step_152.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt/gockpt/gockpt_step_202.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 207,
+          "total_sec": 0.0028247013688087463,
+          "avg_sec": 1.3645900332409402e-05,
+          "max_sec": 0.00034527573734521866
+        },
+        "hook.forward_end": {
+          "count": 207,
+          "total_sec": 0.00043921731412410736,
+          "avg_sec": 2.1218227735464126e-06,
+          "max_sec": 7.640570402145386e-06
+        },
+        "hook.backward_begin": {
+          "count": 207,
+          "total_sec": 0.00023744627833366394,
+          "avg_sec": 1.147083470210937e-06,
+          "max_sec": 5.3765252232551575e-06
+        },
+        "hook.backward_end": {
+          "count": 207,
+          "total_sec": 0.00615479052066803,
+          "avg_sec": 2.9733287539459082e-05,
+          "max_sec": 0.0011940402910113335
+        },
+        "hook.update_begin": {
+          "count": 207,
+          "total_sec": 20.88375729508698,
+          "avg_sec": 0.10088771640138637,
+          "max_sec": 7.864071120508015
+        },
+        "hook.update_end": {
+          "count": 207,
+          "total_sec": 0.2155981445685029,
+          "avg_sec": 0.0010415369302826227,
+          "max_sec": 0.06835534889250994
+        },
+        "hook.save_checkpoint": {
+          "count": 4,
+          "total_sec": 0.004213891923427582,
+          "avg_sec": 0.0010534729808568954,
+          "max_sec": 0.0012150201946496964
+        },
+        "hook.wait_for_pending_persistence": {
+          "count": 1,
+          "total_sec": 147.1347703607753,
+          "avg_sec": 147.1347703607753,
+          "max_sec": 147.1347703607753
+        }
+      },
+      "raw_foreground_summary": {
+        "raw_foreground_forward": {
+          "count": 207,
+          "total_sec": 55.95676608290523,
+          "avg_sec": 0.2703225414633103,
+          "max_sec": 10.536364827305079
+        },
+        "raw_foreground_backward": {
+          "count": 207,
+          "total_sec": 53.590611070394516,
+          "avg_sec": 0.2588918409197803,
+          "max_sec": 1.713668156415224
+        },
+        "raw_foreground_update": {
+          "count": 207,
+          "total_sec": 16.749337722547352,
+          "avg_sec": 0.08091467498815146,
+          "max_sec": 0.21452575363218784
+        }
+      },
+      "transfer_timing_summary": {
+        "mo_foreground_avg_sec": 2.5569834981579334,
+        "mo_full_avg_sec": 2.5569834981579334,
+        "mo_foreground_total_sec": 20.455867985263467,
+        "mo_full_total_sec": 20.455867985263467,
+        "mo_count": 8,
+        "gradient_foreground_avg_sec": 2.6350051139015704,
+        "gradient_full_avg_sec": 2.7162072710925713,
+        "gradient_foreground_total_sec": 21.080040911212564,
+        "gradient_full_total_sec": 21.72965816874057,
+        "gradient_count": 8
+      },
+      "checkpoint_results": [
+        {
+          "start_step": 50,
+          "target_step": 52,
+          "tag": "gockpt_step_52",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt/gockpt/gockpt_step_52.pt",
+          "transfer_duration_sec": 14.36133961379528,
+          "transfer_sync_duration_sec": 2.2415071725845337e-05,
+          "transfer_count": 2,
+          "gradient_duration_sec": 11.421395159326494,
+          "gradient_submit_duration_sec": 11.259365438483655,
+          "gradient_sync_duration_sec": 2.3597851395606995e-05,
+          "gradient_count": 2,
+          "reconstruction_duration_sec": 21.042788790538907,
+          "reconstruction_backpressure_sec": 2.9243528842926025e-05,
+          "persistence_duration_sec": 73.34946421906352,
+          "total_duration_sec": 120.17501702625304
+        },
+        {
+          "start_step": 100,
+          "target_step": 102,
+          "tag": "gockpt_step_102",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt/gockpt/gockpt_step_102.pt",
+          "transfer_duration_sec": 4.237473116256297,
+          "transfer_sync_duration_sec": 3.4467317163944244e-05,
+          "transfer_count": 2,
+          "gradient_duration_sec": 5.155821208842099,
+          "gradient_submit_duration_sec": 4.927588895894587,
+          "gradient_sync_duration_sec": 0.06604376994073391,
+          "gradient_count": 2,
+          "reconstruction_duration_sec": 25.70053400658071,
+          "reconstruction_backpressure_sec": 2.6555731892585754e-05,
+          "persistence_duration_sec": 100.88409212045372,
+          "total_duration_sec": 135.9779470078647
+        },
+        {
+          "start_step": 150,
+          "target_step": 152,
+          "tag": "gockpt_step_152",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt/gockpt/gockpt_step_152.pt",
+          "transfer_duration_sec": 0.8279158845543861,
+          "transfer_sync_duration_sec": 3.057904541492462e-05,
+          "transfer_count": 2,
+          "gradient_duration_sec": 4.219157830812037,
+          "gradient_submit_duration_sec": 3.991508518345654,
+          "gradient_sync_duration_sec": 0.06504751183092594,
+          "gradient_count": 2,
+          "reconstruction_duration_sec": 23.98983206320554,
+          "reconstruction_backpressure_sec": 3.5725533962249756e-05,
+          "persistence_duration_sec": 116.25972988456488,
+          "total_duration_sec": 145.2966713886708
+        },
+        {
+          "start_step": 200,
+          "target_step": 202,
+          "tag": "gockpt_step_202",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt/gockpt/gockpt_step_202.pt",
+          "transfer_duration_sec": 1.0290296310558915,
+          "transfer_sync_duration_sec": 2.227816730737686e-05,
+          "transfer_count": 2,
+          "gradient_duration_sec": 0.9332839697599411,
+          "gradient_submit_duration_sec": 0.7029817262664437,
+          "gradient_sync_duration_sec": 0.06748145259916782,
+          "gradient_count": 2,
+          "reconstruction_duration_sec": 17.942182050086558,
+          "reconstruction_backpressure_sec": 3.083702176809311e-05,
+          "persistence_duration_sec": 131.62829208094627,
+          "total_duration_sec": 151.53281856887043
+        }
+      ],
+      "ringbuffer_pressure_samples": [
+        {
+          "time_sec": 1.1228956282138824e-05,
+          "event": "training_start",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 20.724916329607368,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 34.932031131349504,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 46.92065822146833,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 47.025779308751225,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 47.02580559998751,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 51.22641265857965,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 55.974636173807085,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 55.97561980318278,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 72.92726902663708,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 73.90777544304729,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 83.54070161096752,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 83.54200981743634,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 89.75012685451657,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 94.73449964355677,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 99.6081580678001,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 99.60912134777755,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 112.16637651715428,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 113.20556507911533,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 118.35054905805737,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 118.35077274683863,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 125.47791747935116,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 133.09232112020254,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 137.19525284785777,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 137.1963084116578,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 148.6437906716019,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 149.4590717656538,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 151.50364898052067,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 151.5039063896984,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 155.89253603573889,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 160.1835815552622,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 167.40110900159925,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 167.40258150175214,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        }
+      ],
+      "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt/host_memory_samples.json",
+      "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt/host_memory_samples.jsonl",
+      "host_memory_sample_count": 726,
+      "host_memory_peak_process_tree_rss_gb": 232.05155181884766,
+      "host_memory_peak_system_used_gb": 302.42810440063477,
+      "host_memory_min_system_available_gb": 1713.1159973144531,
+      "host_memory_peak_cgroup_current_gb": 255.96559524536133,
+      "host_memory_cgroup_limit_gb": null,
+      "host_memory_cgroup_oom_events_delta": 0,
+      "host_memory_cgroup_oom_kill_events_delta": 0,
+      "host_memory_sampling_error": null,
+      "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt/power_samples.json",
+      "power_sample_count": 675,
+      "power_avg_w": 147.81503703703697,
+      "power_peak_w": 312.79,
+      "power_energy_j": 53525.80349270754,
+      "power_sampling_error": null,
+      "error": null
+    },
+    {
+      "hook_type": "gockpt_o",
+      "output_dir": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt_o",
+      "command": [
+        "/hpc/home/zsheng1/miniconda3/envs/checkpoint/bin/python",
+        "/hpc/home/zsheng1/checkpoint/finetune.py",
+        "--model",
+        "Qwen3-8B",
+        "--hook-type",
+        "gockpt_o",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "207",
+        "--save-steps",
+        "50",
+        "--overlap-steps",
+        "2",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt_o",
+        "--profile-phases",
+        "--gockpt-inflight-packets",
+        "64",
+        "--gockpt-transfer-chunk-mb",
+        "64.0",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 334.4754396174103,
+      "train_runtime_sec": 143.17967016156763,
+      "train_steps_per_sec": 1.4457359747121632,
+      "checkpoint_count": 4,
+      "checkpoint_files": [
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt_o/gockpt_o/gockpt_o_step_52.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt_o/gockpt_o/gockpt_o_step_102.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt_o/gockpt_o/gockpt_o_step_152.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt_o/gockpt_o/gockpt_o_step_202.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 207,
+          "total_sec": 0.002956422045826912,
+          "avg_sec": 1.4282232105444019e-05,
+          "max_sec": 0.00038191303610801697
+        },
+        "hook.forward_end": {
+          "count": 207,
+          "total_sec": 0.0005746148526668549,
+          "avg_sec": 2.775917162641811e-06,
+          "max_sec": 9.340234100818634e-06
+        },
+        "hook.backward_begin": {
+          "count": 207,
+          "total_sec": 0.005029233172535896,
+          "avg_sec": 2.4295812427709644e-05,
+          "max_sec": 0.001750909723341465
+        },
+        "hook.backward_end": {
+          "count": 207,
+          "total_sec": 0.006372393108904362,
+          "avg_sec": 3.078450777248484e-05,
+          "max_sec": 0.0015179235488176346
+        },
+        "hook.update_begin": {
+          "count": 207,
+          "total_sec": 17.28723967075348,
+          "avg_sec": 0.08351323512441294,
+          "max_sec": 6.4866872150450945
+        },
+        "hook.update_end": {
+          "count": 207,
+          "total_sec": 0.006777231581509113,
+          "avg_sec": 3.2740249186034364e-05,
+          "max_sec": 0.002225937321782112
+        },
+        "hook.save_checkpoint": {
+          "count": 4,
+          "total_sec": 0.003572472371160984,
+          "avg_sec": 0.000893118092790246,
+          "max_sec": 0.0011635106056928635
+        },
+        "hook.wait_for_pending_persistence": {
+          "count": 1,
+          "total_sec": 129.98835318442434,
+          "avg_sec": 129.98835318442434,
+          "max_sec": 129.98835318442434
+        }
+      },
+      "raw_foreground_summary": {
+        "raw_foreground_forward": {
+          "count": 207,
+          "total_sec": 51.34672831185162,
+          "avg_sec": 0.2480518275934861,
+          "max_sec": 10.506313028745353
+        },
+        "raw_foreground_backward": {
+          "count": 207,
+          "total_sec": 51.429228705354035,
+          "avg_sec": 0.24845038021910162,
+          "max_sec": 3.6704298686236143
+        },
+        "raw_foreground_update": {
+          "count": 207,
+          "total_sec": 16.48462646920234,
+          "avg_sec": 0.07963587666281323,
+          "max_sec": 0.18096299562603235
+        }
+      },
+      "transfer_timing_summary": {
+        "mo_foreground_avg_sec": 2.7757574234856293,
+        "mo_full_avg_sec": 2.7757574234856293,
+        "mo_foreground_total_sec": 22.206059387885034,
+        "mo_full_total_sec": 22.206059387885034,
+        "mo_count": 8,
+        "gradient_foreground_avg_sec": 2.1617516942787915,
+        "gradient_full_avg_sec": 3.4985349101480097,
+        "gradient_foreground_total_sec": 17.294013554230332,
+        "gradient_full_total_sec": 27.988279281184077,
+        "gradient_count": 8
+      },
+      "checkpoint_results": [
+        {
+          "start_step": 50,
+          "target_step": 52,
+          "tag": "gockpt_o_step_52",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt_o/gockpt_o/gockpt_o_step_52.pt",
+          "transfer_duration_sec": 13.580078748054802,
+          "transfer_sync_duration_sec": 2.1230429410934448e-05,
+          "transfer_count": 2,
+          "gradient_duration_sec": 6.819850921630859,
+          "gradient_submit_duration_sec": 6.649923118762672,
+          "gradient_sync_duration_sec": 0.009405109100043774,
+          "gradient_count": 2,
+          "reconstruction_duration_sec": 11.529480670578778,
+          "reconstruction_backpressure_sec": 2.7835369110107422e-05,
+          "persistence_duration_sec": 58.731491185724735,
+          "total_duration_sec": 90.66092936135828
+        },
+        {
+          "start_step": 100,
+          "target_step": 102,
+          "tag": "gockpt_o_step_102",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt_o/gockpt_o/gockpt_o_step_102.pt",
+          "transfer_duration_sec": 8.566914938390255,
+          "transfer_sync_duration_sec": 2.272520214319229e-05,
+          "transfer_count": 2,
+          "gradient_duration_sec": 15.407171469181776,
+          "gradient_submit_duration_sec": 6.488998453132808,
+          "gradient_sync_duration_sec": 2.138689160346985e-05,
+          "gradient_count": 2,
+          "reconstruction_duration_sec": 23.805743508040905,
+          "reconstruction_backpressure_sec": 2.665165811777115e-05,
+          "persistence_duration_sec": 79.44630350638181,
+          "total_duration_sec": 127.22616007365286
+        },
+        {
+          "start_step": 150,
+          "target_step": 152,
+          "tag": "gockpt_o_step_152",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt_o/gockpt_o/gockpt_o_step_152.pt",
+          "transfer_duration_sec": 0.03240780346095562,
+          "transfer_sync_duration_sec": 2.7132220566272736e-05,
+          "transfer_count": 2,
+          "gradient_duration_sec": 2.491342958062887,
+          "gradient_submit_duration_sec": 1.6065276935696602,
+          "gradient_sync_duration_sec": 2.919323742389679e-05,
+          "gradient_count": 2,
+          "reconstruction_duration_sec": 13.81271642446518,
+          "reconstruction_backpressure_sec": 3.995746374130249e-05,
+          "persistence_duration_sec": 103.38911494147032,
+          "total_duration_sec": 119.72562208492309
+        },
+        {
+          "start_step": 200,
+          "target_step": 202,
+          "tag": "gockpt_o_step_202",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt_o/gockpt_o/gockpt_o_step_202.pt",
+          "transfer_duration_sec": 0.026562961749732494,
+          "transfer_sync_duration_sec": 2.384837716817856e-05,
+          "transfer_count": 2,
+          "gradient_duration_sec": 3.2699139323085546,
+          "gradient_submit_duration_sec": 2.539083493873477,
+          "gradient_sync_duration_sec": 2.5105662643909454e-05,
+          "gradient_count": 2,
+          "reconstruction_duration_sec": 21.961521549150348,
+          "reconstruction_backpressure_sec": 3.877561539411545e-05,
+          "persistence_duration_sec": 110.54245617520064,
+          "total_duration_sec": 135.80049339402467
+        }
+      ],
+      "ringbuffer_pressure_samples": [
+        {
+          "time_sec": 1.1739321053028107e-05,
+          "event": "training_start",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 20.55546171311289,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 34.752222628332675,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 41.37566090095788,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 41.513834291137755,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 41.51385814510286,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 44.04953780490905,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 46.281598491594195,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 46.2825006628409,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 61.81392734218389,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 71.25407006964087,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 78.07490863651037,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 78.07516712136567,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 85.25646383780986,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 89.96811213903129,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 95.05967891961336,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 95.06073731463403,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 110.17708532139659,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 111.87413235846907,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 113.70510050840676,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 113.7053470313549,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 116.84514196775854,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 121.64559289999306,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 125.68671491649002,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 125.6877198079601,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 136.38163118064404,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 137.64522040635347,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 140.4106894787401,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 140.41160707641393,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 147.96130134817213,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 152.59770118445158,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 159.60664210747927,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 159.60826041176915,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        }
+      ],
+      "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt_o/host_memory_samples.json",
+      "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt_o/host_memory_samples.jsonl",
+      "host_memory_sample_count": 670,
+      "host_memory_peak_process_tree_rss_gb": 239.34507751464844,
+      "host_memory_peak_system_used_gb": 309.9017562866211,
+      "host_memory_min_system_available_gb": 1705.6423454284668,
+      "host_memory_peak_cgroup_current_gb": 255.96583938598633,
+      "host_memory_cgroup_limit_gb": null,
+      "host_memory_cgroup_oom_events_delta": 0,
+      "host_memory_cgroup_oom_kill_events_delta": 0,
+      "host_memory_sampling_error": null,
+      "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-1/gockpt_o/power_samples.json",
+      "power_sample_count": 623,
+      "power_avg_w": 150.5645585874801,
+      "power_peak_w": 337.01,
+      "power_energy_j": 50276.91810053955,
+      "power_sampling_error": null,
+      "error": null
+    }
+  ],
+  "comparison": {
+    "baseline": {
+      "train_steps_per_sec": 0.5999094671985564,
+      "wall_time_sec": 519.4893941748887,
+      "checkpoint_count": 4,
+      "save_checkpoint_total_sec": 258.6468169223517,
+      "forward_begin_total_sec": 0.0002465704455971718,
+      "backward_end_total_sec": 0.0002356087788939476,
+      "update_begin_total_sec": 0.00010878127068281174,
+      "update_end_total_sec": 0.00021597836166620255
+    },
+    "async": {
+      "train_steps_per_sec": 0.7319033827953707,
+      "wall_time_sec": 390.2633035136387,
+      "checkpoint_count": 4,
+      "save_checkpoint_total_sec": 198.56867019459605,
+      "forward_begin_total_sec": 0.00023795105516910553,
+      "backward_end_total_sec": 0.00027818791568279266,
+      "update_begin_total_sec": 0.00010317284613847733,
+      "update_end_total_sec": 0.00022733397781848907,
+      "speedup_vs_baseline": 1.220023058167754,
+      "save_checkpoint_time_ratio_vs_baseline": 0.7677212987090744
+    },
+    "async_o": {
+      "train_steps_per_sec": 1.0854122013413243,
+      "wall_time_sec": 288.1367262993008,
+      "checkpoint_count": 4,
+      "save_checkpoint_total_sec": 100.71232763305306,
+      "forward_begin_total_sec": 0.0002904757857322693,
+      "backward_end_total_sec": 0.0005125636234879494,
+      "update_begin_total_sec": 0.00014129001647233963,
+      "update_end_total_sec": 0.000240362249314785,
+      "speedup_vs_baseline": 1.8092933362261434,
+      "save_checkpoint_time_ratio_vs_baseline": 0.3893816627300226
+    },
+    "gockpt": {
+      "train_steps_per_sec": 1.33877904938599,
+      "wall_time_sec": 362.29826611373574,
+      "checkpoint_count": 4,
+      "save_checkpoint_total_sec": 0.004213891923427582,
+      "forward_begin_total_sec": 0.0028247013688087463,
+      "backward_end_total_sec": 0.00615479052066803,
+      "update_begin_total_sec": 20.88375729508698,
+      "update_end_total_sec": 0.2155981445685029,
+      "speedup_vs_baseline": 2.231635142612084,
+      "save_checkpoint_time_ratio_vs_baseline": 1.629206952387368e-05
+    },
+    "gockpt_o": {
+      "train_steps_per_sec": 1.4457359747121632,
+      "wall_time_sec": 334.4754396174103,
+      "checkpoint_count": 4,
+      "save_checkpoint_total_sec": 0.003572472371160984,
+      "forward_begin_total_sec": 0.002956422045826912,
+      "backward_end_total_sec": 0.006372393108904362,
+      "update_begin_total_sec": 17.28723967075348,
+      "update_end_total_sec": 0.006777231581509113,
+      "speedup_vs_baseline": 2.40992358640951,
+      "save_checkpoint_time_ratio_vs_baseline": 1.3812164455259756e-05
+    }
+  }
+}

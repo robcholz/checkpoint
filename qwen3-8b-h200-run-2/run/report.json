@@ -66,9 +66,9 @@
         "--skip-final-model-save"
       ],
       "returncode": 0,
-      "wall_time_sec": 526.7195565653965,
-      "train_runtime_sec": 376.76688450947404,
-      "train_steps_per_sec": 0.5494113429568008,
+      "wall_time_sec": 501.38377997558564,
+      "train_runtime_sec": 370.21701801754534,
+      "train_steps_per_sec": 0.5591315091576634,
       "checkpoint_count": 4,
       "checkpoint_files": [
         "/tmp/zsheng1/qwen3-8b-h200-run-2/baseline/baseline/baseline_step_50.pt",
@@ -79,65 +79,65 @@
       "phase_summary": {
         "hook.forward_begin": {
           "count": 207,
-          "total_sec": 0.00026552099734544754,
-          "avg_sec": 1.2827101321036113e-06,
-          "max_sec": 6.215646862983704e-06
+          "total_sec": 0.00018408708274364471,
+          "avg_sec": 8.893095784717136e-07,
+          "max_sec": 3.7364661693573e-06
         },
         "hook.forward_end": {
           "count": 207,
-          "total_sec": 0.0002594403922557831,
-          "avg_sec": 1.2533352282888071e-06,
-          "max_sec": 5.639158189296722e-06
+          "total_sec": 0.00023779086768627167,
+          "avg_sec": 1.1487481530737761e-06,
+          "max_sec": 2.787448465824127e-06
         },
         "hook.backward_begin": {
           "count": 207,
-          "total_sec": 0.00010838452726602554,
-          "avg_sec": 5.235967500774181e-07,
-          "max_sec": 2.512708306312561e-06
+          "total_sec": 8.583441376686096e-05,
+          "avg_sec": 4.1465900370464233e-07,
+          "max_sec": 3.741122782230377e-06
         },
         "hook.backward_end": {
           "count": 207,
-          "total_sec": 0.00023654010146856308,
-          "avg_sec": 1.1427058041959568e-06,
-          "max_sec": 2.853572368621826e-06
+          "total_sec": 0.00017945095896720886,
+          "avg_sec": 8.669128452522167e-07,
+          "max_sec": 5.4817646741867065e-06
         },
         "hook.update_begin": {
           "count": 207,
-          "total_sec": 0.0001164022833108902,
-          "avg_sec": 5.623298710671024e-07,
-          "max_sec": 1.0961666703224182e-06
+          "total_sec": 5.924049764871597e-05,
+          "avg_sec": 2.861859789793042e-07,
+          "max_sec": 1.0281801223754883e-06
         },
         "hook.update_end": {
           "count": 207,
-          "total_sec": 0.00020081456750631332,
-          "avg_sec": 9.701186836053784e-07,
-          "max_sec": 6.146728992462158e-06
+          "total_sec": 0.00014738459140062332,
+          "avg_sec": 7.120028570078422e-07,
+          "max_sec": 1.6354024410247803e-06
         },
         "hook.save_checkpoint": {
           "count": 4,
-          "total_sec": 294.7201629281044,
-          "avg_sec": 73.6800407320261,
-          "max_sec": 79.87964813690633
+          "total_sec": 288.45400693640113,
+          "avg_sec": 72.11350173410028,
+          "max_sec": 77.23061231616884
         }
       },
       "raw_foreground_summary": {
         "raw_foreground_forward": {
           "count": 207,
-          "total_sec": 20.564160864800215,
-          "avg_sec": 0.09934377229372085,
-          "max_sec": 0.5170310046523809
+          "total_sec": 19.49077669531107,
+          "avg_sec": 0.09415834152324189,
+          "max_sec": 0.42421897128224373
         },
         "raw_foreground_backward": {
           "count": 207,
-          "total_sec": 37.38856547884643,
-          "avg_sec": 0.1806210892697895,
-          "max_sec": 0.45538715925067663
+          "total_sec": 38.31417332775891,
+          "avg_sec": 0.18509262477178218,
+          "max_sec": 0.4305562870576978
         },
         "raw_foreground_update": {
           "count": 207,
-          "total_sec": 16.36109986808151,
-          "avg_sec": 0.07903912979749522,
-          "max_sec": 0.19083696883171797
+          "total_sec": 16.28079118486494,
+          "avg_sec": 0.07865116514427506,
+          "max_sec": 0.18572295736521482
         }
       },
       "transfer_timing_summary": {
@@ -157,44 +157,44 @@
           "step": 50,
           "tag": "baseline_step_50",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/baseline/baseline/baseline_step_50.pt",
-          "duration_sec": 77.17557746451348
+          "duration_sec": 70.85031774453819
         },
         {
           "step": 100,
           "tag": "baseline_step_100",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/baseline/baseline/baseline_step_100.pt",
-          "duration_sec": 79.87689901608974
+          "duration_sec": 77.2287644231692
         },
         {
           "step": 150,
           "tag": "baseline_step_150",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/baseline/baseline/baseline_step_150.pt",
-          "duration_sec": 70.41919318214059
+          "duration_sec": 73.38967425748706
         },
         {
           "step": 200,
           "tag": "baseline_step_200",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/baseline/baseline/baseline_step_200.pt",
-          "duration_sec": 67.23781124316156
+          "duration_sec": 66.97779895737767
         }
       ],
       "ringbuffer_pressure_samples": [],
       "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/baseline/host_memory_samples.json",
       "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/baseline/host_memory_samples.jsonl",
-      "host_memory_sample_count": 1055,
-      "host_memory_peak_process_tree_rss_gb": 17.286407470703125,
-      "host_memory_peak_system_used_gb": 81.47390365600586,
-      "host_memory_min_system_available_gb": 1934.0542449951172,
-      "host_memory_peak_cgroup_current_gb": 203.60845565795898,
+      "host_memory_sample_count": 1005,
+      "host_memory_peak_process_tree_rss_gb": 17.288223266601562,
+      "host_memory_peak_system_used_gb": 84.88848495483398,
+      "host_memory_min_system_available_gb": 1930.639663696289,
+      "host_memory_peak_cgroup_current_gb": 203.37349700927734,
       "host_memory_cgroup_limit_gb": null,
       "host_memory_cgroup_oom_events_delta": 0,
       "host_memory_cgroup_oom_kill_events_delta": 0,
       "host_memory_sampling_error": null,
       "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/baseline/power_samples.json",
-      "power_sample_count": 1004,
-      "power_avg_w": 131.8110657370517,
-      "power_peak_w": 366.19,
-      "power_energy_j": 69412.88406129365,
+      "power_sample_count": 959,
+      "power_avg_w": 132.26787278415014,
+      "power_peak_w": 370.6,
+      "power_energy_j": 66197.0914848759,
       "power_sampling_error": null,
       "error": null
     },
@@ -239,9 +239,9 @@
         "--skip-final-model-save"
       ],
       "returncode": 0,
-      "wall_time_sec": 431.5590316513553,
-      "train_runtime_sec": 314.94468316901475,
-      "train_steps_per_sec": 0.6572582776033519,
+      "wall_time_sec": 462.86680492013693,
+      "train_runtime_sec": 345.20014391932636,
+      "train_steps_per_sec": 0.5996521254300986,
       "checkpoint_count": 4,
       "checkpoint_files": [
         "/tmp/zsheng1/qwen3-8b-h200-run-2/async/async/async_step_50.pt",
@@ -252,78 +252,78 @@
       "phase_summary": {
         "hook.forward_begin": {
           "count": 207,
-          "total_sec": 0.00026811379939317703,
-          "avg_sec": 1.2952357458607586e-06,
-          "max_sec": 3.3192336559295654e-06
+          "total_sec": 0.0001877378672361374,
+          "avg_sec": 9.069462185320647e-07,
+          "max_sec": 3.526918590068817e-06
         },
         "hook.forward_end": {
           "count": 207,
-          "total_sec": 0.00030059367418289185,
-          "avg_sec": 1.4521433535405403e-06,
-          "max_sec": 6.929971277713776e-06
+          "total_sec": 0.0002577733248472214,
+          "avg_sec": 1.2452817625469631e-06,
+          "max_sec": 6.185844540596008e-06
         },
         "hook.backward_begin": {
           "count": 207,
-          "total_sec": 0.00010842923074960709,
-          "avg_sec": 5.238127089352999e-07,
-          "max_sec": 1.730397343635559e-06
+          "total_sec": 9.999144822359085e-05,
+          "avg_sec": 4.830504745101007e-07,
+          "max_sec": 1.1604279279708862e-06
         },
         "hook.backward_end": {
           "count": 207,
-          "total_sec": 0.0002690013498067856,
-          "avg_sec": 1.2995234290182878e-06,
-          "max_sec": 4.741363227367401e-06
+          "total_sec": 0.00022265780717134476,
+          "avg_sec": 1.0756415805378974e-06,
+          "max_sec": 4.22261655330658e-06
         },
         "hook.update_begin": {
           "count": 207,
-          "total_sec": 0.00014112237840890884,
-          "avg_sec": 6.81750620332893e-07,
-          "max_sec": 4.872679710388184e-06
+          "total_sec": 6.593670696020126e-05,
+          "avg_sec": 3.185348162328563e-07,
+          "max_sec": 1.5078112483024597e-06
         },
         "hook.update_end": {
           "count": 207,
-          "total_sec": 0.0002350909635424614,
-          "avg_sec": 1.1357051378862869e-06,
-          "max_sec": 5.175359547138214e-06
+          "total_sec": 0.0001698797568678856,
+          "avg_sec": 8.206751539511381e-07,
+          "max_sec": 4.678033292293549e-06
         },
         "hook.save_checkpoint": {
           "count": 4,
-          "total_sec": 235.19231272209436,
-          "avg_sec": 58.79807818052359,
-          "max_sec": 74.42054091021419
+          "total_sec": 265.7280794121325,
+          "avg_sec": 66.43201985303313,
+          "max_sec": 75.16942422930151
         },
         "hook.wait_for_pending_persistence": {
           "count": 1,
-          "total_sec": 53.29524687025696,
-          "avg_sec": 53.29524687025696,
-          "max_sec": 53.29524687025696
+          "total_sec": 50.18699870351702,
+          "avg_sec": 50.18699870351702,
+          "max_sec": 50.18699870351702
         }
       },
       "raw_foreground_summary": {
         "raw_foreground_forward": {
           "count": 207,
-          "total_sec": 19.64087953325361,
-          "avg_sec": 0.0948834760060561,
-          "max_sec": 0.40322485752403736
+          "total_sec": 19.337268633767962,
+          "avg_sec": 0.09341675668486939,
+          "max_sec": 0.49806560296565294
         },
         "raw_foreground_backward": {
           "count": 207,
-          "total_sec": 37.2268987018615,
-          "avg_sec": 0.179840090347157,
-          "max_sec": 0.4229583600535989
+          "total_sec": 37.32930377498269,
+          "avg_sec": 0.18033480084532702,
+          "max_sec": 0.6261197673156857
         },
         "raw_foreground_update": {
           "count": 207,
-          "total_sec": 16.459600241854787,
-          "avg_sec": 0.07951497701379125,
-          "max_sec": 0.19123453553766012
+          "total_sec": 16.36311635747552,
+          "avg_sec": 0.07904887129215227,
+          "max_sec": 0.1782575873658061
         }
       },
       "transfer_timing_summary": {
-        "mo_foreground_avg_sec": 31.369986452162266,
-        "mo_full_avg_sec": 31.369986452162266,
-        "mo_foreground_total_sec": 125.47994580864906,
-        "mo_full_total_sec": 125.47994580864906,
+        "mo_foreground_avg_sec": 40.236564819468185,
+        "mo_full_avg_sec": 40.236564819468185,
+        "mo_foreground_total_sec": 160.94625927787274,
+        "mo_full_total_sec": 160.94625927787274,
         "mo_count": 4,
         "gradient_foreground_avg_sec": null,
         "gradient_full_avg_sec": null,
@@ -336,52 +336,52 @@
           "step": 50,
           "tag": "async_step_50",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/async/async/async_step_50.pt",
-          "transfer_duration_sec": 31.29744359664619,
-          "persistence_duration_sec": 49.748183546587825,
-          "total_duration_sec": 81.04562714323401
+          "transfer_duration_sec": 41.6051768399775,
+          "persistence_duration_sec": 51.40527468640357,
+          "total_duration_sec": 93.01045152638108
         },
         {
           "step": 100,
           "tag": "async_step_100",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/async/async/async_step_100.pt",
-          "transfer_duration_sec": 30.926619935780764,
-          "persistence_duration_sec": 49.40199103578925,
-          "total_duration_sec": 80.32861097157001
+          "transfer_duration_sec": 39.51106023043394,
+          "persistence_duration_sec": 49.95560180488974,
+          "total_duration_sec": 89.46666203532368
         },
         {
           "step": 150,
           "tag": "async_step_150",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/async/async/async_step_150.pt",
-          "transfer_duration_sec": 30.863081339746714,
-          "persistence_duration_sec": 56.81593702547252,
-          "total_duration_sec": 87.67901836521924
+          "transfer_duration_sec": 39.85239126160741,
+          "persistence_duration_sec": 49.877244799397886,
+          "total_duration_sec": 89.7296360610053
         },
         {
           "step": 200,
           "tag": "async_step_200",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/async/async/async_step_200.pt",
-          "transfer_duration_sec": 32.392800936475396,
-          "persistence_duration_sec": 53.26253322698176,
-          "total_duration_sec": 85.65533416345716
+          "transfer_duration_sec": 39.97763094585389,
+          "persistence_duration_sec": 49.891767653636634,
+          "total_duration_sec": 89.86939859949052
         }
       ],
       "ringbuffer_pressure_samples": [],
       "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/async/host_memory_samples.json",
       "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/async/host_memory_samples.jsonl",
-      "host_memory_sample_count": 865,
-      "host_memory_peak_process_tree_rss_gb": 49.833595275878906,
-      "host_memory_peak_system_used_gb": 111.86528396606445,
-      "host_memory_min_system_available_gb": 1903.6628646850586,
-      "host_memory_peak_cgroup_current_gb": 255.9658966064453,
+      "host_memory_sample_count": 927,
+      "host_memory_peak_process_tree_rss_gb": 51.56000518798828,
+      "host_memory_peak_system_used_gb": 111.06059265136719,
+      "host_memory_min_system_available_gb": 1904.4675559997559,
+      "host_memory_peak_cgroup_current_gb": 255.9653434753418,
       "host_memory_cgroup_limit_gb": null,
       "host_memory_cgroup_oom_events_delta": 0,
       "host_memory_cgroup_oom_kill_events_delta": 0,
       "host_memory_sampling_error": null,
       "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/async/power_samples.json",
-      "power_sample_count": 823,
-      "power_avg_w": 141.69156743620906,
-      "power_peak_w": 353.95,
-      "power_energy_j": 61166.66626837567,
+      "power_sample_count": 882,
+      "power_avg_w": 138.25986394557825,
+      "power_peak_w": 371.06,
+      "power_energy_j": 64010.91280902572,
       "power_sampling_error": null,
       "error": null
     },
@@ -426,9 +426,9 @@
         "--skip-final-model-save"
       ],
       "returncode": 0,
-      "wall_time_sec": 326.7940525133163,
-      "train_runtime_sec": 215.94249768462032,
-      "train_steps_per_sec": 0.9585885234240429,
+      "wall_time_sec": 316.6150734713301,
+      "train_runtime_sec": 209.64841328095645,
+      "train_steps_per_sec": 0.9873673583333673,
       "checkpoint_count": 4,
       "checkpoint_files": [
         "/tmp/zsheng1/qwen3-8b-h200-run-2/async_o/async_o/async_o_step_50.pt",
@@ -439,78 +439,78 @@
       "phase_summary": {
         "hook.forward_begin": {
           "count": 207,
-          "total_sec": 0.00029924511909484863,
-          "avg_sec": 1.4456285946611045e-06,
-          "max_sec": 5.537644028663635e-06
+          "total_sec": 0.00022961758077144623,
+          "avg_sec": 1.109263675224378e-06,
+          "max_sec": 3.553926944732666e-06
         },
         "hook.forward_end": {
           "count": 207,
-          "total_sec": 0.00030712131410837173,
-          "avg_sec": 1.483677845934163e-06,
-          "max_sec": 4.6156346797943115e-06
+          "total_sec": 0.00023582298308610916,
+          "avg_sec": 1.1392414641841023e-06,
+          "max_sec": 5.67268580198288e-06
         },
         "hook.backward_begin": {
           "count": 207,
-          "total_sec": 0.00011132843792438507,
-          "avg_sec": 5.378185406975124e-07,
-          "max_sec": 2.0992010831832886e-06
+          "total_sec": 0.00010130740702152252,
+          "avg_sec": 4.894077633889977e-07,
+          "max_sec": 2.323649823665619e-06
         },
         "hook.backward_end": {
           "count": 207,
-          "total_sec": 0.0006246017292141914,
-          "avg_sec": 3.017399658039572e-06,
-          "max_sec": 0.00012664124369621277
+          "total_sec": 0.00041399896144866943,
+          "avg_sec": 1.9999949828438135e-06,
+          "max_sec": 2.4730339646339417e-05
         },
         "hook.update_begin": {
           "count": 207,
-          "total_sec": 0.00015412736684083939,
-          "avg_sec": 7.445766514050212e-07,
-          "max_sec": 2.532266080379486e-06
+          "total_sec": 0.00010456237941980362,
+          "avg_sec": 5.051322677285199e-07,
+          "max_sec": 2.2472813725471497e-06
         },
         "hook.update_end": {
           "count": 207,
-          "total_sec": 0.00025274138897657394,
-          "avg_sec": 1.2209728936066374e-06,
-          "max_sec": 7.45430588722229e-06
+          "total_sec": 0.00018458813428878784,
+          "avg_sec": 8.917301173371393e-07,
+          "max_sec": 4.900619387626648e-06
         },
         "hook.save_checkpoint": {
           "count": 4,
-          "total_sec": 125.84503049962223,
-          "avg_sec": 31.461257624905556,
-          "max_sec": 36.871763214468956
+          "total_sec": 121.67967382725328,
+          "avg_sec": 30.41991845681332,
+          "max_sec": 33.38359352666885
         },
         "hook.wait_for_pending_persistence": {
           "count": 1,
-          "total_sec": 44.83833293616772,
-          "avg_sec": 44.83833293616772,
-          "max_sec": 44.83833293616772
+          "total_sec": 45.969112779945135,
+          "avg_sec": 45.969112779945135,
+          "max_sec": 45.969112779945135
         }
       },
       "raw_foreground_summary": {
         "raw_foreground_forward": {
           "count": 207,
-          "total_sec": 24.36994186323136,
-          "avg_sec": 0.11772918774507904,
-          "max_sec": 0.8900561407208443
+          "total_sec": 22.712332198396325,
+          "avg_sec": 0.10972141158645568,
+          "max_sec": 0.8838857151567936
         },
         "raw_foreground_backward": {
           "count": 207,
-          "total_sec": 42.80877661332488,
-          "avg_sec": 0.20680568412234243,
-          "max_sec": 0.5059873089194298
+          "total_sec": 42.412898698821664,
+          "avg_sec": 0.20489323042909016,
+          "max_sec": 0.540738052688539
         },
         "raw_foreground_update": {
           "count": 207,
-          "total_sec": 16.548051366582513,
-          "avg_sec": 0.07994227713324885,
-          "max_sec": 0.1890369225293398
+          "total_sec": 16.478056099265814,
+          "avg_sec": 0.07960413574524548,
+          "max_sec": 0.18023575842380524
         }
       },
       "transfer_timing_summary": {
-        "mo_foreground_avg_sec": 7.585233187535778,
-        "mo_full_avg_sec": 8.439917587209493,
-        "mo_foreground_total_sec": 30.34093275014311,
-        "mo_full_total_sec": 33.75967034883797,
+        "mo_foreground_avg_sec": 8.448085627518594,
+        "mo_full_avg_sec": 9.287360902875662,
+        "mo_foreground_total_sec": 33.79234251007438,
+        "mo_full_total_sec": 37.14944361150265,
         "mo_count": 4,
         "gradient_foreground_avg_sec": null,
         "gradient_full_avg_sec": null,
@@ -523,64 +523,64 @@
           "step": 50,
           "tag": "async_o_step_50",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/async_o/async_o/async_o_step_50.pt",
-          "transfer_duration_sec": 29.930039164610207,
-          "transfer_sync_duration_sec": 1.0102987289428711e-05,
-          "transfer_full_duration_sec": 30.231798173859715,
-          "transfer_enqueue_started_at": 4410268.857504783,
-          "persistence_duration_sec": 61.92053900845349,
-          "total_duration_sec": 91.8505781730637
+          "transfer_duration_sec": 33.38164479471743,
+          "transfer_sync_duration_sec": 9.622424840927124e-06,
+          "transfer_full_duration_sec": 33.78655806463212,
+          "transfer_enqueue_started_at": 4496667.721661997,
+          "persistence_duration_sec": 55.11222508829087,
+          "total_duration_sec": 88.4938698830083
         },
         {
           "step": 100,
           "tag": "async_o_step_100",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/async_o/async_o/async_o_step_100.pt",
-          "transfer_duration_sec": 0.13697212003171444,
-          "transfer_sync_duration_sec": 1.5148892998695374e-05,
-          "transfer_full_duration_sec": 1.1465849773958325,
-          "transfer_enqueue_started_at": 4410360.741112194,
-          "persistence_duration_sec": 47.19238542672247,
-          "total_duration_sec": 47.32935754675418
+          "transfer_duration_sec": 0.13685022573918104,
+          "transfer_sync_duration_sec": 1.0836869478225708e-05,
+          "transfer_full_duration_sec": 1.07538419123739,
+          "transfer_enqueue_started_at": 4496756.245798582,
+          "persistence_duration_sec": 48.300928454846144,
+          "total_duration_sec": 48.437778680585325
         },
         {
           "step": 150,
           "tag": "async_o_step_150",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/async_o/async_o/async_o_step_150.pt",
-          "transfer_duration_sec": 0.13696649856865406,
-          "transfer_sync_duration_sec": 1.3229437172412872e-05,
-          "transfer_full_duration_sec": 1.3014095434919,
-          "transfer_enqueue_started_at": 4410408.837258778,
-          "persistence_duration_sec": 49.62541208602488,
-          "total_duration_sec": 49.762378584593534
+          "transfer_duration_sec": 0.13695130497217178,
+          "transfer_sync_duration_sec": 1.1319294571876526e-05,
+          "transfer_full_duration_sec": 1.2143739629536867,
+          "transfer_enqueue_started_at": 4496805.449190866,
+          "persistence_duration_sec": 47.27400442678481,
+          "total_duration_sec": 47.410955731756985
         },
         {
           "step": 200,
           "tag": "async_o_step_200",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/async_o/async_o/async_o_step_200.pt",
-          "transfer_duration_sec": 0.13690068945288658,
-          "transfer_sync_duration_sec": 1.579616218805313e-05,
-          "transfer_full_duration_sec": 1.0798776540905237,
-          "transfer_enqueue_started_at": 4410459.368496721,
-          "persistence_duration_sec": 47.60721914470196,
-          "total_duration_sec": 47.744119834154844
+          "transfer_duration_sec": 0.13685209397226572,
+          "transfer_sync_duration_sec": 1.2312084436416626e-05,
+          "transfer_full_duration_sec": 1.073127392679453,
+          "transfer_enqueue_started_at": 4496853.625185821,
+          "persistence_duration_sec": 48.708321309648454,
+          "total_duration_sec": 48.84517340362072
         }
       ],
       "ringbuffer_pressure_samples": [],
       "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/async_o/host_memory_samples.json",
       "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/async_o/host_memory_samples.jsonl",
-      "host_memory_sample_count": 656,
-      "host_memory_peak_process_tree_rss_gb": 63.276123046875,
-      "host_memory_peak_system_used_gb": 125.40309524536133,
-      "host_memory_min_system_available_gb": 1890.1250534057617,
-      "host_memory_peak_cgroup_current_gb": 255.96613693237305,
+      "host_memory_sample_count": 635,
+      "host_memory_peak_process_tree_rss_gb": 63.27810287475586,
+      "host_memory_peak_system_used_gb": 117.87052917480469,
+      "host_memory_min_system_available_gb": 1897.6576194763184,
+      "host_memory_peak_cgroup_current_gb": 255.96531295776367,
       "host_memory_cgroup_limit_gb": null,
       "host_memory_cgroup_oom_events_delta": 0,
       "host_memory_cgroup_oom_kill_events_delta": 0,
       "host_memory_sampling_error": null,
       "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/async_o/power_samples.json",
-      "power_sample_count": 613,
-      "power_avg_w": 151.9199184339313,
-      "power_peak_w": 380.81,
-      "power_energy_j": 49491.15309784339,
+      "power_sample_count": 597,
+      "power_avg_w": 151.17725293132335,
+      "power_peak_w": 350.52,
+      "power_energy_j": 47777.67249518431,
       "power_sampling_error": null,
       "error": null
     },
@@ -625,9 +625,9 @@
         "--skip-final-model-save"
       ],
       "returncode": 0,
-      "wall_time_sec": 394.887615904212,
-      "train_runtime_sec": 168.6283873328939,
-      "train_steps_per_sec": 1.2275513232025141,
+      "wall_time_sec": 354.7667114203796,
+      "train_runtime_sec": 159.5077641820535,
+      "train_steps_per_sec": 1.2977424707912113,
       "checkpoint_count": 4,
       "checkpoint_files": [
         "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt/gockpt/gockpt_step_52.pt",
@@ -638,83 +638,83 @@
       "phase_summary": {
         "hook.forward_begin": {
           "count": 207,
-          "total_sec": 20.592657822184265,
-          "avg_sec": 0.09948143875451336,
-          "max_sec": 11.282301809638739
+          "total_sec": 0.0026786401867866516,
+          "avg_sec": 1.2940290757423438e-05,
+          "max_sec": 0.00047165993601083755
         },
         "hook.forward_end": {
           "count": 207,
-          "total_sec": 0.0005489373579621315,
-          "avg_sec": 2.6518712945030506e-06,
-          "max_sec": 9.111128747463226e-06
+          "total_sec": 0.0004229452461004257,
+          "avg_sec": 2.043213749277419e-06,
+          "max_sec": 1.0673888027668e-05
         },
         "hook.backward_begin": {
           "count": 207,
-          "total_sec": 0.00018974393606185913,
-          "avg_sec": 9.166373722795127e-07,
-          "max_sec": 4.4442713260650635e-06
+          "total_sec": 0.00013674143701791763,
+          "avg_sec": 6.605866522604717e-07,
+          "max_sec": 3.946945071220398e-06
         },
         "hook.backward_end": {
           "count": 207,
-          "total_sec": 0.1392732998356223,
-          "avg_sec": 0.0006728178736020401,
-          "max_sec": 0.13316181022673845
+          "total_sec": 0.005779151804745197,
+          "avg_sec": 2.791860775239226e-05,
+          "max_sec": 0.0011110762134194374
         },
         "hook.update_begin": {
           "count": 207,
-          "total_sec": 29.175658035092056,
-          "avg_sec": 0.14094520789899545,
-          "max_sec": 10.693193694576621
+          "total_sec": 23.34488036762923,
+          "avg_sec": 0.11277719984361947,
+          "max_sec": 6.812663941644132
         },
         "hook.update_end": {
           "count": 207,
-          "total_sec": 0.4281193781644106,
-          "avg_sec": 0.0020682095563498096,
-          "max_sec": 0.21010047011077404
+          "total_sec": 0.21380510367453098,
+          "avg_sec": 0.0010328748969784106,
+          "max_sec": 0.0710651446133852
         },
         "hook.save_checkpoint": {
           "count": 4,
-          "total_sec": 0.003871370106935501,
-          "avg_sec": 0.0009678425267338753,
-          "max_sec": 0.0011708680540323257
+          "total_sec": 0.003726004622876644,
+          "avg_sec": 0.000931501155719161,
+          "max_sec": 0.0012506153434515
         },
         "hook.wait_for_pending_persistence": {
           "count": 1,
-          "total_sec": 158.79354297369719,
-          "avg_sec": 158.79354297369719,
-          "max_sec": 158.79354297369719
+          "total_sec": 137.1666949680075,
+          "avg_sec": 137.1666949680075,
+          "max_sec": 137.1666949680075
         }
       },
       "raw_foreground_summary": {
         "raw_foreground_forward": {
           "count": 207,
-          "total_sec": 33.40100862737745,
-          "avg_sec": 0.16135752960085725,
-          "max_sec": 1.7923723617568612
+          "total_sec": 57.00584087986499,
+          "avg_sec": 0.2753905356515217,
+          "max_sec": 13.120811538770795
         },
         "raw_foreground_backward": {
           "count": 207,
-          "total_sec": 60.985534022562206,
-          "avg_sec": 0.2946161063891894,
-          "max_sec": 4.250924646854401
+          "total_sec": 51.180416892282665,
+          "avg_sec": 0.24724839078397423,
+          "max_sec": 1.8479816941544414
         },
         "raw_foreground_update": {
           "count": 207,
-          "total_sec": 16.64769157860428,
-          "avg_sec": 0.08042363081451344,
-          "max_sec": 0.18494855239987373
+          "total_sec": 16.68722853809595,
+          "avg_sec": 0.08061463061882101,
+          "max_sec": 0.2166993608698249
         }
       },
       "transfer_timing_summary": {
-        "mo_foreground_avg_sec": 2.5740256051067263,
-        "mo_full_avg_sec": 2.5740256051067263,
-        "mo_foreground_total_sec": 20.59220484085381,
-        "mo_full_total_sec": 20.59220484085381,
+        "mo_foreground_avg_sec": 3.148752939538099,
+        "mo_full_avg_sec": 3.148752939538099,
+        "mo_foreground_total_sec": 25.19002351630479,
+        "mo_full_total_sec": 25.19002351630479,
         "mo_count": 8,
-        "gradient_foreground_avg_sec": 3.69772287318483,
-        "gradient_full_avg_sec": 3.78006741090212,
-        "gradient_foreground_total_sec": 29.58178298547864,
-        "gradient_full_total_sec": 30.24053928721696,
+        "gradient_foreground_avg_sec": 2.9074295648606494,
+        "gradient_full_avg_sec": 3.0242964742938057,
+        "gradient_foreground_total_sec": 23.259436518885195,
+        "gradient_full_total_sec": 24.194371794350445,
         "gradient_count": 8
       },
       "checkpoint_results": [
@@ -723,73 +723,73 @@
           "target_step": 52,
           "tag": "gockpt_step_52",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt/gockpt/gockpt_step_52.pt",
-          "transfer_duration_sec": 16.5098334569484,
-          "transfer_sync_duration_sec": 4.458799958229065e-05,
+          "transfer_duration_sec": 17.63641431927681,
+          "transfer_sync_duration_sec": 3.0230730772018433e-05,
           "transfer_count": 2,
-          "gradient_duration_sec": 16.60941754374653,
-          "gradient_submit_duration_sec": 16.44152214564383,
-          "gradient_sync_duration_sec": 3.7472695112228394e-05,
+          "gradient_duration_sec": 11.377712185494602,
+          "gradient_submit_duration_sec": 11.215186074376106,
+          "gradient_sync_duration_sec": 2.1585263311862946e-05,
           "gradient_count": 2,
-          "reconstruction_duration_sec": 27.38487687241286,
-          "reconstruction_backpressure_sec": 7.971003651618958e-05,
-          "persistence_duration_sec": 92.64133916143328,
-          "total_duration_sec": 153.1455467445776
+          "reconstruction_duration_sec": 21.08461026661098,
+          "reconstruction_backpressure_sec": 4.193931818008423e-05,
+          "persistence_duration_sec": 77.06383187137544,
+          "total_duration_sec": 127.16261058207601
         },
         {
           "start_step": 100,
           "target_step": 102,
           "tag": "gockpt_step_102",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt/gockpt/gockpt_step_102.pt",
-          "transfer_duration_sec": 2.7839578399434686,
-          "transfer_sync_duration_sec": 2.6690773665905e-05,
+          "transfer_duration_sec": 4.213738431222737,
+          "transfer_sync_duration_sec": 0.2851738967001438,
           "transfer_count": 2,
-          "gradient_duration_sec": 7.896257137879729,
-          "gradient_submit_duration_sec": 7.664547104388475,
-          "gradient_sync_duration_sec": 0.06791498325765133,
+          "gradient_duration_sec": 6.009517992846668,
+          "gradient_submit_duration_sec": 5.493422141298652,
+          "gradient_sync_duration_sec": 0.07044415082782507,
           "gradient_count": 2,
-          "reconstruction_duration_sec": 32.32920011971146,
-          "reconstruction_backpressure_sec": 3.954116255044937e-05,
-          "persistence_duration_sec": 108.30571645777673,
-          "total_duration_sec": 151.31517109647393
+          "reconstruction_duration_sec": 26.210828446783125,
+          "reconstruction_backpressure_sec": 2.319738268852234e-05,
+          "persistence_duration_sec": 94.8067170670256,
+          "total_duration_sec": 131.24082513526082
         },
         {
           "start_step": 150,
           "target_step": 152,
           "tag": "gockpt_step_152",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt/gockpt/gockpt_step_152.pt",
-          "transfer_duration_sec": 1.2661097636446357,
-          "transfer_sync_duration_sec": 2.5345012545585632e-05,
+          "transfer_duration_sec": 2.0684520220384,
+          "transfer_sync_duration_sec": 2.1599233150482178e-05,
           "transfer_count": 2,
-          "gradient_duration_sec": 5.282597778365016,
-          "gradient_submit_duration_sec": 5.053117749281228,
-          "gradient_sync_duration_sec": 0.0667064506560564,
+          "gradient_duration_sec": 5.008850110694766,
+          "gradient_submit_duration_sec": 4.779600070789456,
+          "gradient_sync_duration_sec": 0.0643039783462882,
           "gradient_count": 2,
-          "reconstruction_duration_sec": 30.26547515951097,
-          "reconstruction_backpressure_sec": 2.7567148208618164e-05,
-          "persistence_duration_sec": 118.67982697673142,
-          "total_duration_sec": 155.49403724540025
+          "reconstruction_duration_sec": 26.959093362092972,
+          "reconstruction_backpressure_sec": 7.842108607292175e-05,
+          "persistence_duration_sec": 96.24897212628275,
+          "total_duration_sec": 130.28544604219496
         },
         {
           "start_step": 200,
           "target_step": 202,
           "tag": "gockpt_step_202",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt/gockpt/gockpt_step_202.pt",
-          "transfer_duration_sec": 0.032182879745960236,
-          "transfer_sync_duration_sec": 2.427678555250168e-05,
+          "transfer_duration_sec": 0.9861739771440625,
+          "transfer_sync_duration_sec": 1.9039958715438843e-05,
           "transfer_count": 2,
-          "gradient_duration_sec": 0.4522668272256851,
-          "gradient_submit_duration_sec": 0.01394860539585352,
-          "gradient_sync_duration_sec": 0.2739884741604328,
+          "gradient_duration_sec": 1.7982915053144097,
+          "gradient_submit_duration_sec": 1.5690851174294949,
+          "gradient_sync_duration_sec": 0.06737340055406094,
           "gradient_count": 2,
-          "reconstruction_duration_sec": 13.083497353829443,
-          "reconstruction_backpressure_sec": 5.37969172000885e-05,
-          "persistence_duration_sec": 148.13425313588232,
-          "total_duration_sec": 161.7022539936006
+          "reconstruction_duration_sec": 17.16557495482266,
+          "reconstruction_backpressure_sec": 2.8308480978012085e-05,
+          "persistence_duration_sec": 122.03953889384866,
+          "total_duration_sec": 141.98960763961077
         }
       ],
       "ringbuffer_pressure_samples": [
         {
-          "time_sec": 1.2074597179889679e-05,
+          "time_sec": 8.571892976760864e-06,
           "event": "training_start",
           "inflight": 0,
           "capacity": 0,
@@ -797,7 +797,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 20.324511291459203,
+          "time_sec": 20.021226418204606,
           "event": "queue_start",
           "inflight": 0,
           "capacity": 64,
@@ -805,7 +805,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 38.11869766935706,
+          "time_sec": 37.819711106829345,
           "event": "enqueue",
           "inflight": 1,
           "capacity": 64,
@@ -813,7 +813,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 54.25387314148247,
+          "time_sec": 49.38469098228961,
           "event": "complete",
           "inflight": 0,
           "capacity": 64,
@@ -821,7 +821,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 54.406831704080105,
+          "time_sec": 49.55076499097049,
           "event": "enqueue",
           "inflight": 1,
           "capacity": 64,
@@ -829,7 +829,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 54.406878646463156,
+          "time_sec": 49.55081498064101,
           "event": "enqueue",
           "inflight": 2,
           "capacity": 64,
@@ -837,7 +837,7 @@
           "pressure_percent": 3.125
         },
         {
-          "time_sec": 60.620424893684685,
+          "time_sec": 54.439691425301135,
           "event": "complete",
           "inflight": 1,
           "capacity": 64,
@@ -845,7 +845,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 65.50342191848904,
+          "time_sec": 58.90412733517587,
           "event": "complete",
           "inflight": 0,
           "capacity": 64,
@@ -853,7 +853,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 65.50439878087491,
+          "time_sec": 58.90659299213439,
           "event": "queue_stop",
           "inflight": 0,
           "capacity": 0,
@@ -861,7 +861,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 79.61604967806488,
+          "time_sec": 73.10124195739627,
           "event": "queue_start",
           "inflight": 0,
           "capacity": 64,
@@ -869,7 +869,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 80.45738459005952,
+          "time_sec": 73.70037302002311,
           "event": "enqueue",
           "inflight": 1,
           "capacity": 64,
@@ -877,7 +877,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 91.43044434394687,
+          "time_sec": 83.79356293193996,
           "event": "enqueue",
           "inflight": 2,
           "capacity": 64,
@@ -885,7 +885,7 @@
           "pressure_percent": 3.125
         },
         {
-          "time_sec": 91.43283585831523,
+          "time_sec": 83.79378040134907,
           "event": "enqueue",
           "inflight": 3,
           "capacity": 64,
@@ -893,7 +893,7 @@
           "pressure_percent": 4.6875
         },
         {
-          "time_sec": 101.14382574427873,
+          "time_sec": 89.84533825609833,
           "event": "complete",
           "inflight": 2,
           "capacity": 64,
@@ -901,7 +901,7 @@
           "pressure_percent": 3.125
         },
         {
-          "time_sec": 107.62101974897087,
+          "time_sec": 94.77109940163791,
           "event": "complete",
           "inflight": 1,
           "capacity": 64,
@@ -909,7 +909,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 112.78645058069378,
+          "time_sec": 99.9110718080774,
           "event": "complete",
           "inflight": 0,
           "capacity": 64,
@@ -917,7 +917,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 112.7880742372945,
+          "time_sec": 99.91216857451946,
           "event": "queue_stop",
           "inflight": 0,
           "capacity": 0,
@@ -925,7 +925,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 119.45098635647446,
+          "time_sec": 114.79250638186932,
           "event": "queue_start",
           "inflight": 0,
           "capacity": 64,
@@ -933,7 +933,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 120.4256849475205,
+          "time_sec": 115.7827408388257,
           "event": "enqueue",
           "inflight": 1,
           "capacity": 64,
@@ -941,7 +941,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 127.184778730385,
+          "time_sec": 122.91635993216187,
           "event": "enqueue",
           "inflight": 2,
           "capacity": 64,
@@ -949,7 +949,7 @@
           "pressure_percent": 3.125
         },
         {
-          "time_sec": 127.18504577782005,
+          "time_sec": 122.91665424127132,
           "event": "enqueue",
           "inflight": 3,
           "capacity": 64,
@@ -957,7 +957,7 @@
           "pressure_percent": 4.6875
         },
         {
-          "time_sec": 137.4152348805219,
+          "time_sec": 130.86438493523747,
           "event": "complete",
           "inflight": 2,
           "capacity": 64,
@@ -965,7 +965,7 @@
           "pressure_percent": 3.125
         },
         {
-          "time_sec": 143.09115628432482,
+          "time_sec": 135.67043372802436,
           "event": "complete",
           "inflight": 1,
           "capacity": 64,
@@ -973,7 +973,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 150.6909564556554,
+          "time_sec": 142.74169959127903,
           "event": "complete",
           "inflight": 0,
           "capacity": 64,
@@ -981,7 +981,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 150.69307063147426,
+          "time_sec": 142.7424559034407,
           "event": "queue_stop",
           "inflight": 0,
           "capacity": 0,
@@ -989,7 +989,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 162.42336277104914,
+          "time_sec": 153.26778073702008,
           "event": "queue_start",
           "inflight": 0,
           "capacity": 64,
@@ -997,7 +997,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 163.19995837192982,
+          "time_sec": 154.02323499601334,
           "event": "enqueue",
           "inflight": 1,
           "capacity": 64,
@@ -1005,7 +1005,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 164.2208512313664,
+          "time_sec": 156.84100784733891,
           "event": "enqueue",
           "inflight": 2,
           "capacity": 64,
@@ -1013,7 +1013,7 @@
           "pressure_percent": 3.125
         },
         {
-          "time_sec": 164.22119657695293,
+          "time_sec": 156.84128453582525,
           "event": "enqueue",
           "inflight": 3,
           "capacity": 64,
@@ -1021,7 +1021,7 @@
           "pressure_percent": 4.6875
         },
         {
-          "time_sec": 167.16100009251386,
+          "time_sec": 162.16472522355616,
           "event": "complete",
           "inflight": 2,
           "capacity": 64,
@@ -1029,7 +1029,7 @@
           "pressure_percent": 3.125
         },
         {
-          "time_sec": 172.07579258829355,
+          "time_sec": 166.55889034084976,
           "event": "complete",
           "inflight": 1,
           "capacity": 64,
@@ -1037,7 +1037,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 176.28332361858338,
+          "time_sec": 171.18870849255472,
           "event": "complete",
           "inflight": 0,
           "capacity": 64,
@@ -1045,7 +1045,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 176.2845251718536,
+          "time_sec": 171.18990249559283,
           "event": "queue_stop",
           "inflight": 0,
           "capacity": 0,
@@ -1055,20 +1055,20 @@
       ],
       "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt/host_memory_samples.json",
       "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt/host_memory_samples.jsonl",
-      "host_memory_sample_count": 791,
-      "host_memory_peak_process_tree_rss_gb": 230.85366439819336,
-      "host_memory_peak_system_used_gb": 294.217586517334,
-      "host_memory_min_system_available_gb": 1721.310562133789,
-      "host_memory_peak_cgroup_current_gb": 255.9653663635254,
+      "host_memory_sample_count": 711,
+      "host_memory_peak_process_tree_rss_gb": 231.79307556152344,
+      "host_memory_peak_system_used_gb": 289.0360298156738,
+      "host_memory_min_system_available_gb": 1726.4921188354492,
+      "host_memory_peak_cgroup_current_gb": 255.96533203125,
       "host_memory_cgroup_limit_gb": null,
       "host_memory_cgroup_oom_events_delta": 0,
       "host_memory_cgroup_oom_kill_events_delta": 0,
       "host_memory_sampling_error": null,
       "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt/power_samples.json",
-      "power_sample_count": 738,
-      "power_avg_w": 144.72296747967482,
-      "power_peak_w": 341.15,
-      "power_energy_j": 57214.59110580332,
+      "power_sample_count": 663,
+      "power_avg_w": 147.690527903469,
+      "power_peak_w": 335.99,
+      "power_energy_j": 52315.95744136902,
       "power_sampling_error": null,
       "error": null
     },
@@ -1113,9 +1113,9 @@
         "--skip-final-model-save"
       ],
       "returncode": 0,
-      "wall_time_sec": 383.8406981378794,
-      "train_runtime_sec": 160.15858874004334,
-      "train_steps_per_sec": 1.292468931129169,
+      "wall_time_sec": 361.53995792753994,
+      "train_runtime_sec": 153.55166280828416,
+      "train_steps_per_sec": 1.3480804845366499,
       "checkpoint_count": 4,
       "checkpoint_files": [
         "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt_o/gockpt_o/gockpt_o_step_52.pt",
@@ -1126,83 +1126,83 @@
       "phase_summary": {
         "hook.forward_begin": {
           "count": 207,
-          "total_sec": 24.939034548588097,
-          "avg_sec": 0.12047842777095699,
-          "max_sec": 10.471843224018812
+          "total_sec": 0.028628208674490452,
+          "avg_sec": 0.00013830052499753842,
+          "max_sec": 0.02679909486323595
         },
         "hook.forward_end": {
           "count": 207,
-          "total_sec": 0.0003728596493601799,
-          "avg_sec": 1.8012543447351687e-06,
-          "max_sec": 5.474314093589783e-06
+          "total_sec": 0.00028655119240283966,
+          "avg_sec": 1.384305277308404e-06,
+          "max_sec": 4.770234227180481e-06
         },
         "hook.backward_begin": {
           "count": 207,
-          "total_sec": 0.0050355736166238785,
-          "avg_sec": 2.4326442592385888e-05,
-          "max_sec": 0.001763475127518177
+          "total_sec": 0.003762117587029934,
+          "avg_sec": 1.8174481096762965e-05,
+          "max_sec": 0.001590486615896225
         },
         "hook.backward_end": {
           "count": 207,
-          "total_sec": 0.007624502293765545,
-          "avg_sec": 3.68333444143263e-05,
-          "max_sec": 0.001500825397670269
+          "total_sec": 0.005347340367734432,
+          "avg_sec": 2.5832562162968272e-05,
+          "max_sec": 0.000982002355158329
         },
         "hook.update_begin": {
           "count": 207,
-          "total_sec": 18.52538938447833,
-          "avg_sec": 0.08949463470762478,
-          "max_sec": 6.6222140388563275
+          "total_sec": 21.97306563425809,
+          "avg_sec": 0.10615007552781687,
+          "max_sec": 6.344735323451459
         },
         "hook.update_end": {
           "count": 207,
-          "total_sec": 0.007785750553011894,
-          "avg_sec": 3.761232151213476e-05,
-          "max_sec": 0.00337796937674284
+          "total_sec": 0.016687299124896526,
+          "avg_sec": 8.061497161785762e-05,
+          "max_sec": 0.009596950374543667
         },
         "hook.save_checkpoint": {
           "count": 4,
-          "total_sec": 0.0037417709827423096,
-          "avg_sec": 0.0009354427456855774,
-          "max_sec": 0.001115870662033558
+          "total_sec": 0.0028184494003653526,
+          "avg_sec": 0.0007046123500913382,
+          "max_sec": 0.0007767854258418083
         },
         "hook.wait_for_pending_persistence": {
           "count": 1,
-          "total_sec": 156.48770180623978,
-          "avg_sec": 156.48770180623978,
-          "max_sec": 156.48770180623978
+          "total_sec": 146.90644630230963,
+          "avg_sec": 146.90644630230963,
+          "max_sec": 146.90644630230963
         }
       },
       "raw_foreground_summary": {
         "raw_foreground_forward": {
           "count": 207,
-          "total_sec": 30.247455533593893,
-          "avg_sec": 0.14612297359224102,
-          "max_sec": 1.4539446979761124
+          "total_sec": 52.643900480121374,
+          "avg_sec": 0.2543183598073496,
+          "max_sec": 10.76215520966798
         },
         "raw_foreground_backward": {
           "count": 207,
-          "total_sec": 61.95815963856876,
-          "avg_sec": 0.299314780862651,
-          "max_sec": 5.892480134032667
+          "total_sec": 55.47245871741325,
+          "avg_sec": 0.2679828923546534,
+          "max_sec": 4.233972514048219
         },
         "raw_foreground_update": {
           "count": 207,
-          "total_sec": 17.28338823840022,
-          "avg_sec": 0.08349462917101556,
-          "max_sec": 0.6565127344802022
+          "total_sec": 16.517339615151286,
+          "avg_sec": 0.07979391118430573,
+          "max_sec": 0.18117976374924183
         }
       },
       "transfer_timing_summary": {
-        "mo_foreground_avg_sec": 3.1173227730905637,
-        "mo_full_avg_sec": 3.1173227730905637,
-        "mo_foreground_total_sec": 24.93858218472451,
-        "mo_full_total_sec": 24.93858218472451,
+        "mo_foreground_avg_sec": 3.1835211417637765,
+        "mo_full_avg_sec": 3.1835211417637765,
+        "mo_foreground_total_sec": 25.468169134110212,
+        "mo_full_total_sec": 25.468169134110212,
         "mo_count": 8,
-        "gradient_foreground_avg_sec": 2.3197039195802063,
-        "gradient_full_avg_sec": 3.839066116604954,
-        "gradient_foreground_total_sec": 18.55763135664165,
-        "gradient_full_total_sec": 30.712528932839632,
+        "gradient_foreground_avg_sec": 2.7349890724290162,
+        "gradient_full_avg_sec": 4.163834459381178,
+        "gradient_foreground_total_sec": 21.87991257943213,
+        "gradient_full_total_sec": 33.310675675049424,
         "gradient_count": 8
       },
       "checkpoint_results": [
@@ -1211,73 +1211,73 @@
           "target_step": 52,
           "tag": "gockpt_o_step_52",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt_o/gockpt_o/gockpt_o_step_52.pt",
-          "transfer_duration_sec": 14.797906842082739,
-          "transfer_sync_duration_sec": 3.56622040271759e-05,
+          "transfer_duration_sec": 15.850443470291793,
+          "transfer_sync_duration_sec": 2.396944910287857e-05,
           "transfer_count": 2,
-          "gradient_duration_sec": 7.955361247062683,
-          "gradient_submit_duration_sec": 7.7564652627334,
-          "gradient_sync_duration_sec": 0.03484720177948475,
+          "gradient_duration_sec": 11.412782936356962,
+          "gradient_submit_duration_sec": 11.246194294653833,
+          "gradient_sync_duration_sec": 1.3930723071098328e-05,
           "gradient_count": 2,
-          "reconstruction_duration_sec": 15.098472224548459,
-          "reconstruction_backpressure_sec": 4.0607526898384094e-05,
-          "persistence_duration_sec": 79.40933301113546,
-          "total_duration_sec": 117.26111393235624
+          "reconstruction_duration_sec": 16.85310422629118,
+          "reconstruction_backpressure_sec": 4.169996827840805e-05,
+          "persistence_duration_sec": 76.6449733292684,
+          "total_duration_sec": 120.76134566217661
         },
         {
           "start_step": 100,
           "target_step": 102,
           "tag": "gockpt_o_step_102",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt_o/gockpt_o/gockpt_o_step_102.pt",
-          "transfer_duration_sec": 10.079912264831364,
-          "transfer_sync_duration_sec": 2.83094123005867e-05,
+          "transfer_duration_sec": 9.568838835693896,
+          "transfer_sync_duration_sec": 2.7771107852458954e-05,
           "transfer_count": 2,
-          "gradient_duration_sec": 17.136729875579476,
-          "gradient_submit_duration_sec": 6.6326314164325595,
-          "gradient_sync_duration_sec": 1.9749626517295837e-05,
+          "gradient_duration_sec": 16.170687430538237,
+          "gradient_submit_duration_sec": 6.347020499408245,
+          "gradient_sync_duration_sec": 2.209749072790146e-05,
           "gradient_count": 2,
-          "reconstruction_duration_sec": 27.993491270579398,
-          "reconstruction_backpressure_sec": 2.371612936258316e-05,
-          "persistence_duration_sec": 100.86789499688894,
-          "total_duration_sec": 156.07805212400854
+          "reconstruction_duration_sec": 25.91392577905208,
+          "reconstruction_backpressure_sec": 3.3847056329250336e-05,
+          "persistence_duration_sec": 86.50044656358659,
+          "total_duration_sec": 138.15393245592713
         },
         {
           "start_step": 150,
           "target_step": 152,
           "tag": "gockpt_o_step_152",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt_o/gockpt_o/gockpt_o_step_152.pt",
-          "transfer_duration_sec": 0.02937327418476343,
-          "transfer_sync_duration_sec": 2.4159438908100128e-05,
+          "transfer_duration_sec": 0.024206909351050854,
+          "transfer_sync_duration_sec": 1.6586855053901672e-05,
           "transfer_count": 2,
-          "gradient_duration_sec": 4.004022649489343,
-          "gradient_submit_duration_sec": 3.261673342436552,
-          "gradient_sync_duration_sec": 2.521555870771408e-05,
+          "gradient_duration_sec": 3.948884549550712,
+          "gradient_submit_duration_sec": 3.2277275128290057,
+          "gradient_sync_duration_sec": 1.6481615602970123e-05,
           "gradient_count": 2,
-          "reconstruction_duration_sec": 22.292425006628036,
-          "reconstruction_backpressure_sec": 3.933068364858627e-05,
-          "persistence_duration_sec": 119.28543299809098,
-          "total_duration_sec": 145.61129325907677
+          "reconstruction_duration_sec": 20.452577812597156,
+          "reconstruction_backpressure_sec": 2.6623718440532684e-05,
+          "persistence_duration_sec": 105.36906668450683,
+          "total_duration_sec": 129.7947625797242
         },
         {
           "start_step": 200,
           "target_step": 202,
           "tag": "gockpt_o_step_202",
           "path": "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt_o/gockpt_o/gockpt_o_step_202.pt",
-          "transfer_duration_sec": 0.03127618134021759,
-          "transfer_sync_duration_sec": 2.5491230189800262e-05,
+          "transfer_duration_sec": 0.024594766087830067,
+          "transfer_sync_duration_sec": 1.6825273633003235e-05,
           "transfer_count": 2,
-          "gradient_duration_sec": 1.6164151607081294,
-          "gradient_submit_duration_sec": 0.8719478156417608,
-          "gradient_sync_duration_sec": 2.1352432668209076e-05,
+          "gradient_duration_sec": 1.7783207586035132,
+          "gradient_submit_duration_sec": 1.058899037539959,
+          "gradient_sync_duration_sec": 1.872517168521881e-05,
           "gradient_count": 2,
-          "reconstruction_duration_sec": 21.234761985950172,
-          "reconstruction_backpressure_sec": 2.3152679204940796e-05,
-          "persistence_duration_sec": 135.25920641236007,
-          "total_duration_sec": 158.1416828930378
+          "reconstruction_duration_sec": 19.166021211072803,
+          "reconstruction_backpressure_sec": 2.2543594241142273e-05,
+          "persistence_duration_sec": 128.7539629386738,
+          "total_duration_sec": 149.72292221803218
         }
       ],
       "ringbuffer_pressure_samples": [
         {
-          "time_sec": 2.750195562839508e-05,
+          "time_sec": 8.353032171726227e-06,
           "event": "training_start",
           "inflight": 0,
           "capacity": 0,
@@ -1285,7 +1285,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 20.610484273172915,
+          "time_sec": 20.659716884605587,
           "event": "queue_start",
           "inflight": 0,
           "capacity": 64,
@@ -1293,7 +1293,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 35.606741483323276,
+          "time_sec": 37.82188805472106,
           "event": "enqueue",
           "inflight": 1,
           "capacity": 64,
@@ -1301,7 +1301,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 43.941933806054294,
+          "time_sec": 48.437232326716185,
           "event": "complete",
           "inflight": 0,
           "capacity": 64,
@@ -1309,7 +1309,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 44.144809909164906,
+          "time_sec": 48.63964512664825,
           "event": "enqueue",
           "inflight": 1,
           "capacity": 64,
@@ -1317,7 +1317,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 44.14485706947744,
+          "time_sec": 48.639672581106424,
           "event": "enqueue",
           "inflight": 2,
           "capacity": 64,
@@ -1325,7 +1325,7 @@
           "pressure_percent": 3.125
         },
         {
-          "time_sec": 47.608043318614364,
+          "time_sec": 51.847806197591126,
           "event": "complete",
           "inflight": 1,
           "capacity": 64,
@@ -1333,7 +1333,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 50.70510305091739,
+          "time_sec": 54.6748818019405,
           "event": "complete",
           "inflight": 0,
           "capacity": 64,
@@ -1341,7 +1341,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 50.70611812453717,
+          "time_sec": 54.67563819885254,
           "event": "queue_stop",
           "inflight": 0,
           "capacity": 0,
@@ -1349,7 +1349,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 68.50606771651655,
+          "time_sec": 70.02345689665526,
           "event": "queue_start",
           "inflight": 0,
           "capacity": 64,
@@ -1357,7 +1357,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 79.53915388975292,
+          "time_sec": 80.46142746228725,
           "event": "enqueue",
           "inflight": 1,
           "capacity": 64,
@@ -1365,7 +1365,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 86.55497766565531,
+          "time_sec": 87.1284565096721,
           "event": "enqueue",
           "inflight": 2,
           "capacity": 64,
@@ -1373,7 +1373,7 @@
           "pressure_percent": 3.125
         },
         {
-          "time_sec": 86.55523007921875,
+          "time_sec": 87.13024635892361,
           "event": "enqueue",
           "inflight": 3,
           "capacity": 64,
@@ -1381,7 +1381,7 @@
           "pressure_percent": 4.6875
         },
         {
-          "time_sec": 95.67442967183888,
+          "time_sec": 94.60534755885601,
           "event": "complete",
           "inflight": 2,
           "capacity": 64,
@@ -1389,7 +1389,7 @@
           "pressure_percent": 3.125
         },
         {
-          "time_sec": 102.65835534222424,
+          "time_sec": 101.94560561701655,
           "event": "complete",
           "inflight": 1,
           "capacity": 64,
@@ -1397,7 +1397,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 107.53245500009507,
+          "time_sec": 106.37521262187511,
           "event": "complete",
           "inflight": 0,
           "capacity": 64,
@@ -1405,7 +1405,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 107.5336075052619,
+          "time_sec": 106.37623050063848,
           "event": "queue_stop",
           "inflight": 0,
           "capacity": 0,
@@ -1413,7 +1413,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 118.45564792584628,
+          "time_sec": 118.39151274319738,
           "event": "queue_start",
           "inflight": 0,
           "capacity": 64,
@@ -1421,7 +1421,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 119.94834740180522,
+          "time_sec": 119.7595737176016,
           "event": "enqueue",
           "inflight": 1,
           "capacity": 64,
@@ -1429,7 +1429,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 123.45042293611914,
+          "time_sec": 123.21093389205635,
           "event": "enqueue",
           "inflight": 2,
           "capacity": 64,
@@ -1437,7 +1437,7 @@
           "pressure_percent": 3.125
         },
         {
-          "time_sec": 123.45159975532442,
+          "time_sec": 123.21117075998336,
           "event": "enqueue",
           "inflight": 3,
           "capacity": 64,
@@ -1445,7 +1445,7 @@
           "pressure_percent": 4.6875
         },
         {
-          "time_sec": 136.3899970650673,
+          "time_sec": 130.94745466578752,
           "event": "complete",
           "inflight": 2,
           "capacity": 64,
@@ -1453,7 +1453,7 @@
           "pressure_percent": 3.125
         },
         {
-          "time_sec": 140.2705305563286,
+          "time_sec": 137.1094043822959,
           "event": "complete",
           "inflight": 1,
           "capacity": 64,
@@ -1461,7 +1461,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 142.24062959849834,
+          "time_sec": 140.21205664146692,
           "event": "complete",
           "inflight": 0,
           "capacity": 64,
@@ -1469,7 +1469,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 142.24182675685734,
+          "time_sec": 140.2129429494962,
           "event": "queue_stop",
           "inflight": 0,
           "capacity": 0,
@@ -1477,7 +1477,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 154.27715632412583,
+          "time_sec": 148.03633608482778,
           "event": "queue_start",
           "inflight": 0,
           "capacity": 64,
@@ -1485,7 +1485,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 155.607468822971,
+          "time_sec": 149.2764851730317,
           "event": "enqueue",
           "inflight": 1,
           "capacity": 64,
@@ -1493,7 +1493,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 156.70984125323594,
+          "time_sec": 150.5540854660794,
           "event": "enqueue",
           "inflight": 2,
           "capacity": 64,
@@ -1501,7 +1501,7 @@
           "pressure_percent": 3.125
         },
         {
-          "time_sec": 156.71006449963897,
+          "time_sec": 150.55430576391518,
           "event": "enqueue",
           "inflight": 3,
           "capacity": 64,
@@ -1509,7 +1509,7 @@
           "pressure_percent": 4.6875
         },
         {
-          "time_sec": 165.02967604901642,
+          "time_sec": 156.63917370699346,
           "event": "complete",
           "inflight": 2,
           "capacity": 64,
@@ -1517,7 +1517,7 @@
           "pressure_percent": 3.125
         },
         {
-          "time_sec": 171.0941324736923,
+          "time_sec": 163.11995083186775,
           "event": "complete",
           "inflight": 1,
           "capacity": 64,
@@ -1525,7 +1525,7 @@
           "pressure_percent": 1.5625
         },
         {
-          "time_sec": 176.84208070952445,
+          "time_sec": 168.44240898638964,
           "event": "complete",
           "inflight": 0,
           "capacity": 64,
@@ -1533,7 +1533,7 @@
           "pressure_percent": 0.0
         },
         {
-          "time_sec": 176.8437573108822,
+          "time_sec": 168.44355013221502,
           "event": "queue_stop",
           "inflight": 0,
           "capacity": 0,
@@ -1543,82 +1543,82 @@
       ],
       "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt_o/host_memory_samples.json",
       "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt_o/host_memory_samples.jsonl",
-      "host_memory_sample_count": 768,
-      "host_memory_peak_process_tree_rss_gb": 239.67953872680664,
-      "host_memory_peak_system_used_gb": 303.5368537902832,
-      "host_memory_min_system_available_gb": 1711.9912948608398,
-      "host_memory_peak_cgroup_current_gb": 255.96585845947266,
+      "host_memory_sample_count": 724,
+      "host_memory_peak_process_tree_rss_gb": 239.22832870483398,
+      "host_memory_peak_system_used_gb": 296.2148094177246,
+      "host_memory_min_system_available_gb": 1719.3133392333984,
+      "host_memory_peak_cgroup_current_gb": 255.96581649780273,
       "host_memory_cgroup_limit_gb": null,
       "host_memory_cgroup_oom_events_delta": 0,
       "host_memory_cgroup_oom_kill_events_delta": 0,
       "host_memory_sampling_error": null,
       "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-2/gockpt_o/power_samples.json",
-      "power_sample_count": 716,
-      "power_avg_w": 146.02071229050281,
-      "power_peak_w": 341.03,
-      "power_energy_j": 55980.464243640265,
+      "power_sample_count": 676,
+      "power_avg_w": 146.92423076923052,
+      "power_peak_w": 348.2,
+      "power_energy_j": 53022.79680719288,
       "power_sampling_error": null,
       "error": null
     }
   ],
   "comparison": {
     "baseline": {
-      "train_steps_per_sec": 0.5494113429568008,
-      "wall_time_sec": 526.7195565653965,
+      "train_steps_per_sec": 0.5591315091576634,
+      "wall_time_sec": 501.38377997558564,
       "checkpoint_count": 4,
-      "save_checkpoint_total_sec": 294.7201629281044,
-      "forward_begin_total_sec": 0.00026552099734544754,
-      "backward_end_total_sec": 0.00023654010146856308,
-      "update_begin_total_sec": 0.0001164022833108902,
-      "update_end_total_sec": 0.00020081456750631332
+      "save_checkpoint_total_sec": 288.45400693640113,
+      "forward_begin_total_sec": 0.00018408708274364471,
+      "backward_end_total_sec": 0.00017945095896720886,
+      "update_begin_total_sec": 5.924049764871597e-05,
+      "update_end_total_sec": 0.00014738459140062332
     },
     "async": {
-      "train_steps_per_sec": 0.6572582776033519,
-      "wall_time_sec": 431.5590316513553,
+      "train_steps_per_sec": 0.5996521254300986,
+      "wall_time_sec": 462.86680492013693,
       "checkpoint_count": 4,
-      "save_checkpoint_total_sec": 235.19231272209436,
-      "forward_begin_total_sec": 0.00026811379939317703,
-      "backward_end_total_sec": 0.0002690013498067856,
-      "update_begin_total_sec": 0.00014112237840890884,
-      "update_end_total_sec": 0.0002350909635424614,
-      "speedup_vs_baseline": 1.196295427877671,
-      "save_checkpoint_time_ratio_vs_baseline": 0.7980190781160379
+      "save_checkpoint_total_sec": 265.7280794121325,
+      "forward_begin_total_sec": 0.0001877378672361374,
+      "backward_end_total_sec": 0.00022265780717134476,
+      "update_begin_total_sec": 6.593670696020126e-05,
+      "update_end_total_sec": 0.0001698797568678856,
+      "speedup_vs_baseline": 1.0724706363507932,
+      "save_checkpoint_time_ratio_vs_baseline": 0.9212147275552346
     },
     "async_o": {
-      "train_steps_per_sec": 0.9585885234240429,
-      "wall_time_sec": 326.7940525133163,
+      "train_steps_per_sec": 0.9873673583333673,
+      "wall_time_sec": 316.6150734713301,
       "checkpoint_count": 4,
-      "save_checkpoint_total_sec": 125.84503049962223,
-      "forward_begin_total_sec": 0.00029924511909484863,
-      "backward_end_total_sec": 0.0006246017292141914,
-      "update_begin_total_sec": 0.00015412736684083939,
-      "update_end_total_sec": 0.00025274138897657394,
-      "speedup_vs_baseline": 1.744755611096684,
-      "save_checkpoint_time_ratio_vs_baseline": 0.4269983744896393
+      "save_checkpoint_total_sec": 121.67967382725328,
+      "forward_begin_total_sec": 0.00022961758077144623,
+      "backward_end_total_sec": 0.00041399896144866943,
+      "update_begin_total_sec": 0.00010456237941980362,
+      "update_end_total_sec": 0.00018458813428878784,
+      "speedup_vs_baseline": 1.765894681594398,
+      "save_checkpoint_time_ratio_vs_baseline": 0.42183388304979047
     },
     "gockpt": {
-      "train_steps_per_sec": 1.2275513232025141,
-      "wall_time_sec": 394.887615904212,
+      "train_steps_per_sec": 1.2977424707912113,
+      "wall_time_sec": 354.7667114203796,
       "checkpoint_count": 4,
-      "save_checkpoint_total_sec": 0.003871370106935501,
-      "forward_begin_total_sec": 20.592657822184265,
-      "backward_end_total_sec": 0.1392732998356223,
-      "update_begin_total_sec": 29.175658035092056,
-      "update_end_total_sec": 0.4281193781644106,
-      "speedup_vs_baseline": 2.2343028387366846,
-      "save_checkpoint_time_ratio_vs_baseline": 1.3135749072858323e-05
+      "save_checkpoint_total_sec": 0.003726004622876644,
+      "forward_begin_total_sec": 0.0026786401867866516,
+      "backward_end_total_sec": 0.005779151804745197,
+      "update_begin_total_sec": 23.34488036762923,
+      "update_end_total_sec": 0.21380510367453098,
+      "speedup_vs_baseline": 2.3209968487490036,
+      "save_checkpoint_time_ratio_vs_baseline": 1.2917153283636516e-05
     },
     "gockpt_o": {
-      "train_steps_per_sec": 1.292468931129169,
-      "wall_time_sec": 383.8406981378794,
+      "train_steps_per_sec": 1.3480804845366499,
+      "wall_time_sec": 361.53995792753994,
       "checkpoint_count": 4,
-      "save_checkpoint_total_sec": 0.0037417709827423096,
-      "forward_begin_total_sec": 24.939034548588097,
-      "backward_end_total_sec": 0.007624502293765545,
-      "update_begin_total_sec": 18.52538938447833,
-      "update_end_total_sec": 0.007785750553011894,
-      "speedup_vs_baseline": 2.3524613164581014,
-      "save_checkpoint_time_ratio_vs_baseline": 1.2696012873931184e-05
+      "save_checkpoint_total_sec": 0.0028184494003653526,
+      "forward_begin_total_sec": 0.028628208674490452,
+      "backward_end_total_sec": 0.005347340367734432,
+      "update_begin_total_sec": 21.97306563425809,
+      "update_end_total_sec": 0.016687299124896526,
+      "speedup_vs_baseline": 2.4110257827671795,
+      "save_checkpoint_time_ratio_vs_baseline": 9.770879698636911e-06
     }
   }
 }
