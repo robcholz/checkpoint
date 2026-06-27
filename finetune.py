@@ -161,10 +161,8 @@ def parse_args() -> argparse.Namespace:
     if args.output_dir is None:
         args.output_dir = str(default_output_dir(args.model))
 
-    if args.batch_size != 1:
-        raise ValueError(
-            "This script is configured for batch size 1 per the requested spec."
-        )
+    if args.batch_size <= 0:
+        raise ValueError("--batch-size must be positive.")
     if args.overlap_steps <= 0:
         raise ValueError("--overlap-steps must be positive.")
     if (

@@ -1,0 +1,25 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/399 [00:00<?, ?it/s]Loading weights: 100%|██████████| 399/399 [00:00<00:00, 13903.42it/s]
+step=10/207 loss=1.1051 lr=0.00001999 steps_per_sec=2.11
+step=20/207 loss=1.0128 lr=0.00001979 steps_per_sec=2.13
+step=30/207 loss=0.9270 lr=0.00001935 steps_per_sec=2.20
+step=40/207 loss=0.8970 lr=0.00001869 steps_per_sec=2.22
+step=50/207 loss=0.7908 lr=0.00001780 steps_per_sec=1.40
+step=60/207 loss=1.2098 lr=0.00001673 steps_per_sec=1.22
+step=70/207 loss=0.9828 lr=0.00001549 steps_per_sec=1.30
+step=80/207 loss=1.3479 lr=0.00001412 steps_per_sec=1.35
+step=90/207 loss=0.9594 lr=0.00001264 steps_per_sec=1.40
+step=100/207 loss=0.9121 lr=0.00001110 steps_per_sec=1.44
+step=110/207 loss=1.2999 lr=0.00000953 steps_per_sec=1.28
+step=120/207 loss=1.3387 lr=0.00000797 steps_per_sec=1.29
+step=130/207 loss=1.0425 lr=0.00000647 steps_per_sec=1.32
+step=140/207 loss=0.8056 lr=0.00000505 steps_per_sec=1.35
+step=150/207 loss=1.1333 lr=0.00000375 steps_per_sec=1.37
+step=160/207 loss=0.6888 lr=0.00000260 steps_per_sec=1.35
+step=170/207 loss=0.9618 lr=0.00000164 steps_per_sec=1.31
+step=180/207 loss=0.9079 lr=0.00000089 steps_per_sec=1.33
+step=190/207 loss=0.9235 lr=0.00000035 steps_per_sec=1.36
+step=200/207 loss=0.2859 lr=0.00000006 steps_per_sec=1.38
+train_runtime_sec=148.59
+train_steps_per_sec=1.39

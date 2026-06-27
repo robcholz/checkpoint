@@ -1,0 +1,3014 @@
+{
+  "hook_type": "gockpt_o",
+  "sample_interval_sec": 0.5,
+  "stream_file": "/tmp/zsheng1/qwen3-0.6b-h200-run-4-pcie/gockpt_o/host_memory_samples.jsonl",
+  "summary": {
+    "sample_count": 166,
+    "duration_sec": 81.63450696412474,
+    "peak_process_tree_rss_gb": 12.07199478149414,
+    "peak_process_tree_rss_time_sec": 77.05037361662835,
+    "peak_system_used_gb": 82.95534896850586,
+    "peak_system_used_time_sec": 77.05037361662835,
+    "min_system_available_gb": 1932.588752746582,
+    "min_system_available_time_sec": 77.05037361662835,
+    "peak_system_used_percent": 4.115779401597644,
+    "peak_cgroup_current_gb": 83.64770889282227,
+    "peak_cgroup_current_time_sec": 79.5520929126069,
+    "cgroup_limit_gb": null,
+    "peak_cgroup_used_percent": null,
+    "cgroup_oom_events_delta": 0,
+    "cgroup_oom_kill_events_delta": 0,
+    "last_process_tree_rss_gb": 0.0,
+    "last_system_available_gb": 1943.8744888305664,
+    "last_cgroup_current_gb": 73.4537239074707
+  },
+  "error": null,
+  "samples": [
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.0405731201172,
+      "system_used_gb": 70.5035285949707,
+      "system_used_percent": 3.4979898745444022,
+      "process_tree_rss_gb": 0.0012664794921875,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.52732849121094,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 0.0,
+      "event": "process_start"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.0398635864258,
+      "system_used_gb": 70.50423812866211,
+      "system_used_percent": 3.49802507762881,
+      "process_tree_rss_gb": 0.00238800048828125,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.52879333496094,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 0.0009209373965859413,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.8711013793945,
+      "system_used_gb": 70.67300033569336,
+      "system_used_percent": 3.506398112328852,
+      "process_tree_rss_gb": 0.33737945556640625,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.69416427612305,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 0.501223174855113,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.9126815795898,
+      "system_used_gb": 70.63142013549805,
+      "system_used_percent": 3.504335135876988,
+      "process_tree_rss_gb": 0.4223060607910156,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.74336242675781,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 1.001529200002551,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.9021606445312,
+      "system_used_gb": 70.64194107055664,
+      "system_used_percent": 3.504857125698478,
+      "process_tree_rss_gb": 0.43563079833984375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.75654983520508,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 1.5018187751993537,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.9284706115723,
+      "system_used_gb": 70.61563110351562,
+      "system_used_percent": 3.503551772616964,
+      "process_tree_rss_gb": 0.4471778869628906,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.767608642578125,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 2.002070522867143,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.9259986877441,
+      "system_used_gb": 70.61810302734375,
+      "system_used_percent": 3.503674415620708,
+      "process_tree_rss_gb": 0.45667266845703125,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.776790618896484,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 2.5023207031190395,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.0041275024414,
+      "system_used_gb": 70.53997421264648,
+      "system_used_percent": 3.4997981017940454,
+      "process_tree_rss_gb": 0.50390625,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.8037223815918,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 3.002567447721958,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.9694480895996,
+      "system_used_gb": 70.57465362548828,
+      "system_used_percent": 3.501518699860458,
+      "process_tree_rss_gb": 0.5359916687011719,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.823177337646484,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 3.502828567288816,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.8084602355957,
+      "system_used_gb": 70.73564147949219,
+      "system_used_percent": 3.509506014743169,
+      "process_tree_rss_gb": 0.5528030395507812,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.83546447753906,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 4.003098988905549,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.2058715820312,
+      "system_used_gb": 71.33823013305664,
+      "system_used_percent": 3.539403085864148,
+      "process_tree_rss_gb": 0.5579032897949219,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.83958435058594,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 4.503410211764276,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1943.8989372253418,
+      "system_used_gb": 71.6451644897461,
+      "system_used_percent": 3.5546314480929015,
+      "process_tree_rss_gb": 0.567962646484375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.84827423095703,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 5.003696329891682,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1943.8287506103516,
+      "system_used_gb": 71.71535110473633,
+      "system_used_percent": 3.5581137144908688,
+      "process_tree_rss_gb": 0.5850677490234375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.86384201049805,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 5.503986455500126,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1943.8680534362793,
+      "system_used_gb": 71.6760482788086,
+      "system_used_percent": 3.5561637285841203,
+      "process_tree_rss_gb": 0.5876808166503906,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.86539077758789,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 6.004253635182977,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1943.884433746338,
+      "system_used_gb": 71.65966796875,
+      "system_used_percent": 3.5553510294204234,
+      "process_tree_rss_gb": 0.5881233215332031,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.86570739746094,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 6.504498226568103,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1943.9388427734375,
+      "system_used_gb": 71.60525894165039,
+      "system_used_percent": 3.5526515584907963,
+      "process_tree_rss_gb": 0.588897705078125,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.86611557006836,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 7.004778863862157,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1943.9508094787598,
+      "system_used_gb": 71.59329223632812,
+      "system_used_percent": 3.5520578376532272,
+      "process_tree_rss_gb": 0.5890579223632812,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.866188049316406,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 7.505036664195359,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1943.9976921081543,
+      "system_used_gb": 71.5464096069336,
+      "system_used_percent": 3.5497317843877774,
+      "process_tree_rss_gb": 0.58935546875,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.86664581298828,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 8.005351073108613,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1943.9870834350586,
+      "system_used_gb": 71.5570182800293,
+      "system_used_percent": 3.550258127278845,
+      "process_tree_rss_gb": 0.5898780822753906,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.867210388183594,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 8.505618800409138,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.0695304870605,
+      "system_used_gb": 71.47457122802734,
+      "system_used_percent": 3.54616756672342,
+      "process_tree_rss_gb": 0.5905914306640625,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.86802291870117,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 9.005879746749997,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.0443496704102,
+      "system_used_gb": 71.49975204467773,
+      "system_used_percent": 3.5474168976921128,
+      "process_tree_rss_gb": 0.5908927917480469,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.86834716796875,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 9.506112629547715,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.0806465148926,
+      "system_used_gb": 71.46345520019531,
+      "system_used_percent": 3.545616051734362,
+      "process_tree_rss_gb": 0.5913200378417969,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.86891174316406,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 10.006354985758662,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.346176147461,
+      "system_used_gb": 71.19792556762695,
+      "system_used_percent": 3.532441959818317,
+      "process_tree_rss_gb": 0.5913200378417969,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.868736267089844,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 10.506596263498068,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.6663856506348,
+      "system_used_gb": 70.87771606445312,
+      "system_used_percent": 3.516554959236125,
+      "process_tree_rss_gb": 0.5913238525390625,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.86880874633789,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 11.006840785034,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.031967163086,
+      "system_used_gb": 70.51213455200195,
+      "system_used_percent": 3.49841685389077,
+      "process_tree_rss_gb": 0.5917129516601562,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.86937713623047,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 11.50707218889147,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.220474243164,
+      "system_used_gb": 70.32362747192383,
+      "system_used_percent": 3.489064189271934,
+      "process_tree_rss_gb": 0.6108131408691406,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.90102767944336,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 12.007317569106817,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.2236709594727,
+      "system_used_gb": 70.32043075561523,
+      "system_used_percent": 3.488905586128204,
+      "process_tree_rss_gb": 0.6248245239257812,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.89961624145508,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 12.507558816112578,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.2175483703613,
+      "system_used_gb": 70.32655334472656,
+      "system_used_percent": 3.4892093546791436,
+      "process_tree_rss_gb": 0.6812248229980469,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.91377258300781,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 13.007798101752996,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.2073707580566,
+      "system_used_gb": 70.33673095703125,
+      "system_used_percent": 3.489714310750114,
+      "process_tree_rss_gb": 0.6911544799804688,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.923828125,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 13.508049151860178,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.2657852172852,
+      "system_used_gb": 70.27831649780273,
+      "system_used_percent": 3.4868161127310873,
+      "process_tree_rss_gb": 0.7078857421875,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.939754486083984,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 14.008288076147437,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.16259765625,
+      "system_used_gb": 70.38150405883789,
+      "system_used_percent": 3.4919357010818137,
+      "process_tree_rss_gb": 0.717041015625,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 58.944644927978516,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 14.508524012751877,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.2024574279785,
+      "system_used_gb": 70.34164428710938,
+      "system_used_percent": 3.489958082646444,
+      "process_tree_rss_gb": 0.7976150512695312,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.024696350097656,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 15.008838357403874,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.15669631958,
+      "system_used_gb": 70.38740539550781,
+      "system_used_percent": 3.492228492326862,
+      "process_tree_rss_gb": 0.8561477661132812,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.079734802246094,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 15.509109551087022,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.2070083618164,
+      "system_used_gb": 70.33709335327148,
+      "system_used_percent": 3.489732290820107,
+      "process_tree_rss_gb": 1.0312232971191406,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.091773986816406,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 16.010960962623358,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.226993560791,
+      "system_used_gb": 70.31710815429688,
+      "system_used_percent": 3.48874073727595,
+      "process_tree_rss_gb": 1.2737159729003906,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.092044830322266,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 16.511331662535667,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.2627716064453,
+      "system_used_gb": 70.28133010864258,
+      "system_used_percent": 3.4869656312078736,
+      "process_tree_rss_gb": 1.5162696838378906,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.0928840637207,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 17.01173894945532,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.7211952209473,
+      "system_used_gb": 70.82290649414062,
+      "system_used_percent": 3.5138356155975576,
+      "process_tree_rss_gb": 2.5604820251464844,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.67597961425781,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 17.512087224051356,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.2242889404297,
+      "system_used_gb": 70.3198127746582,
+      "system_used_percent": 3.488874925377268,
+      "process_tree_rss_gb": 2.2708663940429688,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.097496032714844,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 18.01241455320269,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.1427383422852,
+      "system_used_gb": 70.40136337280273,
+      "system_used_percent": 3.4929210089174467,
+      "process_tree_rss_gb": 0.9539680480957031,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.10468292236328,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 18.51270689535886,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.1771812438965,
+      "system_used_gb": 70.3669204711914,
+      "system_used_percent": 3.491212145212504,
+      "process_tree_rss_gb": 0.9603347778320312,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.106666564941406,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 19.012954124249518,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.2033653259277,
+      "system_used_gb": 70.34073638916016,
+      "system_used_percent": 3.4899130378395133,
+      "process_tree_rss_gb": 0.9978065490722656,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.14409255981445,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 19.513211556710303,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.9978408813477,
+      "system_used_gb": 70.54626083374023,
+      "system_used_percent": 3.500110008692455,
+      "process_tree_rss_gb": 1.3426055908203125,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.45083999633789,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 20.013491571880877,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.7591552734375,
+      "system_used_gb": 70.78494644165039,
+      "system_used_percent": 3.5119522505817327,
+      "process_tree_rss_gb": 1.5657157897949219,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.63737106323242,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 20.51378294173628,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.722770690918,
+      "system_used_gb": 70.82133102416992,
+      "system_used_percent": 3.5137574496090602,
+      "process_tree_rss_gb": 1.5843925476074219,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.65547180175781,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 21.014034648425877,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.6541213989258,
+      "system_used_gb": 70.88998031616211,
+      "system_used_percent": 3.517163442657477,
+      "process_tree_rss_gb": 1.5957298278808594,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.66624450683594,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 21.514286817982793,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.6968231201172,
+      "system_used_gb": 70.8472785949707,
+      "system_used_percent": 3.515044822620581,
+      "process_tree_rss_gb": 1.607208251953125,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.677268981933594,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 22.014536161907017,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.7391510009766,
+      "system_used_gb": 70.80495071411133,
+      "system_used_percent": 3.5129447504453633,
+      "process_tree_rss_gb": 1.6182212829589844,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.687767028808594,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 22.514784864149988,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.677719116211,
+      "system_used_gb": 70.86638259887695,
+      "system_used_percent": 3.5159926562050705,
+      "process_tree_rss_gb": 1.62493896484375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.69416809082031,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 23.01503000035882,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1944.6935844421387,
+      "system_used_gb": 70.85051727294922,
+      "system_used_percent": 3.515205507667153,
+      "process_tree_rss_gb": 1.6341400146484375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.7177848815918,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 23.515319142490625,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1948.719123840332,
+      "system_used_gb": 66.82497787475586,
+      "system_used_percent": 3.3154808082786404,
+      "process_tree_rss_gb": 1.6446800231933594,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.712005615234375,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 24.015624131076038,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1948.4534912109375,
+      "system_used_gb": 67.09061050415039,
+      "system_used_percent": 3.3286600103198407,
+      "process_tree_rss_gb": 1.65277099609375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.719383239746094,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 24.51590484008193,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1948.1191329956055,
+      "system_used_gb": 67.42496871948242,
+      "system_used_percent": 3.3452489906873515,
+      "process_tree_rss_gb": 1.6636810302734375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.72966766357422,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 25.01615683734417,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1948.034080505371,
+      "system_used_gb": 67.5100212097168,
+      "system_used_percent": 3.3494688184828334,
+      "process_tree_rss_gb": 1.6718292236328125,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.737281799316406,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 25.516403095796704,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1948.0312118530273,
+      "system_used_gb": 67.51288986206055,
+      "system_used_percent": 3.3496111449316226,
+      "process_tree_rss_gb": 1.6798553466796875,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.7448844909668,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 26.01668044179678,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.9885482788086,
+      "system_used_gb": 67.5555534362793,
+      "system_used_percent": 3.351727872329572,
+      "process_tree_rss_gb": 1.6880760192871094,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.75328826904297,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 26.5169282220304,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.9487037658691,
+      "system_used_gb": 67.59539794921875,
+      "system_used_percent": 3.3537047337093626,
+      "process_tree_rss_gb": 1.6951637268066406,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.75967025756836,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 27.017197662964463,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.959098815918,
+      "system_used_gb": 67.58500289916992,
+      "system_used_percent": 3.3531889895963967,
+      "process_tree_rss_gb": 1.6971092224121094,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.761417388916016,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 27.517455735243857,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.9579277038574,
+      "system_used_gb": 67.58617401123047,
+      "system_used_percent": 3.353247093612059,
+      "process_tree_rss_gb": 1.7046737670898438,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.768802642822266,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 28.017716206610203,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.9707832336426,
+      "system_used_gb": 67.57331848144531,
+      "system_used_percent": 3.3526092742870337,
+      "process_tree_rss_gb": 1.7135047912597656,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.77690505981445,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 28.517962449230254,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.8811340332031,
+      "system_used_gb": 67.66296768188477,
+      "system_used_percent": 3.357057165075589,
+      "process_tree_rss_gb": 1.7219696044921875,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.785247802734375,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 29.018214277923107,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.9257164001465,
+      "system_used_gb": 67.6183853149414,
+      "system_used_percent": 3.354845237938622,
+      "process_tree_rss_gb": 1.7287864685058594,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.791378021240234,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 29.518460092134774,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.9017333984375,
+      "system_used_gb": 67.64236831665039,
+      "system_used_percent": 3.35603514004439,
+      "process_tree_rss_gb": 1.7381820678710938,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.800697326660156,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 30.018724665045738,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.8824920654297,
+      "system_used_gb": 67.6616096496582,
+      "system_used_percent": 3.3569897871290872,
+      "process_tree_rss_gb": 1.7464828491210938,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.80878448486328,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 30.518973510712385,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.8716430664062,
+      "system_used_gb": 67.67245864868164,
+      "system_used_percent": 3.3575280536455185,
+      "process_tree_rss_gb": 1.7544403076171875,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.816158294677734,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 31.01921878848225,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.8595428466797,
+      "system_used_gb": 67.6845588684082,
+      "system_used_percent": 3.3581283987194004,
+      "process_tree_rss_gb": 1.7618560791015625,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.82352828979492,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 31.519459394738078,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.9162216186523,
+      "system_used_gb": 67.62788009643555,
+      "system_used_percent": 3.355316315772447,
+      "process_tree_rss_gb": 1.7695388793945312,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.830902099609375,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 32.0197431165725,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.8446197509766,
+      "system_used_gb": 67.69948196411133,
+      "system_used_percent": 3.3588687990753354,
+      "process_tree_rss_gb": 1.7768630981445312,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.838035583496094,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 32.52000215742737,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.890724182129,
+      "system_used_gb": 67.65337753295898,
+      "system_used_percent": 3.3565813556443973,
+      "process_tree_rss_gb": 1.7819671630859375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.84273147583008,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 33.02024687360972,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1947.8662147521973,
+      "system_used_gb": 67.67788696289062,
+      "system_used_percent": 3.3577973761676287,
+      "process_tree_rss_gb": 1.7868690490722656,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 59.8474235534668,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 33.52049980033189,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1946.495761871338,
+      "system_used_gb": 69.04833984375,
+      "system_used_percent": 3.425791565909903,
+      "process_tree_rss_gb": 3.161712646484375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 61.227867126464844,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 34.020786630921066,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1945.3246421813965,
+      "system_used_gb": 70.2194595336914,
+      "system_used_percent": 3.4838959601002792,
+      "process_tree_rss_gb": 4.249034881591797,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 62.319610595703125,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 34.521167784929276,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1943.446144104004,
+      "system_used_gb": 72.09795761108398,
+      "system_used_percent": 3.57709650459812,
+      "process_tree_rss_gb": 6.469341278076172,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 64.55038452148438,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 35.02165864780545,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1942.4479598999023,
+      "system_used_gb": 73.09614181518555,
+      "system_used_percent": 3.6266208093876893,
+      "process_tree_rss_gb": 7.462596893310547,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 65.54579162597656,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 35.52211363706738,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1940.7864837646484,
+      "system_used_gb": 74.75761795043945,
+      "system_used_percent": 3.7090539416540635,
+      "process_tree_rss_gb": 9.36688232421875,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 67.45695495605469,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 36.02292835153639,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1939.5615501403809,
+      "system_used_gb": 75.98255157470703,
+      "system_used_percent": 3.7698282816064985,
+      "process_tree_rss_gb": 10.36789321899414,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.45548248291016,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 36.52349997218698,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1939.7236633300781,
+      "system_used_gb": 75.82043838500977,
+      "system_used_percent": 3.76178513387486,
+      "process_tree_rss_gb": 10.411014556884766,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 69.07483291625977,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 37.02396265603602,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1939.630615234375,
+      "system_used_gb": 75.91348648071289,
+      "system_used_percent": 3.7664016587935634,
+      "process_tree_rss_gb": 10.418941497802734,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 69.76189804077148,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 37.52430124208331,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1939.6371116638184,
+      "system_used_gb": 75.90699005126953,
+      "system_used_percent": 3.7660793423809467,
+      "process_tree_rss_gb": 10.42532730102539,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 70.53049850463867,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 38.024577972479165,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1939.6477432250977,
+      "system_used_gb": 75.89635848999023,
+      "system_used_percent": 3.765551863906511,
+      "process_tree_rss_gb": 10.433917999267578,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 71.11256790161133,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 38.52484554052353,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1939.696689605713,
+      "system_used_gb": 75.847412109375,
+      "system_used_percent": 3.763123418874046,
+      "process_tree_rss_gb": 10.440853118896484,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 71.81256484985352,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 39.02511333953589,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1941.979694366455,
+      "system_used_gb": 73.56440734863281,
+      "system_used_percent": 3.649853520249674,
+      "process_tree_rss_gb": 6.826587677001953,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.63496780395508,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 39.525410218164325,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1942.0020484924316,
+      "system_used_gb": 73.54205322265625,
+      "system_used_percent": 3.6487444338269297,
+      "process_tree_rss_gb": 6.832874298095703,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.6411247253418,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 40.025690163485706,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1941.5105934143066,
+      "system_used_gb": 74.03350830078125,
+      "system_used_percent": 3.6731276799045913,
+      "process_tree_rss_gb": 6.8421783447265625,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.64994049072266,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 40.52597539126873,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1941.405174255371,
+      "system_used_gb": 74.1389274597168,
+      "system_used_percent": 3.678357987633698,
+      "process_tree_rss_gb": 6.848407745361328,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.65610885620117,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 41.02624183893204,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1941.238754272461,
+      "system_used_gb": 74.30534744262695,
+      "system_used_percent": 3.6866148143024144,
+      "process_tree_rss_gb": 6.856986999511719,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.66445541381836,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 41.52649841271341,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1941.1861152648926,
+      "system_used_gb": 74.35798645019531,
+      "system_used_percent": 3.6892264667849157,
+      "process_tree_rss_gb": 6.866214752197266,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.67352676391602,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 42.026771906763315,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1941.0802688598633,
+      "system_used_gb": 74.46383285522461,
+      "system_used_percent": 3.694477972070225,
+      "process_tree_rss_gb": 6.87091064453125,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.67797088623047,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 42.527037009596825,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1941.0324363708496,
+      "system_used_gb": 74.51166534423828,
+      "system_used_percent": 3.6968511520454466,
+      "process_tree_rss_gb": 6.8773651123046875,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.68413162231445,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 43.02730507589877,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1941.0174407958984,
+      "system_used_gb": 74.52666091918945,
+      "system_used_percent": 3.6975951484153806,
+      "process_tree_rss_gb": 6.8823394775390625,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.68907165527344,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 43.52755466196686,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1940.9700050354004,
+      "system_used_gb": 74.5740966796875,
+      "system_used_percent": 3.6999486449455574,
+      "process_tree_rss_gb": 6.890659332275391,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.6969223022461,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 44.02782150544226,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1940.9679946899414,
+      "system_used_gb": 74.57610702514648,
+      "system_used_percent": 3.7000483870180463,
+      "process_tree_rss_gb": 6.896820068359375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.70256042480469,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 44.528066230006516,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1941.0195617675781,
+      "system_used_gb": 74.52453994750977,
+      "system_used_percent": 3.697489917689946,
+      "process_tree_rss_gb": 6.906078338623047,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.71163940429688,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 45.02832180354744,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1941.0340003967285,
+      "system_used_gb": 74.51010131835938,
+      "system_used_percent": 3.696773553848634,
+      "process_tree_rss_gb": 6.914058685302734,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.71973419189453,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 45.52856271807104,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1941.0331497192383,
+      "system_used_gb": 74.51095199584961,
+      "system_used_percent": 3.6968157596971447,
+      "process_tree_rss_gb": 6.921413421630859,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.72686004638672,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 46.028805969282985,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1940.9730110168457,
+      "system_used_gb": 74.57109069824219,
+      "system_used_percent": 3.69979950499656,
+      "process_tree_rss_gb": 6.93023681640625,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.73495483398438,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 46.52906199824065,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1941.047592163086,
+      "system_used_gb": 74.49650955200195,
+      "system_used_percent": 3.696099206591937,
+      "process_tree_rss_gb": 6.938289642333984,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.74305725097656,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 47.02931845001876,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1940.929027557373,
+      "system_used_gb": 74.61507415771484,
+      "system_used_percent": 3.701981717702064,
+      "process_tree_rss_gb": 6.943080902099609,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.74775314331055,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 47.52955807186663,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1940.9220695495605,
+      "system_used_gb": 74.62203216552734,
+      "system_used_percent": 3.702326935045935,
+      "process_tree_rss_gb": 6.9496917724609375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.75415802001953,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 48.02980325371027,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1940.9129066467285,
+      "system_used_gb": 74.63119506835938,
+      "system_used_percent": 3.702781546920924,
+      "process_tree_rss_gb": 6.9556121826171875,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.75957489013672,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 48.53006382007152,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1940.9292106628418,
+      "system_used_gb": 74.6148910522461,
+      "system_used_percent": 3.70197263303512,
+      "process_tree_rss_gb": 6.962837219238281,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.781494140625,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 49.03032649960369,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1940.9489860534668,
+      "system_used_gb": 74.5951156616211,
+      "system_used_percent": 3.700991489005169,
+      "process_tree_rss_gb": 6.967517852783203,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.77156448364258,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 49.530573189258575,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1940.9091262817383,
+      "system_used_gb": 74.63497543334961,
+      "system_used_percent": 3.7029691074405386,
+      "process_tree_rss_gb": 6.977409362792969,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.7813720703125,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 50.030825359746814,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1940.9464416503906,
+      "system_used_gb": 74.59766006469727,
+      "system_used_percent": 3.7011177280229117,
+      "process_tree_rss_gb": 7.038978576660156,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 68.84244918823242,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 50.53107526805252,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.8045463562012,
+      "system_used_gb": 77.73955535888672,
+      "system_used_percent": 3.8570009603231092,
+      "process_tree_rss_gb": 10.350906372070312,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.16623306274414,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 51.031568897888064,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.972370147705,
+      "system_used_gb": 78.57173156738281,
+      "system_used_percent": 3.8982888789445855,
+      "process_tree_rss_gb": 11.022388458251953,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.83720397949219,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 51.53316731657833,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.1641883850098,
+      "system_used_gb": 78.37991333007812,
+      "system_used_percent": 3.8887719332651796,
+      "process_tree_rss_gb": 10.918167114257812,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 73.30471420288086,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 52.03362091910094,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.135829925537,
+      "system_used_gb": 78.40827178955078,
+      "system_used_percent": 3.8901789210581303,
+      "process_tree_rss_gb": 10.926471710205078,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 74.05305480957031,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 52.53396681230515,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.1457633972168,
+      "system_used_gb": 78.3983383178711,
+      "system_used_percent": 3.8896860778764184,
+      "process_tree_rss_gb": 10.930973052978516,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 74.48451614379883,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 53.034236524254084,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.7163391113281,
+      "system_used_gb": 78.82776260375977,
+      "system_used_percent": 3.9109917037629103,
+      "process_tree_rss_gb": 10.940929412841797,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 75.11712265014648,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 53.5345298955217,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.152114868164,
+      "system_used_gb": 79.39198684692383,
+      "system_used_percent": 3.938985347895229,
+      "process_tree_rss_gb": 10.946006774902344,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 75.88333129882812,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 54.0348203452304,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.8367309570312,
+      "system_used_gb": 78.70737075805664,
+      "system_used_percent": 3.9050185352472386,
+      "process_tree_rss_gb": 8.914806365966797,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 74.46447372436523,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 54.5350830340758,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1938.4799003601074,
+      "system_used_gb": 77.06420135498047,
+      "system_used_percent": 3.823493680411368,
+      "process_tree_rss_gb": 7.3356475830078125,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.86469268798828,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 55.035380189307034,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1938.4543151855469,
+      "system_used_gb": 77.08978652954102,
+      "system_used_percent": 3.8247630733528957,
+      "process_tree_rss_gb": 7.3436126708984375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.87280654907227,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 55.53569052927196,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1938.4398612976074,
+      "system_used_gb": 77.10424041748047,
+      "system_used_percent": 3.825480194249787,
+      "process_tree_rss_gb": 7.3485565185546875,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.87725067138672,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 56.03595282137394,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1938.1534156799316,
+      "system_used_gb": 77.39068603515625,
+      "system_used_percent": 3.8396920201002875,
+      "process_tree_rss_gb": 7.353351593017578,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.88194274902344,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 56.53623337391764,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.8775825500488,
+      "system_used_gb": 77.66651916503906,
+      "system_used_percent": 3.853377313795826,
+      "process_tree_rss_gb": 7.362705230712891,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.89100646972656,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 57.03648699633777,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.8230094909668,
+      "system_used_gb": 77.7210922241211,
+      "system_used_percent": 3.8560849230729235,
+      "process_tree_rss_gb": 7.368621826171875,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.89642715454102,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 57.536764888092875,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.8486213684082,
+      "system_used_gb": 77.69548034667969,
+      "system_used_percent": 3.854814205284133,
+      "process_tree_rss_gb": 7.374340057373047,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.90233612060547,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 58.03700791299343,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.5809745788574,
+      "system_used_gb": 77.96312713623047,
+      "system_used_percent": 3.868093338661718,
+      "process_tree_rss_gb": 7.3816070556640625,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.90946578979492,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 58.53727197833359,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.5900688171387,
+      "system_used_gb": 77.95403289794922,
+      "system_used_percent": 3.8676421335368327,
+      "process_tree_rss_gb": 7.386508941650391,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.9136962890625,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 59.0375193124637,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.7162437438965,
+      "system_used_gb": 77.8278579711914,
+      "system_used_percent": 3.861382040956847,
+      "process_tree_rss_gb": 7.391399383544922,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.91838073730469,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 59.53777670394629,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.747989654541,
+      "system_used_gb": 77.79611206054688,
+      "system_used_percent": 3.8598069868254328,
+      "process_tree_rss_gb": 7.3972015380859375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.92403793334961,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 60.03801641520113,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.7434844970703,
+      "system_used_gb": 77.80061721801758,
+      "system_used_percent": 3.860030507485034,
+      "process_tree_rss_gb": 7.4051055908203125,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.9314079284668,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 60.53825358208269,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.7195854187012,
+      "system_used_gb": 77.82451629638672,
+      "system_used_percent": 3.861216245785119,
+      "process_tree_rss_gb": 7.410129547119141,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.95112991333008,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 61.03849671315402,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.7117462158203,
+      "system_used_gb": 77.83235549926758,
+      "system_used_percent": 3.861605183088659,
+      "process_tree_rss_gb": 7.415943145751953,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.94216918945312,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 61.53878667484969,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.7134437561035,
+      "system_used_gb": 77.83065795898438,
+      "system_used_percent": 3.8615209606555316,
+      "process_tree_rss_gb": 7.419502258300781,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.94540786743164,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 62.03904087655246,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.7402267456055,
+      "system_used_gb": 77.80387496948242,
+      "system_used_percent": 3.860192138851079,
+      "process_tree_rss_gb": 7.424686431884766,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.95059204101562,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 62.53929234761745,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.74125289917,
+      "system_used_gb": 77.80284881591797,
+      "system_used_percent": 3.860141226863414,
+      "process_tree_rss_gb": 7.4337921142578125,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.95941162109375,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 63.03955966141075,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1937.7064323425293,
+      "system_used_gb": 77.8376693725586,
+      "system_used_percent": 3.861868827693929,
+      "process_tree_rss_gb": 7.44024658203125,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 72.96581268310547,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 63.539816935546696,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1935.203468322754,
+      "system_used_gb": 80.34063339233398,
+      "system_used_percent": 3.98605187174866,
+      "process_tree_rss_gb": 10.23626708984375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 75.76953506469727,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 64.04022164549679,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1934.498233795166,
+      "system_used_gb": 81.04586791992188,
+      "system_used_percent": 4.0210416557473225,
+      "process_tree_rss_gb": 11.007476806640625,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.55798721313477,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 64.54074971936643,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1934.7236976623535,
+      "system_used_gb": 80.82040405273438,
+      "system_used_percent": 4.00985540251696,
+      "process_tree_rss_gb": 11.083980560302734,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.92146301269531,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 65.04120319150388,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1934.718116760254,
+      "system_used_gb": 80.82598495483398,
+      "system_used_percent": 4.010132295594857,
+      "process_tree_rss_gb": 11.088661193847656,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 77.72694778442383,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 65.54152414761484,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1934.7144737243652,
+      "system_used_gb": 80.82962799072266,
+      "system_used_percent": 4.010313042614263,
+      "process_tree_rss_gb": 11.095195770263672,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 78.36151504516602,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 66.04182388354093,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1934.7201805114746,
+      "system_used_gb": 80.82392120361328,
+      "system_used_percent": 4.010029903827842,
+      "process_tree_rss_gb": 11.099712371826172,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 79.1574821472168,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 66.54213002603501,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1934.6724739074707,
+      "system_used_gb": 80.87162780761719,
+      "system_used_percent": 4.01239683809454,
+      "process_tree_rss_gb": 11.105579376220703,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 79.79693984985352,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 67.04245889186859,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.9727745056152,
+      "system_used_gb": 78.57132720947266,
+      "system_used_percent": 3.8982688169717505,
+      "process_tree_rss_gb": 7.489204406738281,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.74193572998047,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 67.54281142447144,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.8785858154297,
+      "system_used_gb": 78.6655158996582,
+      "system_used_percent": 3.9029419317949587,
+      "process_tree_rss_gb": 7.498115539550781,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.75077056884766,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 68.0431170463562,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.8865013122559,
+      "system_used_gb": 78.65760040283203,
+      "system_used_percent": 3.902549209213526,
+      "process_tree_rss_gb": 7.507167816162109,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.75959396362305,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 68.5434078592807,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.9875602722168,
+      "system_used_gb": 78.5565414428711,
+      "system_used_percent": 3.897535230116024,
+      "process_tree_rss_gb": 7.513008117675781,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.76525497436523,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 69.04371379781514,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.9645690917969,
+      "system_used_gb": 78.57953262329102,
+      "system_used_percent": 3.898675923609178,
+      "process_tree_rss_gb": 7.518123626708984,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.76996231079102,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 69.54402188025415,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.975730895996,
+      "system_used_gb": 78.5683708190918,
+      "system_used_percent": 3.8981221374533845,
+      "process_tree_rss_gb": 7.525371551513672,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.7770881652832,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 70.04432543925941,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.9436645507812,
+      "system_used_gb": 78.60043716430664,
+      "system_used_percent": 3.89971308975195,
+      "process_tree_rss_gb": 7.531208038330078,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.78274536132812,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 70.54460686072707,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.7650985717773,
+      "system_used_gb": 78.77900314331055,
+      "system_used_percent": 3.9085725326612843,
+      "process_tree_rss_gb": 7.540214538574219,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.79181671142578,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 71.04492884222418,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.7089157104492,
+      "system_used_gb": 78.83518600463867,
+      "system_used_percent": 3.9113600113019316,
+      "process_tree_rss_gb": 7.548221588134766,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.7996597290039,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 71.54522094782442,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.7180404663086,
+      "system_used_gb": 78.8260612487793,
+      "system_used_percent": 3.910907292065889,
+      "process_tree_rss_gb": 7.557621002197266,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.80873107910156,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 72.04551496822387,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.7141036987305,
+      "system_used_gb": 78.82999801635742,
+      "system_used_percent": 3.9111026124051853,
+      "process_tree_rss_gb": 7.56201171875,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.81293487548828,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 72.54580948874354,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.5937194824219,
+      "system_used_gb": 78.95038223266602,
+      "system_used_percent": 3.9170754023930674,
+      "process_tree_rss_gb": 7.566867828369141,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.81787109375,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 73.0461043510586,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.5762367248535,
+      "system_used_gb": 78.96786499023438,
+      "system_used_percent": 3.9179427988223234,
+      "process_tree_rss_gb": 7.573421478271484,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.83198547363281,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 73.54639092646539,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.6017036437988,
+      "system_used_gb": 78.94239807128906,
+      "system_used_percent": 3.9166792730615305,
+      "process_tree_rss_gb": 7.581081390380859,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.83155059814453,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 74.04669832251966,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.6480407714844,
+      "system_used_gb": 78.89606094360352,
+      "system_used_percent": 3.914380284533018,
+      "process_tree_rss_gb": 7.585109710693359,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.83527374267578,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 74.54698238801211,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.7033042907715,
+      "system_used_gb": 78.8407974243164,
+      "system_used_percent": 3.9116384184909854,
+      "process_tree_rss_gb": 7.591102600097656,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.8411865234375,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 75.04738151654601,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.6640281677246,
+      "system_used_gb": 78.88007354736328,
+      "system_used_percent": 3.913587079550471,
+      "process_tree_rss_gb": 7.595550537109375,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.8451156616211,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 75.54770667105913,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.622329711914,
+      "system_used_gb": 78.92177200317383,
+      "system_used_percent": 3.915655923183069,
+      "process_tree_rss_gb": 7.602020263671875,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 76.85175704956055,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 76.04800469987094,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1935.3939208984375,
+      "system_used_gb": 80.15018081665039,
+      "system_used_percent": 3.976602682543545,
+      "process_tree_rss_gb": 9.197639465332031,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 78.4513931274414,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 76.54837531689554,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1932.588752746582,
+      "system_used_gb": 82.95534896850586,
+      "system_used_percent": 4.115779401597644,
+      "process_tree_rss_gb": 12.07199478149414,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 81.33257675170898,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 77.05037361662835,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1933.3258781433105,
+      "system_used_gb": 82.21822357177734,
+      "system_used_percent": 4.079207371439571,
+      "process_tree_rss_gb": 11.256057739257812,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 80.71533966064453,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 77.55086492653936,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1933.3013496398926,
+      "system_used_gb": 82.24275207519531,
+      "system_used_percent": 4.080424338282276,
+      "process_tree_rss_gb": 11.260940551757812,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 81.49366760253906,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 78.05122999660671,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1933.6399726867676,
+      "system_used_gb": 81.90412902832031,
+      "system_used_percent": 4.063623760880528,
+      "process_tree_rss_gb": 11.260940551757812,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 82.09823608398438,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 78.55151826702058,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1933.912509918213,
+      "system_used_gb": 81.631591796875,
+      "system_used_percent": 4.050101991189981,
+      "process_tree_rss_gb": 11.260940551757812,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 82.87053680419922,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 79.05181954614818,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1934.1770362854004,
+      "system_used_gb": 81.3670654296875,
+      "system_used_percent": 4.0369776756782345,
+      "process_tree_rss_gb": 11.260940551757812,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 83.64770889282227,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 79.5520929126069,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1934.9682235717773,
+      "system_used_gb": 80.57587814331055,
+      "system_used_percent": 3.9977233976049487,
+      "process_tree_rss_gb": 9.181625366210938,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 82.171142578125,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 80.05237503349781,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1936.5051803588867,
+      "system_used_gb": 79.03892135620117,
+      "system_used_percent": 3.921468217388275,
+      "process_tree_rss_gb": 7.619560241699219,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 80.58534240722656,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 80.55273799225688,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1938.3500518798828,
+      "system_used_gb": 77.19404983520508,
+      "system_used_percent": 3.829936034121918,
+      "process_tree_rss_gb": 0.0,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 78.76685333251953,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 81.05306938756257,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1943.0529441833496,
+      "system_used_gb": 72.49115753173828,
+      "system_used_percent": 3.5966048805408595,
+      "process_tree_rss_gb": 0.0,
+      "process_tree_pid_count": 1,
+      "process_tree_pids": [
+        2692133
+      ],
+      "cgroup_memory_current_gb": 74.24504470825195,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 81.55338759627193,
+      "event": "sample"
+    },
+    {
+      "system_total_gb": 2015.544101715088,
+      "system_available_gb": 1943.8744888305664,
+      "system_used_gb": 71.66961288452148,
+      "system_used_percent": 3.5558444403938183,
+      "process_tree_rss_gb": 0.0,
+      "process_tree_pid_count": 0,
+      "process_tree_pids": [],
+      "cgroup_memory_current_gb": 73.4537239074707,
+      "cgroup_memory_limit_gb": null,
+      "cgroup_memory_used_percent": null,
+      "cgroup_memory_oom_events": 0,
+      "cgroup_memory_oom_kill_events": 0,
+      "time_sec": 81.63450696412474,
+      "event": "process_exit"
+    }
+  ]
+}

@@ -22,6 +22,6 @@ nvidia-smi
 free -h
 nproc
 
-sh train.sh qwen3-0.6b-h200-run-2/ --model=Qwen3-0.6B
+sh train.sh qwen3-0.6b-h200-run-6-batch-overlap/ --model=Qwen3-0.6B
 
 echo "End time: $(date)"

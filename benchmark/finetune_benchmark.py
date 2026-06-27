@@ -69,6 +69,7 @@ def parse_args() -> argparse.Namespace:
         help="Qwen model id, such as Qwen3-8B, or a full Hugging Face model id.",
     )
     parser.add_argument("--seq-len", type=int, default=512, choices=(256, 512))
+    parser.add_argument("--batch-size", type=int, default=1, help="Per-device train batch size.")
     parser.add_argument("--max-steps", type=int, default=200)
     parser.add_argument("--save-steps", type=int, default=20)
     parser.add_argument("--overlap-steps", type=int, default=7)
@@ -757,7 +758,7 @@ def build_command(args: argparse.Namespace, hook_type: str, run_dir: Path) -> li
         "--seq-len",
         str(args.seq_len),
         "--batch-size",
-        "1",
+        str(args.batch_size),
         "--max-steps",
         str(args.max_steps),
         "--save-steps",
@@ -1063,6 +1064,7 @@ def main() -> None:
         "config": {
             "hook_types": args.hook_types,
             "seq_len": args.seq_len,
+            "batch_size": args.batch_size,
             "max_steps": args.max_steps,
             "save_steps": args.save_steps,
             "overlap_steps": args.overlap_steps,

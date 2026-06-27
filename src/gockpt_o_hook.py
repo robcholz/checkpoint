@@ -95,6 +95,12 @@ class GoCkptOCheckpointHook(GoCkptCheckpointHook):
         if runtime is None or not self._is_step_in_request(runtime, step):
             return
 
+        # Wait for current step's partition transfer thread to complete
+        # before capturing gradients, otherwise we might miss blocks
+        partition_index = step - runtime.request.start_step
+        if 0 <= partition_index < len(runtime.partitions):
+            self._wait_partition_transfer_thread(runtime, partition_index)
+
         gradients = self._collect_gradients_for_step(runtime, step)
         if not gradients:
             return

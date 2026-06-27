@@ -1,0 +1,4824 @@
+{
+  "config": {
+    "hook_types": [
+      "baseline",
+      "async",
+      "async_o",
+      "gockpt",
+      "gockpt_o"
+    ],
+    "seq_len": 512,
+    "max_steps": 207,
+    "save_steps": 50,
+    "overlap_steps": 7,
+    "gockpt_reconstruction_queue_depth": 64,
+    "gockpt_transfer_chunk_mb": 64.0,
+    "learning_rate": 2e-05,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.03,
+    "seed": 42,
+    "gradient_checkpointing": true,
+    "save_final_model": false,
+    "min_free_gb": 12.0,
+    "power_sample_interval_sec": 0.5,
+    "power_gpu_index": 0,
+    "host_memory_sample_interval_sec": 0.5
+  },
+  "runs": [
+    {
+      "hook_type": "baseline",
+      "output_dir": "/tmp/zsheng1/qwen3-8b-h200-run-3/baseline",
+      "command": [
+        "/hpc/home/zsheng1/miniconda3/envs/checkpoint/bin/python",
+        "/hpc/home/zsheng1/checkpoint/finetune.py",
+        "--model",
+        "Qwen3-8B",
+        "--hook-type",
+        "baseline",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "207",
+        "--save-steps",
+        "50",
+        "--overlap-steps",
+        "7",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/baseline",
+        "--profile-phases",
+        "--gockpt-inflight-packets",
+        "64",
+        "--gockpt-transfer-chunk-mb",
+        "64.0",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 373.4267103858292,
+      "train_runtime_sec": 324.7757038604468,
+      "train_steps_per_sec": 0.6373629478421392,
+      "checkpoint_count": 4,
+      "checkpoint_files": [
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/baseline/baseline/baseline_step_50.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/baseline/baseline/baseline_step_100.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/baseline/baseline/baseline_step_150.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/baseline/baseline/baseline_step_200.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 207,
+          "total_sec": 0.00018976908177137375,
+          "avg_sec": 9.167588491370713e-07,
+          "max_sec": 4.344619810581207e-06
+        },
+        "hook.forward_end": {
+          "count": 207,
+          "total_sec": 0.00019445549696683884,
+          "avg_sec": 9.393985360716852e-07,
+          "max_sec": 3.9907172322273254e-06
+        },
+        "hook.backward_begin": {
+          "count": 207,
+          "total_sec": 8.664187043905258e-05,
+          "avg_sec": 4.1855976057513324e-07,
+          "max_sec": 8.612871170043945e-06
+        },
+        "hook.backward_end": {
+          "count": 207,
+          "total_sec": 0.0001790989190340042,
+          "avg_sec": 8.652121692463972e-07,
+          "max_sec": 6.290152668952942e-06
+        },
+        "hook.update_begin": {
+          "count": 207,
+          "total_sec": 7.366761565208435e-05,
+          "avg_sec": 3.5588220121779877e-07,
+          "max_sec": 2.4475157260894775e-06
+        },
+        "hook.update_end": {
+          "count": 207,
+          "total_sec": 0.0001447359099984169,
+          "avg_sec": 6.992072946783425e-07,
+          "max_sec": 5.288049578666687e-06
+        },
+        "hook.save_checkpoint": {
+          "count": 4,
+          "total_sec": 236.53769561927766,
+          "avg_sec": 59.134423904819414,
+          "max_sec": 62.36167279444635
+        }
+      },
+      "raw_foreground_summary": {
+        "raw_foreground_forward": {
+          "count": 207,
+          "total_sec": 22.071446841582656,
+          "avg_sec": 0.10662534706078577,
+          "max_sec": 0.4231242472305894
+        },
+        "raw_foreground_backward": {
+          "count": 207,
+          "total_sec": 43.59607538767159,
+          "avg_sec": 0.2106090598438241,
+          "max_sec": 0.45474243350327015
+        },
+        "raw_foreground_update": {
+          "count": 207,
+          "total_sec": 16.23104123584926,
+          "avg_sec": 0.07841082722632493,
+          "max_sec": 0.18554654717445374
+        }
+      },
+      "transfer_timing_summary": {
+        "mo_foreground_avg_sec": null,
+        "mo_full_avg_sec": null,
+        "mo_foreground_total_sec": 0.0,
+        "mo_full_total_sec": 0.0,
+        "mo_count": 0,
+        "gradient_foreground_avg_sec": null,
+        "gradient_full_avg_sec": null,
+        "gradient_foreground_total_sec": 0.0,
+        "gradient_full_total_sec": 0.0,
+        "gradient_count": 0
+      },
+      "checkpoint_results": [
+        {
+          "step": 50,
+          "tag": "baseline_step_50",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/baseline/baseline/baseline_step_50.pt",
+          "duration_sec": 62.35955284629017
+        },
+        {
+          "step": 100,
+          "tag": "baseline_step_100",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/baseline/baseline/baseline_step_100.pt",
+          "duration_sec": 57.71880376338959
+        },
+        {
+          "step": 150,
+          "tag": "baseline_step_150",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/baseline/baseline/baseline_step_150.pt",
+          "duration_sec": 59.51583873573691
+        },
+        {
+          "step": 200,
+          "tag": "baseline_step_200",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/baseline/baseline/baseline_step_200.pt",
+          "duration_sec": 56.935345069505274
+        }
+      ],
+      "ringbuffer_pressure_samples": [],
+      "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/baseline/host_memory_samples.json",
+      "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/baseline/host_memory_samples.jsonl",
+      "host_memory_sample_count": 749,
+      "host_memory_peak_process_tree_rss_gb": 17.290313720703125,
+      "host_memory_peak_system_used_gb": 93.13931655883789,
+      "host_memory_min_system_available_gb": 1922.40478515625,
+      "host_memory_peak_cgroup_current_gb": 194.78928756713867,
+      "host_memory_cgroup_limit_gb": null,
+      "host_memory_cgroup_oom_events_delta": 0,
+      "host_memory_cgroup_oom_kill_events_delta": 0,
+      "host_memory_sampling_error": null,
+      "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/baseline/power_samples.json",
+      "power_sample_count": 715,
+      "power_avg_w": 146.85931468531467,
+      "power_peak_w": 385.2,
+      "power_energy_j": 54796.39146385631,
+      "power_sampling_error": null,
+      "error": null
+    },
+    {
+      "hook_type": "async",
+      "output_dir": "/tmp/zsheng1/qwen3-8b-h200-run-3/async",
+      "command": [
+        "/hpc/home/zsheng1/miniconda3/envs/checkpoint/bin/python",
+        "/hpc/home/zsheng1/checkpoint/finetune.py",
+        "--model",
+        "Qwen3-8B",
+        "--hook-type",
+        "async",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "207",
+        "--save-steps",
+        "50",
+        "--overlap-steps",
+        "7",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/async",
+        "--profile-phases",
+        "--gockpt-inflight-packets",
+        "64",
+        "--gockpt-transfer-chunk-mb",
+        "64.0",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 391.0672783907503,
+      "train_runtime_sec": 282.11089331284165,
+      "train_steps_per_sec": 0.7337540127188608,
+      "checkpoint_count": 4,
+      "checkpoint_files": [
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/async/async/async_step_50.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/async/async/async_step_100.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/async/async/async_step_150.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/async/async/async_step_200.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 207,
+          "total_sec": 0.00024164561182260513,
+          "avg_sec": 1.1673701054232131e-06,
+          "max_sec": 3.7690624594688416e-06
+        },
+        "hook.forward_end": {
+          "count": 207,
+          "total_sec": 0.0002442803233861923,
+          "avg_sec": 1.1800981806096248e-06,
+          "max_sec": 4.665926098823547e-06
+        },
+        "hook.backward_begin": {
+          "count": 207,
+          "total_sec": 0.00010536238551139832,
+          "avg_sec": 5.089970314560305e-07,
+          "max_sec": 1.3364478945732117e-06
+        },
+        "hook.backward_end": {
+          "count": 207,
+          "total_sec": 0.00023357383906841278,
+          "avg_sec": 1.1283760341469216e-06,
+          "max_sec": 4.227273166179657e-06
+        },
+        "hook.update_begin": {
+          "count": 207,
+          "total_sec": 0.00012318789958953857,
+          "avg_sec": 5.951106260364182e-07,
+          "max_sec": 3.3583492040634155e-06
+        },
+        "hook.update_end": {
+          "count": 207,
+          "total_sec": 0.00018035061657428741,
+          "avg_sec": 8.71259017267089e-07,
+          "max_sec": 3.2633543014526367e-06
+        },
+        "hook.save_checkpoint": {
+          "count": 4,
+          "total_sec": 196.7382040321827,
+          "avg_sec": 49.18455100804567,
+          "max_sec": 56.975259128026664
+        },
+        "hook.wait_for_pending_persistence": {
+          "count": 1,
+          "total_sec": 44.542755806818604,
+          "avg_sec": 44.542755806818604,
+          "max_sec": 44.542755806818604
+        }
+      },
+      "raw_foreground_summary": {
+        "raw_foreground_forward": {
+          "count": 207,
+          "total_sec": 21.684046027250588,
+          "avg_sec": 0.10475384554227338,
+          "max_sec": 0.4856071760877967
+        },
+        "raw_foreground_backward": {
+          "count": 207,
+          "total_sec": 40.928890789859,
+          "avg_sec": 0.19772411009593718,
+          "max_sec": 0.49063323251903057
+        },
+        "raw_foreground_update": {
+          "count": 207,
+          "total_sec": 16.346796271391213,
+          "avg_sec": 0.07897003029657591,
+          "max_sec": 0.17930534668266773
+        }
+      },
+      "transfer_timing_summary": {
+        "mo_foreground_avg_sec": 28.53721104422584,
+        "mo_full_avg_sec": 28.53721104422584,
+        "mo_foreground_total_sec": 114.14884417690337,
+        "mo_full_total_sec": 114.14884417690337,
+        "mo_count": 4,
+        "gradient_foreground_avg_sec": null,
+        "gradient_full_avg_sec": null,
+        "gradient_foreground_total_sec": 0.0,
+        "gradient_full_total_sec": 0.0,
+        "gradient_count": 0
+      },
+      "checkpoint_results": [
+        {
+          "step": 50,
+          "tag": "async_step_50",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/async/async/async_step_50.pt",
+          "transfer_duration_sec": 28.84318921342492,
+          "persistence_duration_sec": 46.21153282281011,
+          "total_duration_sec": 75.05472203623503
+        },
+        {
+          "step": 100,
+          "tag": "async_step_100",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/async/async/async_step_100.pt",
+          "transfer_duration_sec": 28.780570726841688,
+          "persistence_duration_sec": 43.962733728811145,
+          "total_duration_sec": 72.74330445565283
+        },
+        {
+          "step": 150,
+          "tag": "async_step_150",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/async/async/async_step_150.pt",
+          "transfer_duration_sec": 28.27463520038873,
+          "persistence_duration_sec": 44.503658628091216,
+          "total_duration_sec": 72.77829382847995
+        },
+        {
+          "step": 200,
+          "tag": "async_step_200",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/async/async/async_step_200.pt",
+          "transfer_duration_sec": 28.25044903624803,
+          "persistence_duration_sec": 46.0891586355865,
+          "total_duration_sec": 74.33960767183453
+        }
+      ],
+      "ringbuffer_pressure_samples": [],
+      "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/async/host_memory_samples.json",
+      "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/async/host_memory_samples.jsonl",
+      "host_memory_sample_count": 784,
+      "host_memory_peak_process_tree_rss_gb": 50.25787353515625,
+      "host_memory_peak_system_used_gb": 127.5527229309082,
+      "host_memory_min_system_available_gb": 1887.9913787841797,
+      "host_memory_peak_cgroup_current_gb": 255.96560668945312,
+      "host_memory_cgroup_limit_gb": null,
+      "host_memory_cgroup_oom_events_delta": 0,
+      "host_memory_cgroup_oom_kill_events_delta": 0,
+      "host_memory_sampling_error": null,
+      "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/async/power_samples.json",
+      "power_sample_count": 747,
+      "power_avg_w": 143.37637215528767,
+      "power_peak_w": 385.0,
+      "power_energy_j": 56103.17041862486,
+      "power_sampling_error": null,
+      "error": null
+    },
+    {
+      "hook_type": "async_o",
+      "output_dir": "/tmp/zsheng1/qwen3-8b-h200-run-3/async_o",
+      "command": [
+        "/hpc/home/zsheng1/miniconda3/envs/checkpoint/bin/python",
+        "/hpc/home/zsheng1/checkpoint/finetune.py",
+        "--model",
+        "Qwen3-8B",
+        "--hook-type",
+        "async_o",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "207",
+        "--save-steps",
+        "50",
+        "--overlap-steps",
+        "7",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/async_o",
+        "--profile-phases",
+        "--gockpt-inflight-packets",
+        "64",
+        "--gockpt-transfer-chunk-mb",
+        "64.0",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 307.4799342053011,
+      "train_runtime_sec": 197.03926761820912,
+      "train_steps_per_sec": 1.0505520168755964,
+      "checkpoint_count": 4,
+      "checkpoint_files": [
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/async_o/async_o/async_o_step_50.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/async_o/async_o/async_o_step_100.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/async_o/async_o/async_o_step_150.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/async_o/async_o/async_o_step_200.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 207,
+          "total_sec": 0.0002571363002061844,
+          "avg_sec": 1.2422043488221467e-06,
+          "max_sec": 4.5765191316604614e-06
+        },
+        "hook.forward_end": {
+          "count": 207,
+          "total_sec": 0.00024067051708698273,
+          "avg_sec": 1.1626595028356653e-06,
+          "max_sec": 4.148110747337341e-06
+        },
+        "hook.backward_begin": {
+          "count": 207,
+          "total_sec": 0.0001035984605550766,
+          "avg_sec": 5.004756548554425e-07,
+          "max_sec": 1.6670674085617065e-06
+        },
+        "hook.backward_end": {
+          "count": 207,
+          "total_sec": 0.0003895917907357216,
+          "avg_sec": 1.882085945583196e-06,
+          "max_sec": 2.627633512020111e-05
+        },
+        "hook.update_begin": {
+          "count": 207,
+          "total_sec": 0.00013137701898813248,
+          "avg_sec": 6.346715893146497e-07,
+          "max_sec": 1.932494342327118e-06
+        },
+        "hook.update_end": {
+          "count": 207,
+          "total_sec": 0.000184597447514534,
+          "avg_sec": 8.917751087658647e-07,
+          "max_sec": 3.7439167499542236e-06
+        },
+        "hook.save_checkpoint": {
+          "count": 4,
+          "total_sec": 105.61048245429993,
+          "avg_sec": 26.40262061357498,
+          "max_sec": 30.64689800515771
+        },
+        "hook.wait_for_pending_persistence": {
+          "count": 1,
+          "total_sec": 39.71598626021296,
+          "avg_sec": 39.71598626021296,
+          "max_sec": 39.71598626021296
+        }
+      },
+      "raw_foreground_summary": {
+        "raw_foreground_forward": {
+          "count": 207,
+          "total_sec": 24.79390721116215,
+          "avg_sec": 0.11977732952252246,
+          "max_sec": 0.9061155039817095
+        },
+        "raw_foreground_backward": {
+          "count": 207,
+          "total_sec": 43.8943049069494,
+          "avg_sec": 0.21204978215917586,
+          "max_sec": 0.4990166528150439
+        },
+        "raw_foreground_update": {
+          "count": 207,
+          "total_sec": 16.391659968532622,
+          "avg_sec": 0.07918676313300783,
+          "max_sec": 0.17679564096033573
+        }
+      },
+      "transfer_timing_summary": {
+        "mo_foreground_avg_sec": 6.598919263109565,
+        "mo_full_avg_sec": 7.416104678763077,
+        "mo_foreground_total_sec": 26.39567705243826,
+        "mo_full_total_sec": 29.664418715052307,
+        "mo_count": 4,
+        "gradient_foreground_avg_sec": null,
+        "gradient_full_avg_sec": null,
+        "gradient_foreground_total_sec": 0.0,
+        "gradient_full_total_sec": 0.0,
+        "gradient_count": 0
+      },
+      "checkpoint_results": [
+        {
+          "step": 50,
+          "tag": "async_o_step_50",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/async_o/async_o/async_o_step_50.pt",
+          "transfer_duration_sec": 25.985219274647534,
+          "transfer_sync_duration_sec": 1.0060146450996399e-05,
+          "transfer_full_duration_sec": 26.284574776887894,
+          "transfer_enqueue_started_at": 4612726.68096187,
+          "persistence_duration_sec": 54.54200812894851,
+          "total_duration_sec": 80.52722740359604
+        },
+        {
+          "step": 100,
+          "tag": "async_o_step_100",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/async_o/async_o/async_o_step_100.pt",
+          "transfer_duration_sec": 0.13675427343696356,
+          "transfer_sync_duration_sec": 1.0928139090538025e-05,
+          "transfer_full_duration_sec": 1.0701184831559658,
+          "transfer_enqueue_started_at": 4612807.237433152,
+          "persistence_duration_sec": 46.2662199344486,
+          "total_duration_sec": 46.40297420788556
+        },
+        {
+          "step": 150,
+          "tag": "async_o_step_150",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/async_o/async_o/async_o_step_150.pt",
+          "transfer_duration_sec": 0.13681543804705143,
+          "transfer_sync_duration_sec": 1.0875053703784943e-05,
+          "transfer_full_duration_sec": 1.2324841460213065,
+          "transfer_enqueue_started_at": 4612854.402462927,
+          "persistence_duration_sec": 40.814532388933,
+          "total_duration_sec": 40.951347826980054
+        },
+        {
+          "step": 200,
+          "tag": "async_o_step_200",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/async_o/async_o/async_o_step_200.pt",
+          "transfer_duration_sec": 0.1368442066013813,
+          "transfer_sync_duration_sec": 1.1996366083621979e-05,
+          "transfer_full_duration_sec": 1.0772413089871407,
+          "transfer_enqueue_started_at": 4612896.121973912,
+          "persistence_duration_sec": 42.975495939143,
+          "total_duration_sec": 43.11234014574438
+        }
+      ],
+      "ringbuffer_pressure_samples": [],
+      "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/async_o/host_memory_samples.json",
+      "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/async_o/host_memory_samples.jsonl",
+      "host_memory_sample_count": 617,
+      "host_memory_peak_process_tree_rss_gb": 63.27878189086914,
+      "host_memory_peak_system_used_gb": 133.50268936157227,
+      "host_memory_min_system_available_gb": 1882.0414123535156,
+      "host_memory_peak_cgroup_current_gb": 255.96521759033203,
+      "host_memory_cgroup_limit_gb": null,
+      "host_memory_cgroup_oom_events_delta": 0,
+      "host_memory_cgroup_oom_kill_events_delta": 0,
+      "host_memory_sampling_error": null,
+      "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/async_o/power_samples.json",
+      "power_sample_count": 579,
+      "power_avg_w": 151.69291882556132,
+      "power_peak_w": 384.15,
+      "power_energy_j": 46548.89807041602,
+      "power_sampling_error": null,
+      "error": null
+    },
+    {
+      "hook_type": "gockpt",
+      "output_dir": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt",
+      "command": [
+        "/hpc/home/zsheng1/miniconda3/envs/checkpoint/bin/python",
+        "/hpc/home/zsheng1/checkpoint/finetune.py",
+        "--model",
+        "Qwen3-8B",
+        "--hook-type",
+        "gockpt",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "207",
+        "--save-steps",
+        "50",
+        "--overlap-steps",
+        "7",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt",
+        "--profile-phases",
+        "--gockpt-inflight-packets",
+        "64",
+        "--gockpt-transfer-chunk-mb",
+        "64.0",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 334.2894446514547,
+      "train_runtime_sec": 178.68364841863513,
+      "train_steps_per_sec": 1.1584719801278232,
+      "checkpoint_count": 4,
+      "checkpoint_files": [
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt/gockpt/gockpt_step_57.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt/gockpt/gockpt_step_107.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt/gockpt/gockpt_step_157.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt/gockpt/gockpt_step_207.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 207,
+          "total_sec": 0.45958914048969746,
+          "avg_sec": 0.002220237393670036,
+          "max_sec": 0.13598954025655985
+        },
+        "hook.forward_end": {
+          "count": 207,
+          "total_sec": 0.0003287140280008316,
+          "avg_sec": 1.587990473433969e-06,
+          "max_sec": 7.102265954017639e-06
+        },
+        "hook.backward_begin": {
+          "count": 207,
+          "total_sec": 0.00014664698392152786,
+          "avg_sec": 7.084395358527916e-07,
+          "max_sec": 2.582557499408722e-06
+        },
+        "hook.backward_end": {
+          "count": 207,
+          "total_sec": 0.025208143517374992,
+          "avg_sec": 0.00012177847109842992,
+          "max_sec": 0.003157355822622776
+        },
+        "hook.update_begin": {
+          "count": 207,
+          "total_sec": 36.2286464702338,
+          "avg_sec": 0.1750176157982309,
+          "max_sec": 4.6184086706489325
+        },
+        "hook.update_end": {
+          "count": 207,
+          "total_sec": 0.5711664762347937,
+          "avg_sec": 0.00275925833929852,
+          "max_sec": 0.19957343395799398
+        },
+        "hook.save_checkpoint": {
+          "count": 4,
+          "total_sec": 0.002936813049018383,
+          "avg_sec": 0.0007342032622545958,
+          "max_sec": 0.0007493495941162109
+        },
+        "hook.wait_for_pending_persistence": {
+          "count": 1,
+          "total_sec": 96.84668309800327,
+          "avg_sec": 96.84668309800327,
+          "max_sec": 96.84668309800327
+        }
+      },
+      "raw_foreground_summary": {
+        "raw_foreground_forward": {
+          "count": 207,
+          "total_sec": 61.27459790278226,
+          "avg_sec": 0.2960125502549868,
+          "max_sec": 3.575493276119232
+        },
+        "raw_foreground_backward": {
+          "count": 207,
+          "total_sec": 56.57544656097889,
+          "avg_sec": 0.27331133604337626,
+          "max_sec": 2.624979997985065
+        },
+        "raw_foreground_update": {
+          "count": 207,
+          "total_sec": 16.58329855836928,
+          "avg_sec": 0.08011255342207381,
+          "max_sec": 0.1987315285950899
+        }
+      },
+      "transfer_timing_summary": {
+        "mo_foreground_avg_sec": 1.1171442192114358,
+        "mo_full_avg_sec": 1.1171442192114358,
+        "mo_foreground_total_sec": 31.2800381379202,
+        "mo_full_total_sec": 31.2800381379202,
+        "mo_count": 28,
+        "gradient_foreground_avg_sec": 1.2981855196745269,
+        "gradient_full_avg_sec": 1.3905562107517784,
+        "gradient_foreground_total_sec": 36.34919455088675,
+        "gradient_full_total_sec": 38.93557390104979,
+        "gradient_count": 28
+      },
+      "checkpoint_results": [
+        {
+          "start_step": 50,
+          "target_step": 57,
+          "tag": "gockpt_step_57",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt/gockpt/gockpt_step_57.pt",
+          "transfer_duration_sec": 16.877290016040206,
+          "transfer_sync_duration_sec": 7.867254316806793e-05,
+          "transfer_count": 7,
+          "gradient_duration_sec": 7.059058148413897,
+          "gradient_submit_duration_sec": 6.4944807682186365,
+          "gradient_sync_duration_sec": 8.224416524171829e-05,
+          "gradient_count": 7,
+          "reconstruction_duration_sec": 27.929095612838864,
+          "reconstruction_backpressure_sec": 0.0001562889665365219,
+          "persistence_duration_sec": 60.00900750979781,
+          "total_duration_sec": 111.87460757605731
+        },
+        {
+          "start_step": 100,
+          "target_step": 107,
+          "tag": "gockpt_step_107",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt/gockpt/gockpt_step_107.pt",
+          "transfer_duration_sec": 7.186685587279499,
+          "transfer_sync_duration_sec": 8.87848436832428e-05,
+          "transfer_count": 7,
+          "gradient_duration_sec": 12.759005055762827,
+          "gradient_submit_duration_sec": 12.161072954535484,
+          "gradient_sync_duration_sec": 0.02363948803395033,
+          "gradient_count": 7,
+          "reconstruction_duration_sec": 29.280421395786107,
+          "reconstruction_backpressure_sec": 0.00010625459253787994,
+          "persistence_duration_sec": 79.7486383561045,
+          "total_duration_sec": 128.97485664952546
+        },
+        {
+          "start_step": 150,
+          "target_step": 157,
+          "tag": "gockpt_step_157",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt/gockpt/gockpt_step_157.pt",
+          "transfer_duration_sec": 2.921364934183657,
+          "transfer_sync_duration_sec": 0.0001185862347483635,
+          "transfer_count": 7,
+          "gradient_duration_sec": 5.521054780110717,
+          "gradient_submit_duration_sec": 4.660990646108985,
+          "gradient_sync_duration_sec": 0.05334654450416565,
+          "gradient_count": 7,
+          "reconstruction_duration_sec": 20.546955358237028,
+          "reconstruction_backpressure_sec": 0.0001815594732761383,
+          "persistence_duration_sec": 88.21409698203206,
+          "total_duration_sec": 117.20365361403674
+        },
+        {
+          "start_step": 200,
+          "target_step": 207,
+          "tag": "gockpt_step_207",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt/gockpt/gockpt_step_207.pt",
+          "transfer_duration_sec": 4.294344344176352,
+          "transfer_sync_duration_sec": 6.721261888742447e-05,
+          "transfer_count": 7,
+          "gradient_duration_sec": 13.596455916762352,
+          "gradient_submit_duration_sec": 12.903436296619475,
+          "gradient_sync_duration_sec": 0.05214560870081186,
+          "gradient_count": 7,
+          "reconstruction_duration_sec": 32.71514071710408,
+          "reconstruction_backpressure_sec": 0.00012193992733955383,
+          "persistence_duration_sec": 82.43435968738049,
+          "total_duration_sec": 133.0404226053506
+        }
+      ],
+      "ringbuffer_pressure_samples": [
+        {
+          "time_sec": 9.41101461648941e-06,
+          "event": "training_start",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 22.78161322325468,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 27.776385728269815,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 29.1742673991248,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 30.88530076481402,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 30.88532424904406,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 31.534947149455547,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 32.89432086609304,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 33.03330738097429,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 33.03332890756428,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 33.03333423566073,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 33.943735799752176,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 34.02531467657536,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 35.11325371451676,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 35.541042883880436,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 35.54106662981212,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 35.541073142550886,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 35.54107722453773,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 36.71350129973143,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 36.789316094480455,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 36.96487705223262,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 37.799952554516494,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 38.44350439310074,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 38.44352668616921,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 38.44353230018169,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 38.443536549806595,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 38.44354063458741,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 40.72449588123709,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 42.06434358470142,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 42.20648813806474,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 42.354778287000954,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 43.36411849129945,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 43.84609837643802,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 43.8461203770712,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 43.84612668212503,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 43.84613120928407,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 43.8461355464533,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 43.84613973926753,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 46.68419701512903,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 47.36550952959806,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 47.50879217404872,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 47.79989965073764,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 47.99777872860432,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 49.39433472324163,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 49.394449416548014,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 49.39446334447712,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 49.39447215665132,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 49.3944822140038,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 49.394492571242154,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 49.39821888040751,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 50.32754158321768,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 53.909982978366315,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 54.08791703917086,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 54.269782239571214,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 54.4323295596987,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 54.58747818134725,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 54.916851276531816,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 55.70523092709482,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 55.7070949645713,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 70.79918137937784,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 71.16040754318237,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 71.75455709174275,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 71.7547209020704,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 73.74540080316365,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 73.83178704697639,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 73.83180984761566,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 73.83201084565371,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 75.37035615369678,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 76.51277888659388,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 77.71806001663208,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 79.05100120510906,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 79.15416762325913,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 79.1541895614937,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 79.15419446956366,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 79.15419903770089,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 80.91857346147299,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 81.19056552648544,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 82.48907767888159,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 83.55430679675192,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 83.55433075595647,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 83.55433596950024,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 83.55434073228389,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 83.56155901681632,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 83.56164119951427,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 85.94514914322644,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 86.34266064874828,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 86.46292377170175,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 87.42261549923569,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 88.57547230552882,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 88.65690603479743,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 88.65692827105522,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 88.65693433769047,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 88.65693881735206,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 88.6569453170523,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 88.65695048868656,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 91.89297600928694,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 92.5308878114447,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 93.44406271073967,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 93.61100984178483,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 93.7831544149667,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 93.89971291087568,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 93.89974399004132,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 93.89975234959275,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 93.89976027607918,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 93.89976742304862,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 93.89977363310754,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 93.8997900551185,
+          "event": "enqueue",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 96.38000647258013,
+          "event": "complete",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 96.949722786434,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 97.84391429275274,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 97.9904064098373,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 98.13928315695375,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 98.4707459229976,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 99.60250203404576,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 99.98384366370738,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 100.44072614703327,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 100.44236192759126,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 120.40814705565572,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 120.9425602722913,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 121.3882459430024,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 121.3884569555521,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 122.07519997749478,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 122.68874363321811,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 122.6887671938166,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 122.70368513930589,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 122.95549897477031,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 123.34000488556921,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 123.34009526856244,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 123.41252207569778,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 123.52605461888015,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 123.53395749535412,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 124.23339193873107,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 124.5813720813021,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 125.12293049599975,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 125.68110058177263,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 126.0995496371761,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 126.3456666842103,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 126.34569417033345,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 126.34570089261979,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 126.34570673760027,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 126.34571240004152,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 127.02040192484856,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 127.61377672012895,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 127.91824549622834,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 128.324618332088,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 129.30289059411734,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 129.53249276336282,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 129.53254938311875,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 129.53256033174694,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 129.5325735816732,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 129.53258202038705,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 129.53259102161974,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 131.07234526239336,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 131.8954899571836,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 132.9151376662776,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 133.0443919710815,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 133.33920030016452,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 133.5150105273351,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 133.51505470834672,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 133.51506833918393,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 133.5150773525238,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 133.51508923154324,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 133.51510490104556,
+          "event": "enqueue",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 133.51512844208628,
+          "event": "enqueue",
+          "inflight": 10,
+          "capacity": 64,
+          "pressure": 0.15625,
+          "pressure_percent": 15.625
+        },
+        {
+          "time_sec": 135.75998079869896,
+          "event": "complete",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 137.42408476117998,
+          "event": "complete",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 137.80721011105925,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 138.07878249138594,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 138.20754778850824,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 138.74981701932847,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 140.28290694300085,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 140.65008462499827,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 140.9917328413576,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 141.48926707729697,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 141.4909467305988,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 157.28628444019705,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 157.65439527016133,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 157.96110129822046,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 157.9644758719951,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 158.8474635714665,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 158.84957014396787,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 158.85256605315953,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 160.77592296525836,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 161.85308992117643,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 162.69868579041213,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 162.6987151419744,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 162.6987228738144,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 162.76222862768918,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 162.8927979171276,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 163.83457977045327,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 166.07698498200625,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 167.31067993864417,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 168.18487531598657,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 168.1849148236215,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 168.1849251491949,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 168.1849326118827,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 168.18494153115898,
+          "event": "enqueue",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 168.651328234002,
+          "event": "complete",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 169.39838150516152,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 169.91513223201036,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 171.9244175767526,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 173.08247387316078,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 173.44228189252317,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 173.4423179635778,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 173.4423269079998,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 173.44233261886984,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 173.44233898166567,
+          "event": "enqueue",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 173.4423447921872,
+          "event": "enqueue",
+          "inflight": 10,
+          "capacity": 64,
+          "pressure": 0.15625,
+          "pressure_percent": 15.625
+        },
+        {
+          "time_sec": 174.602530724369,
+          "event": "complete",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 176.31623199302703,
+          "event": "complete",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 176.45095174759626,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 176.8114963248372,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 178.20306808687747,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 178.3265738254413,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 178.32660400215536,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 178.32661660201848,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 178.32662411872298,
+          "event": "enqueue",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 178.3266315208748,
+          "event": "enqueue",
+          "inflight": 10,
+          "capacity": 64,
+          "pressure": 0.15625,
+          "pressure_percent": 15.625
+        },
+        {
+          "time_sec": 178.32664035633206,
+          "event": "enqueue",
+          "inflight": 11,
+          "capacity": 64,
+          "pressure": 0.171875,
+          "pressure_percent": 17.1875
+        },
+        {
+          "time_sec": 178.3266556877643,
+          "event": "enqueue",
+          "inflight": 12,
+          "capacity": 64,
+          "pressure": 0.1875,
+          "pressure_percent": 18.75
+        },
+        {
+          "time_sec": 180.36662637256086,
+          "event": "complete",
+          "inflight": 11,
+          "capacity": 64,
+          "pressure": 0.171875,
+          "pressure_percent": 17.1875
+        },
+        {
+          "time_sec": 184.75910209305584,
+          "event": "complete",
+          "inflight": 10,
+          "capacity": 64,
+          "pressure": 0.15625,
+          "pressure_percent": 15.625
+        },
+        {
+          "time_sec": 184.92611209582537,
+          "event": "complete",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 186.39049015007913,
+          "event": "complete",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 186.5588638521731,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 187.16313656419516,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 187.7578107714653,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 188.41609296016395,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 188.96548086963594,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 189.6565536344424,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 190.05769704654813,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 190.36935102380812,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 190.3711995240301,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        }
+      ],
+      "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt/host_memory_samples.json",
+      "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt/host_memory_samples.jsonl",
+      "host_memory_sample_count": 670,
+      "host_memory_peak_process_tree_rss_gb": 193.65087890625,
+      "host_memory_peak_system_used_gb": 261.75716400146484,
+      "host_memory_min_system_available_gb": 1753.786937713623,
+      "host_memory_peak_cgroup_current_gb": 255.9658317565918,
+      "host_memory_cgroup_limit_gb": null,
+      "host_memory_cgroup_oom_events_delta": 0,
+      "host_memory_cgroup_oom_kill_events_delta": 0,
+      "host_memory_sampling_error": null,
+      "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt/power_samples.json",
+      "power_sample_count": 625,
+      "power_avg_w": 150.7655679999999,
+      "power_peak_w": 328.74,
+      "power_energy_j": 50230.88282990544,
+      "power_sampling_error": null,
+      "error": null
+    },
+    {
+      "hook_type": "gockpt_o",
+      "output_dir": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt_o",
+      "command": [
+        "/hpc/home/zsheng1/miniconda3/envs/checkpoint/bin/python",
+        "/hpc/home/zsheng1/checkpoint/finetune.py",
+        "--model",
+        "Qwen3-8B",
+        "--hook-type",
+        "gockpt_o",
+        "--seq-len",
+        "512",
+        "--batch-size",
+        "1",
+        "--max-steps",
+        "207",
+        "--save-steps",
+        "50",
+        "--overlap-steps",
+        "7",
+        "--learning-rate",
+        "2e-05",
+        "--weight-decay",
+        "0.01",
+        "--warmup-ratio",
+        "0.03",
+        "--logging-steps",
+        "10",
+        "--seed",
+        "42",
+        "--output-dir",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt_o",
+        "--profile-phases",
+        "--gockpt-inflight-packets",
+        "64",
+        "--gockpt-transfer-chunk-mb",
+        "64.0",
+        "--gradient-checkpointing",
+        "--skip-final-model-save"
+      ],
+      "returncode": 0,
+      "wall_time_sec": 332.5581182036549,
+      "train_runtime_sec": 170.15556023456156,
+      "train_steps_per_sec": 1.2165338571049216,
+      "checkpoint_count": 4,
+      "checkpoint_files": [
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt_o/gockpt_o/gockpt_o_step_57.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt_o/gockpt_o/gockpt_o_step_107.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt_o/gockpt_o/gockpt_o_step_157.pt",
+        "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt_o/gockpt_o/gockpt_o_step_207.pt"
+      ],
+      "phase_summary": {
+        "hook.forward_begin": {
+          "count": 207,
+          "total_sec": 0.22853294014930725,
+          "avg_sec": 0.0011040238654555906,
+          "max_sec": 0.1078400444239378
+        },
+        "hook.forward_end": {
+          "count": 207,
+          "total_sec": 0.0004308801144361496,
+          "avg_sec": 2.0815464465514473e-06,
+          "max_sec": 6.527639925479889e-06
+        },
+        "hook.backward_begin": {
+          "count": 207,
+          "total_sec": 0.2450178498402238,
+          "avg_sec": 0.0011836611103392453,
+          "max_sec": 0.14206505194306374
+        },
+        "hook.backward_end": {
+          "count": 207,
+          "total_sec": 0.031802509911358356,
+          "avg_sec": 0.00015363531358144133,
+          "max_sec": 0.005488315597176552
+        },
+        "hook.update_begin": {
+          "count": 207,
+          "total_sec": 32.7138611106202,
+          "avg_sec": 0.15803797637980774,
+          "max_sec": 3.6783810732886195
+        },
+        "hook.update_end": {
+          "count": 207,
+          "total_sec": 3.430766844190657,
+          "avg_sec": 0.016573752870486267,
+          "max_sec": 2.9309194814413786
+        },
+        "hook.save_checkpoint": {
+          "count": 4,
+          "total_sec": 0.003752675838768482,
+          "avg_sec": 0.0009381689596921206,
+          "max_sec": 0.001391872763633728
+        },
+        "hook.wait_for_pending_persistence": {
+          "count": 1,
+          "total_sec": 92.95694910082966,
+          "avg_sec": 92.95694910082966,
+          "max_sec": 92.95694910082966
+        }
+      },
+      "raw_foreground_summary": {
+        "raw_foreground_forward": {
+          "count": 207,
+          "total_sec": 58.41150486283004,
+          "avg_sec": 0.28218118291222244,
+          "max_sec": 3.6001671124249697
+        },
+        "raw_foreground_backward": {
+          "count": 207,
+          "total_sec": 52.207175833173096,
+          "avg_sec": 0.25220857890421783,
+          "max_sec": 2.306361483410001
+        },
+        "raw_foreground_update": {
+          "count": 207,
+          "total_sec": 16.51380454096943,
+          "avg_sec": 0.0797768335312533,
+          "max_sec": 0.18342204671353102
+        }
+      },
+      "transfer_timing_summary": {
+        "mo_foreground_avg_sec": 1.0549515214349543,
+        "mo_full_avg_sec": 1.0549515214349543,
+        "mo_foreground_total_sec": 29.53864260017872,
+        "mo_full_total_sec": 29.53864260017872,
+        "mo_count": 28,
+        "gradient_foreground_avg_sec": 1.1693357475035424,
+        "gradient_full_avg_sec": 1.3549433987188553,
+        "gradient_foreground_total_sec": 32.74140093009919,
+        "gradient_full_total_sec": 37.938415164127946,
+        "gradient_count": 28
+      },
+      "checkpoint_results": [
+        {
+          "start_step": 50,
+          "target_step": 57,
+          "tag": "gockpt_o_step_57",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt_o/gockpt_o/gockpt_o_step_57.pt",
+          "transfer_duration_sec": 13.781935022212565,
+          "transfer_sync_duration_sec": 8.290261030197144e-05,
+          "transfer_count": 7,
+          "gradient_duration_sec": 7.273634584620595,
+          "gradient_submit_duration_sec": 6.710885438136756,
+          "gradient_sync_duration_sec": 4.55956906080246e-05,
+          "gradient_count": 7,
+          "reconstruction_duration_sec": 22.59073901269585,
+          "reconstruction_backpressure_sec": 0.00015925616025924683,
+          "persistence_duration_sec": 54.28469665814191,
+          "total_duration_sec": 97.93116453383118
+        },
+        {
+          "start_step": 100,
+          "target_step": 107,
+          "tag": "gockpt_o_step_107",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt_o/gockpt_o/gockpt_o_step_107.pt",
+          "transfer_duration_sec": 7.942951058968902,
+          "transfer_sync_duration_sec": 6.381701678037643e-05,
+          "transfer_count": 7,
+          "gradient_duration_sec": 11.777725470252335,
+          "gradient_submit_duration_sec": 10.526309615001082,
+          "gradient_sync_duration_sec": 4.610326141119003e-05,
+          "gradient_count": 7,
+          "reconstruction_duration_sec": 28.64968561939895,
+          "reconstruction_backpressure_sec": 0.0001442069187760353,
+          "persistence_duration_sec": 73.63347194250673,
+          "total_duration_sec": 122.0039782980457
+        },
+        {
+          "start_step": 150,
+          "target_step": 157,
+          "tag": "gockpt_o_step_157",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt_o/gockpt_o/gockpt_o_step_157.pt",
+          "transfer_duration_sec": 3.3530691890046,
+          "transfer_sync_duration_sec": 9.760074317455292e-05,
+          "transfer_count": 7,
+          "gradient_duration_sec": 7.146398345939815,
+          "gradient_submit_duration_sec": 5.060594971291721,
+          "gradient_sync_duration_sec": 0.041200014762580395,
+          "gradient_count": 7,
+          "reconstruction_duration_sec": 19.936653309501708,
+          "reconstruction_backpressure_sec": 0.00016366411000490189,
+          "persistence_duration_sec": 76.68480646796525,
+          "total_duration_sec": 107.12109097652137
+        },
+        {
+          "start_step": 200,
+          "target_step": 207,
+          "tag": "gockpt_o_step_207",
+          "path": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt_o/gockpt_o/gockpt_o_step_207.pt",
+          "transfer_duration_sec": 4.4603613102808595,
+          "transfer_sync_duration_sec": 8.169934153556824e-05,
+          "transfer_count": 7,
+          "gradient_duration_sec": 11.7406567633152,
+          "gradient_submit_duration_sec": 10.40226367302239,
+          "gradient_sync_duration_sec": 5.551893264055252e-05,
+          "gradient_count": 7,
+          "reconstruction_duration_sec": 28.392203012481332,
+          "reconstruction_backpressure_sec": 0.00014183204621076584,
+          "persistence_duration_sec": 83.90500464383513,
+          "total_duration_sec": 128.49836756195873
+        }
+      ],
+      "ringbuffer_pressure_samples": [
+        {
+          "time_sec": 9.863637387752533e-06,
+          "event": "training_start",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 20.9068311015144,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 25.907069926150143,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 27.500112935900688,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 29.139928323216736,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 29.13995357044041,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 29.880647922866046,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 31.28164723701775,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 31.462334961630404,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 31.462357135489583,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 31.46236287150532,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 32.51156058162451,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 32.62800077255815,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 33.83138858526945,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 34.257639549672604,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 34.25766342598945,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 34.257669895887375,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 34.25767440441996,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 35.27508570253849,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 35.715668137185276,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 35.83466727472842,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 36.799327693879604,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 37.448867096565664,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 37.448890584520996,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 37.448896209709346,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 37.44890035595745,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 37.44890428520739,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 38.982078513130546,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 39.27791325841099,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 39.391570057719946,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 39.501169204711914,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 40.421691277995706,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 41.06792826857418,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 41.06795366387814,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 41.06796030327678,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 41.067965460941195,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 41.06797046586871,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 41.067975064739585,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 42.709273133426905,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 43.481707262806594,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 43.4817723557353,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 43.60507513862103,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 43.711389052681625,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 44.85391084942967,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 44.85402081999928,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 44.85403362289071,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 44.85404911544174,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 44.854063977487385,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 44.85407988820225,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 44.85686204675585,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 45.74151711445302,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 47.41223513986915,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 47.61031283996999,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 47.69924488849938,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 47.78532094601542,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 47.87109245918691,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 48.17867707554251,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 48.49769384134561,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 48.505813361145556,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 64.17258832231164,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 64.5293240621686,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 65.5555844688788,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 65.55575521755964,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 67.29227825719863,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 67.36354979593307,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 67.36361042317003,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 67.3639619871974,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 68.79310485441238,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 70.19347009342164,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 71.41043873783201,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 72.75327733065933,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 72.88045630604029,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 72.88049734383821,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 72.88051030039787,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 72.88052014447749,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 74.8839062359184,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 75.00617764052004,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 76.5568186333403,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 76.96597503125668,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 76.96601931843907,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 76.96602799277753,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 76.96603456605226,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 76.9660436604172,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 78.60624707303941,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 79.98369039501995,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 80.247828502208,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 80.54456321243197,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 82.0897149387747,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 82.29260690230876,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 82.29264168348163,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 82.29265113268048,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 82.29265827313066,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 82.29266384150833,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 82.29267035517842,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 84.64945512637496,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 85.46866808645427,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 85.6079676495865,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 85.83744013961405,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 86.09203323535621,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 86.35151869058609,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 86.35158531367779,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 86.35159639455378,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 86.35160778556019,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 86.35161989182234,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 86.35163237992674,
+          "event": "enqueue",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 86.35166543815285,
+          "event": "enqueue",
+          "inflight": 10,
+          "capacity": 64,
+          "pressure": 0.15625,
+          "pressure_percent": 15.625
+        },
+        {
+          "time_sec": 88.98379279766232,
+          "event": "complete",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 89.66955021955073,
+          "event": "complete",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 89.83206640463322,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 90.01009405590594,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 90.94699102267623,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 91.51755150593817,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 91.92207335680723,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 92.41118121612817,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 92.68501410353929,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 93.1788815241307,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 93.18077631574124,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 113.41577310860157,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 114.1360313212499,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 115.29283110518008,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 115.37958465050906,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 115.37982756085694,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 115.96175649762154,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 115.96178552974015,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 116.1029993398115,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 116.31043786089867,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 116.69892251398414,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 116.69897601287812,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 116.70165611989796,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 116.70191411674023,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 117.43246420100331,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 117.55225859303027,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 118.52337652258575,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 118.76001282501966,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 119.75989026669413,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 119.98913889378309,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 120.12565333489329,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 120.12569087464362,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 120.1257008118555,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 120.125708588399,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 120.12571847625077,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 122.39167227037251,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 122.75353920273483,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 123.2313801664859,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 123.67210206668824,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 123.90281358454376,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 124.66987655032426,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 124.6699089333415,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 124.6699151089415,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 124.66992020700127,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 124.66992384847254,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 124.66992779448628,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 126.0935284672305,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 127.6289152558893,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 128.3946319660172,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 128.6814050776884,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 128.80304169096053,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 128.92650015372783,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 129.08336116187274,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 129.08339645713568,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 129.08340497594327,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 129.0834125643596,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 129.08341941982508,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 129.08342714700848,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 129.0834337277338,
+          "event": "enqueue",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 130.31389949657023,
+          "event": "complete",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 130.71538097038865,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 131.58781912270933,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 131.85450410936028,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 131.9851270923391,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 132.22573569137603,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 133.32020472548902,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 133.664625832811,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 134.07257039751858,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 134.07421593833715,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 147.80818447470665,
+          "event": "queue_start",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 148.16546826343983,
+          "event": "enqueue",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 148.86279255058616,
+          "event": "enqueue",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 148.86356099043041,
+          "event": "enqueue",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 149.58823041431606,
+          "event": "enqueue",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 149.59131952095777,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 149.59144752379507,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 151.2331075584516,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 152.4700229326263,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 152.5691370908171,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 152.56916754227132,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 152.56917344592512,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 152.57012469600886,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 153.73732989653945,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 154.67999765835702,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 155.9158468330279,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 157.06514495331794,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 157.39610866829753,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 157.39615532569587,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 157.3961652070284,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 157.3961753062904,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 157.39618822652847,
+          "event": "enqueue",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 158.54722532164305,
+          "event": "complete",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 158.7705984255299,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 159.4415153870359,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 160.84775611571968,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 161.86931524146348,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 162.57112789992243,
+          "event": "enqueue",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 162.57116320822388,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 162.57117158453912,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 162.57117776479572,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 162.5711841424927,
+          "event": "enqueue",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 162.5711900377646,
+          "event": "enqueue",
+          "inflight": 10,
+          "capacity": 64,
+          "pressure": 0.15625,
+          "pressure_percent": 15.625
+        },
+        {
+          "time_sec": 162.93211097456515,
+          "event": "complete",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 164.93269032426178,
+          "event": "complete",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 165.06205897033215,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 165.3670332012698,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 166.40717007685453,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 166.85430535580963,
+          "event": "enqueue",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 166.85433569177985,
+          "event": "enqueue",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 166.85434408765286,
+          "event": "enqueue",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 166.85435033682734,
+          "event": "enqueue",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 166.85435551032424,
+          "event": "enqueue",
+          "inflight": 10,
+          "capacity": 64,
+          "pressure": 0.15625,
+          "pressure_percent": 15.625
+        },
+        {
+          "time_sec": 166.85436268430203,
+          "event": "enqueue",
+          "inflight": 11,
+          "capacity": 64,
+          "pressure": 0.171875,
+          "pressure_percent": 17.1875
+        },
+        {
+          "time_sec": 166.85438080318272,
+          "event": "enqueue",
+          "inflight": 12,
+          "capacity": 64,
+          "pressure": 0.1875,
+          "pressure_percent": 18.75
+        },
+        {
+          "time_sec": 169.7847788054496,
+          "event": "complete",
+          "inflight": 11,
+          "capacity": 64,
+          "pressure": 0.171875,
+          "pressure_percent": 17.1875
+        },
+        {
+          "time_sec": 171.3742726398632,
+          "event": "complete",
+          "inflight": 10,
+          "capacity": 64,
+          "pressure": 0.15625,
+          "pressure_percent": 15.625
+        },
+        {
+          "time_sec": 171.91495167836547,
+          "event": "complete",
+          "inflight": 9,
+          "capacity": 64,
+          "pressure": 0.140625,
+          "pressure_percent": 14.0625
+        },
+        {
+          "time_sec": 172.06092987582088,
+          "event": "complete",
+          "inflight": 8,
+          "capacity": 64,
+          "pressure": 0.125,
+          "pressure_percent": 12.5
+        },
+        {
+          "time_sec": 172.20845454372466,
+          "event": "complete",
+          "inflight": 7,
+          "capacity": 64,
+          "pressure": 0.109375,
+          "pressure_percent": 10.9375
+        },
+        {
+          "time_sec": 173.54566490463912,
+          "event": "complete",
+          "inflight": 6,
+          "capacity": 64,
+          "pressure": 0.09375,
+          "pressure_percent": 9.375
+        },
+        {
+          "time_sec": 173.68559123948216,
+          "event": "complete",
+          "inflight": 5,
+          "capacity": 64,
+          "pressure": 0.078125,
+          "pressure_percent": 7.8125
+        },
+        {
+          "time_sec": 174.91486000083387,
+          "event": "complete",
+          "inflight": 4,
+          "capacity": 64,
+          "pressure": 0.0625,
+          "pressure_percent": 6.25
+        },
+        {
+          "time_sec": 175.42883856780827,
+          "event": "complete",
+          "inflight": 3,
+          "capacity": 64,
+          "pressure": 0.046875,
+          "pressure_percent": 4.6875
+        },
+        {
+          "time_sec": 175.92304321564734,
+          "event": "complete",
+          "inflight": 2,
+          "capacity": 64,
+          "pressure": 0.03125,
+          "pressure_percent": 3.125
+        },
+        {
+          "time_sec": 176.3164500016719,
+          "event": "complete",
+          "inflight": 1,
+          "capacity": 64,
+          "pressure": 0.015625,
+          "pressure_percent": 1.5625
+        },
+        {
+          "time_sec": 176.55754615552723,
+          "event": "complete",
+          "inflight": 0,
+          "capacity": 64,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        },
+        {
+          "time_sec": 176.55927869863808,
+          "event": "queue_stop",
+          "inflight": 0,
+          "capacity": 0,
+          "pressure": 0.0,
+          "pressure_percent": 0.0
+        }
+      ],
+      "host_memory_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt_o/host_memory_samples.json",
+      "host_memory_stream_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt_o/host_memory_samples.jsonl",
+      "host_memory_sample_count": 667,
+      "host_memory_peak_process_tree_rss_gb": 187.75775527954102,
+      "host_memory_peak_system_used_gb": 256.9741859436035,
+      "host_memory_min_system_available_gb": 1758.5699157714844,
+      "host_memory_peak_cgroup_current_gb": 255.96533203125,
+      "host_memory_cgroup_limit_gb": null,
+      "host_memory_cgroup_oom_events_delta": 0,
+      "host_memory_cgroup_oom_kill_events_delta": 0,
+      "host_memory_sampling_error": null,
+      "power_samples_file": "/tmp/zsheng1/qwen3-8b-h200-run-3/gockpt_o/power_samples.json",
+      "power_sample_count": 624,
+      "power_avg_w": 149.62932692307686,
+      "power_peak_w": 355.36,
+      "power_energy_j": 49652.085043513725,
+      "power_sampling_error": null,
+      "error": null
+    }
+  ],
+  "comparison": {
+    "baseline": {
+      "train_steps_per_sec": 0.6373629478421392,
+      "wall_time_sec": 373.4267103858292,
+      "checkpoint_count": 4,
+      "save_checkpoint_total_sec": 236.53769561927766,
+      "forward_begin_total_sec": 0.00018976908177137375,
+      "backward_end_total_sec": 0.0001790989190340042,
+      "update_begin_total_sec": 7.366761565208435e-05,
+      "update_end_total_sec": 0.0001447359099984169
+    },
+    "async": {
+      "train_steps_per_sec": 0.7337540127188608,
+      "wall_time_sec": 391.0672783907503,
+      "checkpoint_count": 4,
+      "save_checkpoint_total_sec": 196.7382040321827,
+      "forward_begin_total_sec": 0.00024164561182260513,
+      "backward_end_total_sec": 0.00023357383906841278,
+      "update_begin_total_sec": 0.00012318789958953857,
+      "update_end_total_sec": 0.00018035061657428741,
+      "speedup_vs_baseline": 1.1512341832907982,
+      "save_checkpoint_time_ratio_vs_baseline": 0.8317414419596157
+    },
+    "async_o": {
+      "train_steps_per_sec": 1.0505520168755964,
+      "wall_time_sec": 307.4799342053011,
+      "checkpoint_count": 4,
+      "save_checkpoint_total_sec": 105.61048245429993,
+      "forward_begin_total_sec": 0.0002571363002061844,
+      "backward_end_total_sec": 0.0003895917907357216,
+      "update_begin_total_sec": 0.00013137701898813248,
+      "update_end_total_sec": 0.000184597447514534,
+      "speedup_vs_baseline": 1.648279085617313,
+      "save_checkpoint_time_ratio_vs_baseline": 0.44648478618937193
+    },
+    "gockpt": {
+      "train_steps_per_sec": 1.1584719801278232,
+      "wall_time_sec": 334.2894446514547,
+      "checkpoint_count": 4,
+      "save_checkpoint_total_sec": 0.002936813049018383,
+      "forward_begin_total_sec": 0.45958914048969746,
+      "backward_end_total_sec": 0.025208143517374992,
+      "update_begin_total_sec": 36.2286464702338,
+      "update_end_total_sec": 0.5711664762347937,
+      "speedup_vs_baseline": 1.8176017040996102,
+      "save_checkpoint_time_ratio_vs_baseline": 1.2415835206855862e-05
+    },
+    "gockpt_o": {
+      "train_steps_per_sec": 1.2165338571049216,
+      "wall_time_sec": 332.5581182036549,
+      "checkpoint_count": 4,
+      "save_checkpoint_total_sec": 0.003752675838768482,
+      "forward_begin_total_sec": 0.22853294014930725,
+      "backward_end_total_sec": 0.031802509911358356,
+      "update_begin_total_sec": 32.7138611106202,
+      "update_end_total_sec": 3.430766844190657,
+      "speedup_vs_baseline": 1.9086987425667397,
+      "save_checkpoint_time_ratio_vs_baseline": 1.5865022397143207e-05
+    }
+  }
+}

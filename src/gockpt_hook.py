@@ -338,6 +338,12 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         if runtime is None or not self._is_step_in_request(runtime, step):
             return
 
+        # Wait for current step's partition transfer thread to complete
+        # before capturing gradients, otherwise we might miss blocks
+        partition_index = step - runtime.request.start_step
+        if 0 <= partition_index < len(runtime.partitions):
+            self._wait_partition_transfer_thread(runtime, partition_index)
+
         gradients_for_step: dict[str, torch.Tensor | None] = {}
         # Thread-safe copy of transferred_blocks to avoid iteration issues
         # while background transfer thread may be adding to it
@@ -1228,7 +1234,8 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
         for name, grad in gradients_for_step.items():
             snapshot = runtime.transferred_blocks[name]
             if grad is None:
-                snapshot.version_step = step + 1
+                # Use max to handle out-of-order reconstruction task execution
+                snapshot.version_step = max(snapshot.version_step, step + 1)
                 continue
 
             param_group = optimizer_param_groups[name]
@@ -1245,7 +1252,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             self._apply_cpu_adamw_bucket(snapshots, gradients, param_group)
 
         for name in gradients_for_step:
-            runtime.transferred_blocks[name].version_step = step + 1
+            # Use max to handle out-of-order reconstruction task execution
+            snapshot = runtime.transferred_blocks[name]
+            snapshot.version_step = max(snapshot.version_step, step + 1)
 
     def _apply_flat_cpu_adamw_updates(
         self,
@@ -1295,7 +1304,9 @@ class GoCkptCheckpointHook(BaselineCheckpointHook):
             )
 
         for name in gradients_for_step:
-            runtime.transferred_blocks[name].version_step = step + 1
+            # Use max to handle out-of-order reconstruction task execution
+            snapshot = runtime.transferred_blocks[name]
+            snapshot.version_step = max(snapshot.version_step, step + 1)
         return True
 
     def _apply_flat_cpu_adamw_block(

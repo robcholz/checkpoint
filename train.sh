@@ -38,6 +38,7 @@ if [ -z "${model}" ]; then
 fi
 tmp_run_dir="/tmp/zsheng1/${benchmark}"
 run_dir="${benchmark}/run"
+warmup_dir="${tmp_run_dir}/warmup"
 
 mkdir -p "${tmp_run_dir}"
 mkdir -p "${run_dir}"
@@ -45,13 +46,27 @@ mkdir -p logs
 
 conda run -n checkpoint python "benchmark/finetune_benchmark.py" \
   --model "${model}" \
+  --hook-types baseline \
+  --seq-len 512 \
+  --batch-size 4 \
+  --max-steps 55 \
+  --save-steps 50 \
+  --overlap-steps 7 \
+  --gradient-checkpointing \
+  --power-sample-interval-sec 0 \
+  --host-memory-sample-interval-sec 0 \
+  --output-dir "${warmup_dir}"
+
+conda run -n checkpoint python "benchmark/finetune_benchmark.py" \
+  --model "${model}" \
   --hook-types baseline async async_o gockpt gockpt_o \
   --seq-len 512 \
+  --batch-size 4 \
   --max-steps 207 \
   --save-steps 50 \
-  --overlap-steps 2 \
+  --overlap-steps 7 \
   --gockpt-inflight-packets 64 \
-  --gockpt-transfer-chunk-mb 64 \
+  --gockpt-transfer-chunk-mb 4 \
   --gradient-checkpointing \
   --output-dir "${tmp_run_dir}"
 
